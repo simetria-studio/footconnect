@@ -1,0 +1,672 @@
+/* FootConnect - Bootstrap 5 + CSS Custom - Dark Theme */
+
+/* Import Bootstrap via CDN será adicionado no layout */
+/* Mantendo Tailwind para compatibilidade */
+@import 'tailwindcss';
+
+/* FORÇAR FUNDO VERDE ESCURO - PRIORIDADE MÁXIMA */
+html {
+    background: #0d2818 !important;
+    background-color: #0d2818 !important;
+}
+
+body {
+    background: #0d2818 !important;
+    background-color: #0d2818 !important;
+    background-image: linear-gradient(180deg, #0d2818 0%, #0f2419 100%) !important;
+}
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+/* ============================================
+   VARIÁVEIS CSS - TEMA DARK
+   ============================================ */
+:root {
+    /* Cores de Fundo - Baseado no site FootConnect (campo de futebol verde escuro) */
+    --fc-bg-primary: #0d2818;
+    --fc-bg-secondary: #1a3d2e;
+    --fc-bg-tertiary: #0f2419;
+    --fc-bg-card: #152e1f;
+    --fc-bg-hover: #1e4a2f;
+    
+    /* Bordas */
+    --fc-border: #2d4a3a;
+    --fc-border-light: rgba(255, 255, 255, 0.1);
+    --fc-border-hover: rgba(34, 197, 94, 0.4);
+    
+    /* Textos */
+    --fc-text-primary: #ffffff;
+    --fc-text-secondary: #c0d4c8;
+    --fc-text-muted: #9db5a8;
+    --fc-text-disabled: #6b8a7a;
+    
+    /* Cores de Acento - Baseado no site FootConnect */
+    --fc-accent-green: #22c55e;
+    --fc-accent-green-hover: #4ade80;
+    --fc-accent-green-light: rgba(34, 197, 94, 0.15);
+    --fc-accent-green-dark: #16a34a;
+    --fc-accent-amber: #f59e0b;
+    --fc-accent-amber-hover: #fbbf24;
+    --fc-accent-amber-light: rgba(245, 158, 11, 0.1);
+    --fc-accent-blue: #3b82f6;
+    --fc-accent-blue-hover: #60a5fa;
+    --fc-accent-blue-light: rgba(59, 130, 246, 0.1);
+    
+    /* Sombras */
+    --fc-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+    --fc-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+    --fc-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
+    --fc-shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.6);
+    
+    /* Transições */
+    --fc-transition: all 0.2s ease-in-out;
+    --fc-transition-fast: all 0.15s ease-in-out;
+}
+
+/* ============================================
+   RESET E BASE
+   ============================================ */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    background: var(--fc-bg-primary) !important;
+    background-color: var(--fc-bg-primary) !important;
+    background-image: linear-gradient(180deg, var(--fc-bg-primary) 0%, var(--fc-bg-tertiary) 100%) !important;
+}
+
+html, body {
+    background: var(--fc-bg-primary) !important;
+    background-color: var(--fc-bg-primary) !important;
+    background-image: linear-gradient(180deg, var(--fc-bg-primary) 0%, var(--fc-bg-tertiary) 100%) !important;
+    color: var(--fc-text-primary) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+body {
+    min-height: 100vh !important;
+    background: var(--fc-bg-primary) !important;
+    background-color: var(--fc-bg-primary) !important;
+    background-image: linear-gradient(180deg, var(--fc-bg-primary) 0%, var(--fc-bg-tertiary) 100%) !important;
+}
+
+/* Forçar fundo verde em todos os elementos principais */
+main, section, .container, .container-fluid {
+    background: transparent !important;
+}
+
+/* Override do Bootstrap que pode estar causando fundo branco */
+.bg-white, .bg-light, [class*="bg-white"] {
+    background: var(--fc-bg-card) !important;
+    background-color: var(--fc-bg-card) !important;
+}
+
+/* Garantir que nenhum elemento tenha fundo branco */
+* {
+    background-color: transparent;
+}
+
+body *, body *::before, body *::after {
+    background-color: transparent;
+}
+
+/* Exceções para elementos que precisam de fundo */
+.card, .fc-card, .navbar, .fc-header, .fc-nav-bottom, .modal-content, .dropdown-menu, .form-control, .form-select, .input-group-text {
+    background-color: inherit !important;
+}
+
+/* ============================================
+   OVERRIDES BOOTSTRAP - DARK THEME
+   ============================================ */
+
+/* Cards */
+.card, .fc-card {
+    background: var(--fc-bg-card) !important;
+    border: 1px solid var(--fc-border) !important;
+    border-radius: 16px !important;
+    color: var(--fc-text-primary) !important;
+    box-shadow: var(--fc-shadow-md) !important;
+    transition: var(--fc-transition);
+}
+
+.card:hover, .fc-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--fc-shadow-lg) !important;
+    border-color: var(--fc-border-hover) !important;
+}
+
+.card-header, .fc-card-header {
+    background: transparent !important;
+    border-bottom: 1px solid var(--fc-border) !important;
+    color: var(--fc-text-primary) !important;
+    font-weight: 600;
+    padding: 1rem 1.25rem;
+}
+
+.card-body {
+    padding: 1.25rem;
+    color: var(--fc-text-primary);
+}
+
+.card-footer {
+    background: transparent !important;
+    border-top: 1px solid var(--fc-border) !important;
+    padding: 1rem 1.25rem;
+}
+
+/* Botões */
+.btn {
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    padding: 0.625rem 1.25rem !important;
+    transition: var(--fc-transition) !important;
+    border: none !important;
+}
+
+.btn-primary, .btn-success {
+    background: var(--fc-accent-green) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3) !important;
+}
+
+.btn-primary:hover, .btn-success:hover {
+    background: var(--fc-accent-green-hover) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(34, 197, 94, 0.4) !important;
+    color: #ffffff !important;
+}
+
+.btn-primary:active, .btn-success:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.btn-outline-primary, .btn-outline-success {
+    border: 1px solid var(--fc-accent-green-dark) !important;
+    color: var(--fc-accent-green) !important;
+    background: transparent !important;
+}
+
+.btn-outline-primary:hover, .btn-outline-success:hover {
+    background: var(--fc-accent-green) !important;
+    color: #ffffff !important;
+    border-color: var(--fc-accent-green) !important;
+}
+
+.btn-outline-secondary {
+    border: 1px solid var(--fc-border) !important;
+    color: var(--fc-text-secondary) !important;
+    background: transparent !important;
+}
+
+.btn-outline-secondary:hover {
+    background: var(--fc-bg-hover) !important;
+    color: var(--fc-text-primary) !important;
+    border-color: var(--fc-border-hover) !important;
+}
+
+.btn-sm {
+    padding: 0.5rem 1rem !important;
+    font-size: 0.875rem !important;
+}
+
+.btn-lg {
+    padding: 0.75rem 1.5rem !important;
+    font-size: 1rem !important;
+}
+
+/* Formulários */
+.form-control, .form-select, .form-control:focus, .form-select:focus {
+    background: var(--fc-bg-secondary) !important;
+    border: 1px solid var(--fc-border) !important;
+    color: var(--fc-text-primary) !important;
+    border-radius: 12px !important;
+    padding: 0.625rem 1rem !important;
+    transition: var(--fc-transition) !important;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--fc-accent-green) !important;
+    box-shadow: 0 0 0 0.2rem rgba(34, 197, 94, 0.25) !important;
+    background: var(--fc-bg-secondary) !important;
+    color: var(--fc-text-primary) !important;
+}
+
+.form-control::placeholder {
+    color: var(--fc-text-disabled) !important;
+    opacity: 1;
+}
+
+.form-label {
+    color: var(--fc-text-secondary) !important;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.form-text {
+    color: var(--fc-text-muted) !important;
+    font-size: 0.75rem;
+}
+
+/* Input Groups */
+.input-group-text {
+    background: var(--fc-bg-secondary) !important;
+    border: 1px solid var(--fc-border) !important;
+    color: var(--fc-text-secondary) !important;
+    border-radius: 12px 0 0 12px !important;
+}
+
+/* Navbar */
+.navbar {
+    background: rgba(13, 40, 24, 0.9) !important;
+    backdrop-filter: blur(20px) !important;
+    border-bottom: 1px solid var(--fc-border-light) !important;
+    padding: 0.75rem 0 !important;
+}
+
+.navbar-brand {
+    color: var(--fc-text-primary) !important;
+    font-weight: 700;
+}
+
+.nav-link {
+    color: var(--fc-text-muted) !important;
+    transition: var(--fc-transition) !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 8px !important;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: var(--fc-accent-green) !important;
+    background: var(--fc-accent-green-light) !important;
+}
+
+/* Badges */
+.badge {
+    border-radius: 8px !important;
+    padding: 0.375rem 0.75rem !important;
+    font-weight: 600 !important;
+}
+
+.badge-success, .bg-success {
+    background: var(--fc-accent-green) !important;
+    color: #ffffff !important;
+}
+
+.badge-warning, .bg-warning {
+    background: linear-gradient(135deg, var(--fc-accent-amber), #d97706) !important;
+    color: #ffffff !important;
+}
+
+.badge-primary, .bg-primary {
+    background: linear-gradient(135deg, var(--fc-accent-blue), #2563eb) !important;
+    color: #ffffff !important;
+}
+
+/* Alerts */
+.alert {
+    border-radius: 12px !important;
+    border: 1px solid var(--fc-border) !important;
+    padding: 1rem 1.25rem !important;
+}
+
+.alert-success {
+    background: var(--fc-accent-green-light) !important;
+    border-color: var(--fc-accent-green) !important;
+    color: var(--fc-accent-green-hover) !important;
+}
+
+.alert-danger {
+    background: rgba(239, 68, 68, 0.1) !important;
+    border-color: #ef4444 !important;
+    color: #fca5a5 !important;
+}
+
+.alert-warning {
+    background: var(--fc-accent-amber-light) !important;
+    border-color: var(--fc-accent-amber) !important;
+    color: var(--fc-accent-amber-hover) !important;
+}
+
+.alert-info {
+    background: var(--fc-accent-blue-light) !important;
+    border-color: var(--fc-accent-blue) !important;
+    color: var(--fc-accent-blue-hover) !important;
+}
+
+/* Pagination */
+.pagination {
+    --bs-pagination-bg: var(--fc-bg-secondary) !important;
+    --bs-pagination-border-color: var(--fc-border) !important;
+    --bs-pagination-color: var(--fc-text-primary) !important;
+    --bs-pagination-hover-bg: var(--fc-bg-hover) !important;
+    --bs-pagination-hover-color: var(--fc-accent-green) !important;
+    --bs-pagination-active-bg: var(--fc-accent-green) !important;
+    --bs-pagination-active-border-color: var(--fc-accent-green) !important;
+}
+
+.page-link {
+    border-radius: 8px !important;
+    margin: 0 0.25rem !important;
+    border: 1px solid var(--fc-border) !important;
+}
+
+/* Modals */
+.modal-content {
+    background: var(--fc-bg-card) !important;
+    border: 1px solid var(--fc-border) !important;
+    border-radius: 16px !important;
+    color: var(--fc-text-primary) !important;
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--fc-border) !important;
+}
+
+.modal-footer {
+    border-top: 1px solid var(--fc-border) !important;
+}
+
+.modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Dropdowns */
+.dropdown-menu {
+    background: var(--fc-bg-card) !important;
+    border: 1px solid var(--fc-border) !important;
+    border-radius: 12px !important;
+    box-shadow: var(--fc-shadow-lg) !important;
+    padding: 0.5rem !important;
+}
+
+.dropdown-item {
+    color: var(--fc-text-primary) !important;
+    border-radius: 8px !important;
+    padding: 0.5rem 1rem !important;
+    transition: var(--fc-transition) !important;
+}
+
+.dropdown-item:hover, .dropdown-item:focus {
+    background: var(--fc-bg-hover) !important;
+    color: var(--fc-accent-green) !important;
+}
+
+/* ============================================
+   CLASSES UTILITÁRIAS CUSTOMIZADAS (.fc-*)
+   ============================================ */
+
+/* Backgrounds */
+.fc-bg-primary { background-color: var(--fc-bg-primary) !important; }
+.fc-bg-secondary { background-color: var(--fc-bg-secondary) !important; }
+.fc-bg-tertiary { background-color: var(--fc-bg-tertiary) !important; }
+.fc-bg-card { background-color: var(--fc-bg-card) !important; }
+
+/* Textos */
+.fc-text-primary { color: var(--fc-text-primary) !important; }
+.fc-text-secondary { color: var(--fc-text-secondary) !important; }
+.fc-text-muted { color: var(--fc-text-muted) !important; }
+
+/* Bordas */
+.fc-border { border-color: var(--fc-border) !important; }
+.fc-border-light { border-color: var(--fc-border-light) !important; }
+
+/* Cards Customizados */
+.fc-card {
+    background: var(--fc-bg-card) !important;
+    border: 1px solid var(--fc-border) !important;
+    border-radius: 16px !important;
+    padding: 1.25rem;
+    transition: var(--fc-transition);
+}
+
+.fc-card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--fc-shadow-lg);
+    border-color: var(--fc-border-hover);
+}
+
+.fc-card-header {
+    color: var(--fc-text-primary) !important;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.fc-card-text {
+    color: var(--fc-text-secondary) !important;
+    line-height: 1.6;
+    font-size: 0.875rem;
+}
+
+/* Botões Customizados */
+.fc-btn-primary {
+    background: var(--fc-accent-green) !important;
+    border: none !important;
+    color: #ffffff !important;
+    font-weight: 600;
+    padding: 0.625rem 1.25rem;
+    border-radius: 12px;
+    transition: var(--fc-transition);
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+
+.fc-btn-primary:hover {
+    background: var(--fc-accent-green-hover) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(34, 197, 94, 0.4);
+    color: #ffffff !important;
+}
+
+.fc-btn-primary:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* Avatar */
+.fc-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: #ffffff;
+    background: var(--fc-accent-green);
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+
+.fc-avatar-lg {
+    width: 64px;
+    height: 64px;
+    font-size: 1.25rem;
+}
+
+.fc-avatar-sm {
+    width: 32px;
+    height: 32px;
+    font-size: 0.75rem;
+}
+
+/* Navegação Inferior */
+.fc-nav-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.9) !important;
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--fc-border-light);
+    padding: 0.5rem 0;
+}
+
+.fc-nav-bottom .nav-link {
+    color: var(--fc-text-muted) !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 12px !important;
+    transition: var(--fc-transition);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.625rem;
+    font-weight: 500;
+}
+
+.fc-nav-bottom .nav-link.active {
+    color: var(--fc-accent-green) !important;
+    background: var(--fc-accent-green-light) !important;
+}
+
+.fc-nav-bottom .nav-link:hover {
+    color: var(--fc-accent-green) !important;
+}
+
+/* Header Sticky */
+.fc-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.8) !important;
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--fc-border-light);
+    padding: 1rem 0;
+}
+
+/* Divisores */
+.fc-divider {
+    height: 1px;
+    background: linear-gradient(to right, var(--fc-border-light), transparent);
+    margin: 1.5rem 0;
+}
+
+/* Espaçamentos Customizados */
+.fc-section {
+    margin-bottom: 2rem;
+}
+
+.fc-section-sm {
+    margin-bottom: 1rem;
+}
+
+.fc-section-lg {
+    margin-bottom: 3rem;
+}
+
+/* Responsividade Mobile-First */
+@media (max-width: 575.98px) {
+    .fc-card {
+        padding: 1rem;
+    }
+    
+    .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    .fc-nav-bottom {
+        padding: 0.75rem 0;
+    }
+    
+    /* Espaçamento extra no mobile para não colar no menu inferior */
+    main {
+        padding-bottom: 120px !important;
+    }
+    
+    .container-fluid, .container {
+        padding-bottom: 30px !important;
+        margin-bottom: 20px !important;
+    }
+    
+    /* Último elemento em cada seção deve ter margem extra */
+    .row:last-child, .card:last-child {
+        margin-bottom: 30px !important;
+    }
+}
+
+/* Espaçamento para tablets */
+@media (min-width: 576px) and (max-width: 991.98px) {
+    main {
+        padding-bottom: 100px !important;
+    }
+}
+
+@media (min-width: 576px) {
+    .container {
+        max-width: 540px;
+    }
+}
+
+@media (min-width: 768px) {
+    .container {
+        max-width: 720px;
+    }
+}
+
+@media (min-width: 992px) {
+    .container {
+        max-width: 960px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1140px;
+    }
+}
+
+/* Animações Suaves */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fc-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Scrollbar Customizado */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--fc-bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--fc-border);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--fc-accent-green);
+}
+
+/* Ajustes adicionais para corresponder ao site FootConnect */
+.navbar {
+    background: rgba(13, 40, 24, 0.9) !important;
+}
+
+.fc-header {
+    background: rgba(13, 40, 24, 0.9) !important;
+}
+
+.fc-nav-bottom {
+    background: rgba(13, 40, 24, 0.95) !important;
+}
