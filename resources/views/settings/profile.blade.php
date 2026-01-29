@@ -58,6 +58,33 @@
                 </div>
             </div>
 
+            <!-- Perfil público e fotos -->
+            <div class="card fc-card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0 fw-bold">Perfil público e fotos</h5>
+                </div>
+                <div class="card-body">
+                    <p class="small fc-text-secondary mb-3">
+                        @if($user->role === 'player')
+                            Edite suas informações de jogador e adicione fotos ou vídeos que aparecem no seu perfil para profissionais.
+                        @else
+                            Edite suas informações profissionais e adicione fotos de onde trabalhou ou times que representou.
+                        @endif
+                    </p>
+                    <div class="d-flex flex-wrap gap-2">
+                        @if($user->role === 'player')
+                            <a href="{{ route('me.player-profile.edit') }}" class="btn btn-outline-success btn-sm">Editar perfil de jogador</a>
+                            <a href="{{ route('me.player-photos') }}" class="btn btn-outline-success btn-sm">Gerenciar fotos</a>
+                            <a href="{{ route('me.player-videos') }}" class="btn btn-outline-success btn-sm">Gerenciar vídeos</a>
+                            <a href="{{ route('me.player-stats') }}" class="btn btn-outline-success btn-sm">Estatísticas</a>
+                        @else
+                            <a href="{{ route('me.scout-profile.edit') }}" class="btn btn-outline-success btn-sm">Editar perfil profissional</a>
+                            <a href="{{ route('me.scout-photos') }}" class="btn btn-outline-success btn-sm">Gerenciar fotos</a>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
             <!-- Alterar Senha -->
             <div class="card fc-card">
                 <div class="card-header">

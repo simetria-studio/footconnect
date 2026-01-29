@@ -51,6 +51,10 @@ Route::middleware(['auth', 'subscription.active'])->group(function () {
     Route::get('/me/player-videos', [PlayerProfileController::class, 'videos'])->name('me.player-videos');
     Route::post('/me/player-videos', [PlayerProfileController::class, 'storeVideo'])->name('me.player-videos.store');
 
+    Route::get('/me/player-photos', [PlayerProfileController::class, 'photos'])->name('me.player-photos');
+    Route::post('/me/player-photos', [PlayerProfileController::class, 'storePhoto'])->name('me.player-photos.store');
+    Route::delete('/me/player-photos/{photo}', [PlayerProfileController::class, 'destroyPhoto'])->name('me.player-photos.destroy');
+
     Route::get('/me/player-stats', [PlayerProfileController::class, 'stats'])->name('me.player-stats');
     Route::post('/me/player-stats', [PlayerProfileController::class, 'storeStat'])->name('me.player-stats.store');
 
@@ -58,6 +62,10 @@ Route::middleware(['auth', 'subscription.active'])->group(function () {
     Route::get('/scouts/{user}', [ScoutProfileController::class, 'show'])->name('scouts.show');
     Route::get('/me/scout-profile', [ScoutProfileController::class, 'edit'])->name('me.scout-profile.edit');
     Route::post('/me/scout-profile', [ScoutProfileController::class, 'update'])->name('me.scout-profile.update');
+
+    Route::get('/me/scout-photos', [ScoutProfileController::class, 'photos'])->name('me.scout-photos');
+    Route::post('/me/scout-photos', [ScoutProfileController::class, 'storePhoto'])->name('me.scout-photos.store');
+    Route::delete('/me/scout-photos/{photo}', [ScoutProfileController::class, 'destroyPhoto'])->name('me.scout-photos.destroy');
 
     // Mensagens
     Route::get('/messages', [ConversationController::class, 'index'])->name('messages.index');

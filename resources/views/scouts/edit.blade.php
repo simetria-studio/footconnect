@@ -85,6 +85,18 @@
                     </div>
                 </div>
             </form>
+
+            <div class="card fc-card mt-4">
+                <div class="card-body">
+                    <h2 class="h6 fw-bold fc-text-primary mb-2">Deixe seu perfil ainda mais completo</h2>
+                    <p class="small fc-text-secondary mb-3">
+                        Adicione fotos de onde trabalhou ou times em que jogou (clubes, agências, eventos) para enriquecer seu perfil como empresário, treinador ou outro profissional.
+                    </p>
+                    <a href="{{ route('me.scout-photos') }}" class="btn btn-outline-success btn-sm">
+                        Gerenciar fotos
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </div>

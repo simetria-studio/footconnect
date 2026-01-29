@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\PlayerProfile;
 use App\Models\PlayerVideo;
 use App\Models\PlayerStat;
+use App\Models\PlayerPhoto;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PlayerProfileController extends Controller
 {
@@ -186,6 +188,65 @@ class PlayerProfileController extends Controller
         ]);
 
         return redirect()->route('me.player-stats')->with('status', 'Estatística adicionada com sucesso.');
+    }
+
+    public function photos(Request $request)
+    {
+        $user = $request->user();
+
+        abort_unless($user->role === 'player', 403);
+
+        $profile = $user->playerProfile()->firstOrCreate(['user_id' => $user->id]);
+        $photos = $profile->photos()
+            ->orderBy('display_order')
+            ->latest()
+            ->get();
+
+        return view('players.photos', [
+            'user' => $user,
+            'profile' => $profile,
+            'photos' => $photos,
+        ]);
+    }
+
+    public function storePhoto(Request $request)
+    {
+        $user = $request->user();
+
+        abort_unless($user->role === 'player', 403);
+
+        $profile = $user->playerProfile()->firstOrCreate(['user_id' => $user->id]);
+
+        $data = $request->validate([
+            'photo' => ['required', 'image', 'max:5120'], // até 5MB
+            'caption' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $path = $request->file('photo')->store('player-photos', 'public');
+
+        PlayerPhoto::create([
+            'player_profile_id' => $profile->id,
+            'path' => $path,
+            'caption' => $data['caption'] ?? null,
+        ]);
+
+        return redirect()->route('me.player-photos')->with('status', 'Foto adicionada com sucesso.');
+    }
+
+    public function destroyPhoto(PlayerPhoto $photo, Request $request)
+    {
+        $user = $request->user();
+
+        abort_unless($user->role === 'player', 403);
+        abort_unless($photo->playerProfile && $photo->playerProfile->user_id === $user->id, 403);
+
+        if ($photo->path) {
+            Storage::disk('public')->delete($photo->path);
+        }
+
+        $photo->delete();
+
+        return redirect()->route('me.player-photos')->with('status', 'Foto removida com sucesso.');
     }
 }
 

@@ -65,6 +65,32 @@
                 </div>
             @endif
 
+            @if($profile->photos->isNotEmpty())
+                <div class="card fc-card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0 fw-bold">Onde trabalhou / Trajetória</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            @foreach($profile->photos as $photo)
+                                <div class="col-6 col-md-4">
+                                    <div class="ratio ratio-1x1 rounded overflow-hidden bg-light">
+                                        <img
+                                            src="{{ asset('storage/'.$photo->path) }}"
+                                            alt="{{ $photo->caption ?: 'Foto' }}"
+                                            class="img-fluid object-fit-cover"
+                                        >
+                                    </div>
+                                    @if($photo->caption)
+                                        <p class="small fc-text-secondary mt-2 mb-0">{{ $photo->caption }}</p>
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             @if(auth()->id() !== $user->id)
                 <form method="GET" action="{{ route('messages.start', $user->id) }}">
                     <button type="submit" class="btn btn-success w-100">Enviar mensagem</button>
