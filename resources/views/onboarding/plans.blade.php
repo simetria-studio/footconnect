@@ -230,7 +230,7 @@
                 <div class="fc-plan-card">
                     <p class="fc-plan-label">Jogador</p>
                     <h2 style="font-size: 0.95rem; font-weight: 600; margin: 0 0 0.35rem;">
-                        Plano Jogador — R$ 19,90 / 3 meses
+                        Plano Jogador — {{ $playerPlan ? $playerPlan->display_label : 'R$ 19,90 / 3 meses' }}
                     </h2>
                     <p class="fc-plan-description">
                         Perfil esportivo completo, vitrine de vídeos, fotos, estatísticas e contato direto com empresários, agentes
@@ -265,7 +265,7 @@
                             <input type="radio" name="plan" value="scout_monthly" checked>
                             <div class="fc-radio-content">
                                 <div class="fc-radio-title">Plano Mensal</div>
-                                <div class="fc-radio-price">R$ 29,90 <span class="fc-price-note">/ mês</span></div>
+                                <div class="fc-radio-price">{{ $scoutMonthly ? $scoutMonthly->formatted_price : 'R$ 29,90' }} <span class="fc-price-note">/ mês</span></div>
                                 <p class="fc-radio-text">
                                     Comece com pouco compromisso e teste o FootConnect no dia a dia da sua rotina profissional.
                                 </p>
@@ -281,7 +281,7 @@
                                         30% OFF
                                     </span>
                                 </div>
-                                <div class="fc-radio-price">R$ 251,20 <span class="fc-price-note">/ ano</span></div>
+                                <div class="fc-radio-price">{{ $scoutYearly ? $scoutYearly->formatted_price : 'R$ 251,20' }} <span class="fc-price-note">/ ano</span></div>
                                 <p class="fc-radio-text">
                                     Economia de 30% com acesso garantido por 12 meses, ideal para clubes, agências e projetos de longo prazo.
                                 </p>
@@ -307,7 +307,7 @@
     // Atualiza visualmente quando um plano é selecionado
     document.addEventListener('DOMContentLoaded', function() {
         const radios = document.querySelectorAll('input[name="plan"]');
-        
+
         // Função para atualizar visual
         function updateSelection() {
             radios.forEach(radio => {
@@ -319,14 +319,14 @@
                 }
             });
         }
-        
+
         // Atualiza na inicialização
         updateSelection();
-        
+
         // Atualiza quando muda
         radios.forEach(radio => {
             radio.addEventListener('change', updateSelection);
-            
+
             // Também atualiza no clique do label
             radio.closest('.fc-radio-label').addEventListener('click', function(e) {
                 // Se clicou no label mas não no input, marca o input

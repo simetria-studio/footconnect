@@ -23,6 +23,8 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'is_admin',
+        'is_active',
         'city',
         'state',
         'plan_type',
@@ -54,6 +56,8 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'current_period_end' => 'datetime',
+            'is_admin' => 'boolean',
+            'is_active' => 'boolean',
         ];
     }
 
@@ -86,5 +90,15 @@ class User extends Authenticatable
     public function favoritedByScouts()
     {
         return $this->hasMany(Favorite::class, 'player_id');
+    }
+
+    public function isAdmin(): bool
+    {
+        return (bool) $this->is_admin;
+    }
+
+    public function isActive(): bool
+    {
+        return (bool) ($this->is_active ?? true);
     }
 }

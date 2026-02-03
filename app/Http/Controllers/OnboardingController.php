@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PlanPrice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
@@ -81,8 +82,16 @@ class OnboardingController extends Controller
             return redirect()->route('onboarding.user-type');
         }
 
+        $planPrices = PlanPrice::getPlansForOnboarding();
+        $playerPlan = $planPrices->firstWhere('plan_key', 'player_quarterly');
+        $scoutMonthly = $planPrices->firstWhere('plan_key', 'scout_monthly');
+        $scoutYearly = $planPrices->firstWhere('plan_key', 'scout_yearly');
+
         return view('onboarding.plans', [
             'role' => $user->role,
+            'playerPlan' => $playerPlan,
+            'scoutMonthly' => $scoutMonthly,
+            'scoutYearly' => $scoutYearly,
         ]);
     }
 
@@ -90,7 +99,7 @@ class OnboardingController extends Controller
     {
         // Agora usa o usuário autenticado
         $user = $request->user();
-        
+
         if (! $user) {
             return redirect()->route('onboarding.user-type');
         }
@@ -186,36 +195,18 @@ class OnboardingController extends Controller
             }
         }
 
-        // Define os planos
-        $plans = [
-            'player_quarterly' => [
-                'name' => 'FootConnect - Jogador (Trimestral)',
-                'amount' => 1990, // R$ 19,90 em centavos
-                'currency' => 'brl',
-                'interval' => 'month',
-                'interval_count' => 3, // A cada 3 meses
-            ],
-            'scout_monthly' => [
-                'name' => 'FootConnect - Olheiro (Mensal)',
-                'amount' => 2990, // R$ 29,90 em centavos
-                'currency' => 'brl',
-                'interval' => 'month',
-                'interval_count' => 1,
-            ],
-            'scout_yearly' => [
-                'name' => 'FootConnect - Olheiro (Anual)',
-                'amount' => 25120, // R$ 251,20 em centavos
-                'currency' => 'brl',
-                'interval' => 'year',
-                'interval_count' => 1,
-            ],
-        ];
-
-        if (! isset($plans[$planKey])) {
-            abort(500, 'Plano inválido');
+        $planModel = PlanPrice::getByKey($planKey);
+        if (! $planModel) {
+            abort(500, 'Plano inválido ou inativo.');
         }
 
-        $plan = $plans[$planKey];
+        $plan = [
+            'name' => $planModel->name,
+            'amount' => $planModel->amount_cents,
+            'currency' => $planModel->currency,
+            'interval' => $planModel->interval,
+            'interval_count' => $planModel->interval_count,
+        ];
 
         // Busca produto existente ou cria um novo
         $productName = 'FootConnect - '.($planKey === 'player_quarterly' ? 'Jogador' : 'Olheiro');
@@ -230,7 +221,7 @@ class OnboardingController extends Controller
         }
 
         if (! $product) {
-            $productDescription = $planKey === 'player_quarterly' 
+            $productDescription = $planKey === 'player_quarterly'
                 ? 'Acesso completo à plataforma FootConnect para jogadores. Crie seu perfil profissional, adicione vídeos e estatísticas, e conecte-se com olheiros e profissionais do futebol.'
                 : 'Acesso completo à plataforma FootConnect para profissionais. Busque jogadores com filtros avançados, visualize perfis detalhados, e comunique-se diretamente com os talentos.';
 
@@ -312,12 +303,12 @@ class OnboardingController extends Controller
         // Você pode adicionar URLs de imagens reais aqui
         // As imagens devem estar hospedadas publicamente (ex: S3, CDN, ou pasta public)
         $baseUrl = rtrim(config('app.url'), '/');
-        
+
         // Tenta encontrar uma imagem na pasta public
-        $imagePath = $planKey === 'player_quarterly' 
+        $imagePath = $planKey === 'player_quarterly'
             ? '/images/products/player-plan.png'
             : '/images/products/scout-plan.png';
-        
+
         // Retorna null se não houver imagem (você pode adicionar imagens depois)
         // Para usar, adicione as imagens em public/images/products/
         return null; // Altere para $baseUrl . $imagePath quando tiver as imagens
@@ -330,13 +321,13 @@ class OnboardingController extends Controller
     {
         $productName = 'FootConnect - '.($planKey === 'player_quarterly' ? 'Jogador' : 'Olheiro');
         $products = Product::all(['limit' => 100, 'active' => true]);
-        
+
         foreach ($products->data as $p) {
             if ($p->name === $productName) {
                 return $p;
             }
         }
-        
+
         return null;
     }
 
@@ -345,22 +336,16 @@ class OnboardingController extends Controller
      */
     private function getPlanInfo(string $planKey): array
     {
-        $plans = [
-            'player_quarterly' => [
-                'name' => 'FootConnect - Jogador (Trimestral)',
-                'description' => 'Acesso completo à plataforma FootConnect para jogadores. Perfil completo, vídeos, estatísticas e conexão com olheiros profissionais.',
-            ],
-            'scout_monthly' => [
-                'name' => 'FootConnect - Olheiro (Mensal)',
-                'description' => 'Acesso completo à plataforma FootConnect para profissionais. Busca avançada de jogadores, perfis detalhados e sistema de mensagens.',
-            ],
-            'scout_yearly' => [
-                'name' => 'FootConnect - Olheiro (Anual)',
-                'description' => 'Acesso completo à plataforma FootConnect para profissionais. Busca avançada de jogadores, perfis detalhados e sistema de mensagens. Economia de 30% com plano anual.',
-            ],
-        ];
+        $planModel = PlanPrice::getByKey($planKey);
 
-        return $plans[$planKey] ?? [
+        if ($planModel) {
+            return [
+                'name' => $planModel->name,
+                'description' => $planModel->description ?? 'Assinatura do FootConnect',
+            ];
+        }
+
+        return [
             'name' => 'FootConnect',
             'description' => 'Assinatura do FootConnect',
         ];
@@ -369,7 +354,7 @@ class OnboardingController extends Controller
     public function success(Request $request)
     {
         $user = $request->user();
-        
+
         if (! $user) {
             return redirect()->route('onboarding.user-type');
         }

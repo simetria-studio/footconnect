@@ -4,16 +4,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'FootConnect')</title>
-    
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
+
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+
     <!-- Custom CSS - Deve vir DEPOIS do Bootstrap para sobrescrever -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    
+
     <style>
         /* Estilos inline para garantir fundo verde */
         html, body {
@@ -22,7 +22,7 @@
             background-image: linear-gradient(180deg, #0d2818 0%, #0f2419 100%) !important;
         }
     </style>
-    
+
     @stack('styles')
 </head>
 <body class="fc-bg-primary" style="background: #0d2818 !important; background-color: #0d2818 !important; background-image: linear-gradient(180deg, #0d2818 0%, #0f2419 100%) !important;">
@@ -40,7 +40,10 @@
                             <p class="mb-0 fw-bold fc-text-primary">{{ auth()->user()->full_name ?? auth()->user()->email }}</p>
                         </div>
                     </div>
-                    <form method="POST" action="{{ route('logout') }}">
+                    @if(auth()->user()->isAdmin())
+                        <a href="{{ route('admin.dashboard') }}" class="btn btn-sm btn-outline-success border-success me-2">Painel admin</a>
+                    @endif
+                    <form method="POST" action="{{ route('logout') }}" class="d-inline">
                         @csrf
                         <button type="submit" class="btn btn-sm btn-outline-secondary border-secondary">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -104,7 +107,7 @@
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     @stack('scripts')
 </body>
 </html>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\HomeController;
@@ -23,6 +24,7 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.po
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::view('/subscription/required', 'subscription.required')->name('subscription.required');
+Route::view('/conta-desativada', 'account.deactivated')->name('account.deactivated');
 
 // Onboarding / pagamento
 Route::get('/onboarding/tipo-usuario', [OnboardingController::class, 'chooseUserType'])->name('onboarding.user-type');
@@ -39,7 +41,18 @@ Route::middleware('auth')->group(function () {
 
 Route::post('/stripe/webhook', StripeWebhookController::class)->name('stripe.webhook');
 
-Route::middleware(['auth', 'subscription.active'])->group(function () {
+// Painel administrativo (apenas usuários com is_admin = true)
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/users', [AdminController::class, 'users'])->name('users');
+    Route::get('/plan-prices', [AdminController::class, 'planPrices'])->name('plan-prices');
+    Route::post('/plan-prices', [AdminController::class, 'updatePlanPrices'])->name('plan-prices.update');
+    Route::post('/users/{user}/cancel-plan', [AdminController::class, 'cancelPlan'])->name('users.cancel-plan');
+    Route::post('/users/{user}/deactivate', [AdminController::class, 'deactivate'])->name('users.deactivate');
+    Route::post('/users/{user}/reactivate', [AdminController::class, 'reactivate'])->name('users.reactivate');
+});
+
+Route::middleware(['auth', 'active', 'subscription.active'])->group(function () {
     Route::get('/home', HomeController::class)->name('home');
 
     // Jogadores
