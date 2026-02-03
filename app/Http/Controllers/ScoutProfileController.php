@@ -96,19 +96,27 @@ class ScoutProfileController extends Controller
         $profile = $user->scoutProfile()->firstOrCreate(['user_id' => $user->id]);
 
         $data = $request->validate([
-            'photo' => ['required', 'image', 'max:5120'],
+            'photos' => ['required', 'array', 'min:1'],
+            'photos.*' => ['required', 'image', 'max:5120'],
             'caption' => ['nullable', 'string', 'max:255'],
         ]);
 
-        $path = $request->file('photo')->store('scout-photos', 'public');
+        $caption = $data['caption'] ?? null;
+        $count = 0;
 
-        ScoutPhoto::create([
-            'scout_profile_id' => $profile->id,
-            'path' => $path,
-            'caption' => $data['caption'] ?? null,
-        ]);
+        foreach ($request->file('photos') as $file) {
+            $path = $file->store('scout-photos', 'public');
+            ScoutPhoto::create([
+                'scout_profile_id' => $profile->id,
+                'path' => $path,
+                'caption' => $caption,
+            ]);
+            $count++;
+        }
 
-        return redirect()->route('me.scout-photos')->with('status', 'Foto adicionada com sucesso.');
+        $message = $count === 1 ? 'Foto adicionada com sucesso.' : "{$count} fotos adicionadas com sucesso.";
+
+        return redirect()->route('me.scout-photos')->with('status', $message);
     }
 
     public function destroyPhoto(ScoutPhoto $photo, Request $request)

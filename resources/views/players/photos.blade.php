@@ -10,7 +10,7 @@
                 <div>
                     <h1 class="h5 fw-bold fc-text-primary mb-1">Suas fotos em destaque</h1>
                     <p class="small fc-text-secondary mb-0">
-                        Envie fotos em boa qualidade para que empresários, agentes e olheiros possam te conhecer melhor em campo e fora dele.
+                        Você pode adicionar várias fotos (em campo, treino, apresentações). Empresários e olheiros verão todas no seu perfil.
                     </p>
                 </div>
                 <a href="{{ route('me.player-profile.edit') }}" class="btn btn-sm btn-outline-secondary">Voltar para o perfil</a>
@@ -26,18 +26,18 @@
             <!-- Formulário de Adicionar Foto -->
             <div class="card fc-card mb-4">
                 <div class="card-header">
-                    <h5 class="mb-0 fw-bold">Adicionar nova foto</h5>
+                    <h5 class="mb-0 fw-bold">Adicionar fotos</h5>
                 </div>
                 <div class="card-body">
                     <form method="POST" action="{{ route('me.player-photos.store') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-3">
-                            <label for="photo" class="form-label">Foto</label>
-                            <input type="file" class="form-control" id="photo" name="photo" accept="image/*" required>
-                            <div class="form-text">Formatos aceitos: JPG, PNG, WEBP. Tamanho máximo: 5MB.</div>
+                            <label for="photos" class="form-label">Uma ou várias fotos</label>
+                            <input type="file" class="form-control" id="photos" name="photos[]" accept="image/*" multiple>
+                            <div class="form-text">Selecione várias imagens de uma vez se quiser. JPG, PNG ou WEBP. Até 5MB por foto.</div>
                         </div>
                         <div class="mb-3">
-                            <label for="caption" class="form-label">Legenda (opcional)</label>
+                            <label for="caption" class="form-label">Legenda (opcional, para todas)</label>
                             <input type="text" class="form-control" id="caption" name="caption" value="{{ old('caption') }}" placeholder="Ex: Foto de jogo, treino, apresentação no clube...">
                         </div>
                         @if ($errors->any())
@@ -49,7 +49,7 @@
                                 </ul>
                             </div>
                         @endif
-                        <button type="submit" class="btn btn-success">Salvar foto</button>
+                        <button type="submit" class="btn btn-success">Salvar fotos</button>
                     </form>
                 </div>
             </div>
@@ -57,7 +57,7 @@
             <!-- Lista de Fotos -->
             <div class="card fc-card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0 fw-bold">Fotos cadastradas</h5>
+                    <h5 class="mb-0 fw-bold">Fotos cadastradas ({{ $photos->count() }})</h5>
                 </div>
                 <div class="card-body">
                     @forelse($photos as $photo)
@@ -92,7 +92,7 @@
                     @empty
                         <div class="text-center py-4">
                             <p class="fc-text-secondary mb-1">Você ainda não cadastrou fotos.</p>
-                            <p class="small mb-0">Comece enviando uma foto agora para deixar seu perfil mais completo.</p>
+                            <p class="small mb-0">Adicione uma ou várias fotos acima para deixar seu perfil mais completo.</p>
                         </div>
                     @endforelse
                 </div>

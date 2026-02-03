@@ -76,7 +76,7 @@
                         <th class="border-0 ps-4">Usuário</th>
                         <th class="border-0">Tipo</th>
                         <th class="border-0">Pagamento / Plano</th>
-                        <th class="border-0">Fim do período</th>
+                        <th class="border-0">Fim da assinatura</th>
                         <th class="border-0">Conta</th>
                         <th class="border-0">Cadastro</th>
                         <th class="border-0 pe-4 text-end">Ações</th>
@@ -111,8 +111,17 @@
                                     <span class="fc-text-secondary">{{ $u->subscription_status ?: 'Sem assinatura' }}</span>
                                 @endif
                             </td>
-                            <td class="small fc-text-secondary">
-                                {{ $u->current_period_end ? $u->current_period_end->format('d/m/Y') : '—' }}
+                            <td class="small">
+                                @if($u->current_period_end)
+                                    <span class="fc-text-primary fw-semibold">{{ $u->current_period_end->format('d/m/Y') }}</span>
+                                    @if($u->current_period_end->isFuture())
+                                        <br><span class="fc-text-secondary">(vence {{ $u->current_period_end->diffForHumans() }})</span>
+                                    @else
+                                        <br><span class="text-warning">(vencida)</span>
+                                    @endif
+                                @else
+                                    <span class="fc-text-secondary">—</span>
+                                @endif
                             </td>
                             <td>
                                 @if($u->isActive())

@@ -218,19 +218,27 @@ class PlayerProfileController extends Controller
         $profile = $user->playerProfile()->firstOrCreate(['user_id' => $user->id]);
 
         $data = $request->validate([
-            'photo' => ['required', 'image', 'max:5120'], // até 5MB
+            'photos' => ['required', 'array', 'min:1'],
+            'photos.*' => ['required', 'image', 'max:5120'],
             'caption' => ['nullable', 'string', 'max:255'],
         ]);
 
-        $path = $request->file('photo')->store('player-photos', 'public');
+        $caption = $data['caption'] ?? null;
+        $count = 0;
 
-        PlayerPhoto::create([
-            'player_profile_id' => $profile->id,
-            'path' => $path,
-            'caption' => $data['caption'] ?? null,
-        ]);
+        foreach ($request->file('photos') as $file) {
+            $path = $file->store('player-photos', 'public');
+            PlayerPhoto::create([
+                'player_profile_id' => $profile->id,
+                'path' => $path,
+                'caption' => $caption,
+            ]);
+            $count++;
+        }
 
-        return redirect()->route('me.player-photos')->with('status', 'Foto adicionada com sucesso.');
+        $message = $count === 1 ? 'Foto adicionada com sucesso.' : "{$count} fotos adicionadas com sucesso.";
+
+        return redirect()->route('me.player-photos')->with('status', $message);
     }
 
     public function destroyPhoto(PlayerPhoto $photo, Request $request)

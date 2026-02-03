@@ -63,6 +63,7 @@
                     <tr>
                         <th class="border-0 ps-4">Nome / E-mail</th>
                         <th class="border-0">Tipo</th>
+                        <th class="border-0">Fim da assinatura</th>
                         <th class="border-0">Cadastro</th>
                     </tr>
                 </thead>
@@ -82,11 +83,21 @@
                                     <span class="badge bg-info">Profissional</span>
                                 @endif
                             </td>
+                            <td class="small">
+                                @if($u->current_period_end)
+                                    <span class="fc-text-primary">{{ $u->current_period_end->format('d/m/Y') }}</span>
+                                    @if($u->current_period_end->isPast())
+                                        <span class="text-warning">(vencida)</span>
+                                    @endif
+                                @else
+                                    <span class="fc-text-secondary">—</span>
+                                @endif
+                            </td>
                             <td class="small fc-text-secondary">{{ $u->created_at->format('d/m/Y H:i') }}</td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="3" class="text-center py-4 fc-text-secondary">Nenhum usuário ainda.</td>
+                            <td colspan="4" class="text-center py-4 fc-text-secondary">Nenhum usuário ainda.</td>
                         </tr>
                     @endforelse
                 </tbody>
