@@ -93,4 +93,6 @@ Route::middleware(['auth', 'active', 'subscription.active'])->group(function () 
 
     Route::get('/settings/plan', [SettingsController::class, 'plan'])->name('settings.plan');
     Route::post('/settings/plan/cancel', [SettingsController::class, 'cancelPlan'])->name('settings.plan.cancel');
+    Route::post('/settings/account/cancel', [SettingsController::class, 'cancelAccount'])->name('settings.account.cancel');
+    Route::post('/settings/account/delete', [SettingsController::class, 'deleteAccount'])->name('settings.account.delete');
 });

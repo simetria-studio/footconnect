@@ -86,7 +86,7 @@
             </div>
 
             <!-- Alterar Senha -->
-            <div class="card fc-card">
+            <div class="card fc-card mb-4">
                 <div class="card-header">
                     <h5 class="mb-0 fw-bold">Alterar senha</h5>
                 </div>
@@ -112,6 +112,100 @@
                             <button type="submit" class="btn btn-success">Atualizar senha</button>
                         </div>
                     </form>
+                </div>
+            </div>
+
+            <!-- Encerrar conta -->
+            <div class="card fc-card border-danger">
+                <div class="card-header border-danger">
+                    <h5 class="mb-0 fw-bold text-danger">Encerrar ou excluir conta</h5>
+                </div>
+                <div class="card-body">
+                    <p class="small fc-text-secondary mb-3">
+                        Você pode apenas <strong>encerrar</strong> (desativar) sua conta ou <strong>excluir permanentemente</strong>.
+                        <br>
+                        - Encerrar conta: cancela sua assinatura (se houver) e bloqueia novo acesso, mas mantém o histórico salvo.<br>
+                        - Excluir conta: remove definitivamente seus dados (perfil, mensagens, favoritos, etc.). Esta ação não pode ser desfeita.
+                    </p>
+                    <div class="d-flex flex-wrap gap-2">
+                        <button type="button" class="btn btn-outline-danger"
+                                data-bs-toggle="modal" data-bs-target="#cancelAccountModal">
+                            Encerrar minha conta
+                        </button>
+                        <button type="button" class="btn btn-danger"
+                                data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
+                            Excluir permanentemente minha conta
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal: Encerrar conta -->
+            <div class="modal fade" id="cancelAccountModal" tabindex="-1" aria-labelledby="cancelAccountModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content fc-bg-secondary">
+                        <div class="modal-header border-0">
+                            <h5 class="modal-title text-danger" id="cancelAccountModalLabel">Encerrar conta</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p class="small fc-text-secondary mb-3">
+                                Ao encerrar sua conta:
+                            </p>
+                            <ul class="small fc-text-secondary mb-3 text-start">
+                                <li>Sua assinatura atual será <strong>cancelada</strong> (se houver).</li>
+                                <li>Seu acesso ao FootConnect será <strong>bloqueado</strong> com este e-mail.</li>
+                                <li>Seu histórico (mensagens, favoritos, perfis) será mantido apenas para controle interno.</li>
+                            </ul>
+                            <p class="small text-warning mb-0">
+                                Você poderá voltar no futuro criando uma nova conta com o mesmo e-mail, mas esta conta ficará desativada.
+                            </p>
+                        </div>
+                        <div class="modal-footer border-0">
+                            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Voltar</button>
+                            <form method="POST" action="{{ route('settings.account.cancel') }}" class="d-inline">
+                                @csrf
+                                <button type="submit" class="btn btn-outline-danger btn-sm">
+                                    Sim, encerrar minha conta
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal: Excluir conta -->
+            <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content fc-bg-secondary">
+                        <div class="modal-header border-0">
+                            <h5 class="modal-title text-danger" id="deleteAccountModalLabel">Excluir permanentemente conta</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p class="small fc-text-secondary mb-3">
+                                Esta ação é <strong>definitiva</strong> e não pode ser desfeita.
+                            </p>
+                            <ul class="small fc-text-secondary mb-3 text-start">
+                                <li>Seu usuário será removido do FootConnect.</li>
+                                <li>Seus perfis, fotos, vídeos, estatísticas, favoritos e mensagens serão apagados.</li>
+                                <li>Não será possível recuperar nenhum dado desta conta depois.</li>
+                            </ul>
+                            <p class="small text-warning mb-0">
+                                Se você quer apenas parar de pagar e sair do app, use a opção <strong>Encerrar conta</strong>.
+                                Use esta opção apenas se tiver certeza absoluta que deseja remover tudo.
+                            </p>
+                        </div>
+                        <div class="modal-footer border-0">
+                            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                            <form method="POST" action="{{ route('settings.account.delete') }}" class="d-inline">
+                                @csrf
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    Sim, excluir tudo definitivamente
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Stripe\Stripe;
 
@@ -82,6 +83,65 @@ class SettingsController extends Controller
         $user->save();
 
         return redirect()->route('settings.plan')->with('status', 'Assinatura cancelada com sucesso.');
+    }
+
+    public function cancelAccount(Request $request)
+    {
+        /** @var User $user */
+        $user = $request->user();
+
+        // Cancela assinatura no Stripe se existir
+        if ($user->stripe_subscription_id && config('stripe.secret')) {
+            Stripe::setApiKey(config('stripe.secret'));
+
+            try {
+                $subscription = \Stripe\Subscription::retrieve($user->stripe_subscription_id);
+                $subscription->cancel();
+            } catch (\Throwable $e) {
+                // Não bloqueia o cancelamento da conta se o Stripe falhar
+            }
+        }
+
+        $user->subscription_status = 'canceled';
+        $user->current_period_end = null;
+        $user->is_active = false;
+        $user->save();
+
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()
+            ->route('account.deactivated')
+            ->withErrors(['account' => 'Sua conta foi encerrada com sucesso.']);
+    }
+
+    public function deleteAccount(Request $request)
+    {
+        /** @var User $user */
+        $user = $request->user();
+
+        // Cancela assinatura no Stripe se existir, mas não bloqueia exclusão se falhar
+        if ($user->stripe_subscription_id && config('stripe.secret')) {
+            Stripe::setApiKey(config('stripe.secret'));
+
+            try {
+                $subscription = \Stripe\Subscription::retrieve($user->stripe_subscription_id);
+                $subscription->cancel();
+            } catch (\Throwable $e) {
+                // apenas registra internamente se quiser (aqui ignoramos)
+            }
+        }
+
+        Auth::logout();
+
+        // Exclui definitivamente o usuário e dados relacionados (cascadeOnDelete nas FK)
+        $user->delete();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('landing');
     }
 }
 
