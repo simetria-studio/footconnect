@@ -7,9 +7,14 @@ return [
     'prices' => [
         // Opcional: IDs dos preços se já existirem no Stripe
         // Se não definidos, os preços serão criados automaticamente
-        'player_quarterly' => env('STRIPE_PRICE_PLAYER_QUARTERLY'), // R$ 19,90 / 3 meses
-        'scout_monthly' => env('STRIPE_PRICE_SCOUT_MONTHLY'), // R$ 29,90 / mês
-        'scout_yearly' => env('STRIPE_PRICE_SCOUT_YEARLY'), // R$ 251,20 / ano (30% off)
+        'g1_monthly' => env('STRIPE_PRICE_G1_MONTHLY'),
+        'g1_yearly' => env('STRIPE_PRICE_G1_YEARLY'),
+        'g2_monthly' => env('STRIPE_PRICE_G2_MONTHLY'),
+        'g2_yearly' => env('STRIPE_PRICE_G2_YEARLY'),
+        'g3_monthly' => env('STRIPE_PRICE_G3_MONTHLY'),
+        'g3_yearly' => env('STRIPE_PRICE_G3_YEARLY'),
+        'g4_monthly' => env('STRIPE_PRICE_G4_MONTHLY'),
+        'g4_yearly' => env('STRIPE_PRICE_G4_YEARLY'),
     ],
 
     /*
@@ -28,8 +33,7 @@ return [
     | As configurações abaixo são aplicadas via API quando disponíveis.
     */
     'appearance' => [
-        'theme' => 'stripe', // 'stripe' ou 'night' (modo escuro)
-        'primary_color' => env('STRIPE_PRIMARY_COLOR', '#22c55e'), // Verde FootConnect
+        'theme' => 'stripe',
+        'primary_color' => env('STRIPE_PRIMARY_COLOR', '#22c55e'),
     ],
 ];
-

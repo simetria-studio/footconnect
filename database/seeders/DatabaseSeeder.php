@@ -33,23 +33,30 @@ class DatabaseSeeder extends Seeder
             'role' => 'player',
             'city' => 'São Paulo',
             'state' => 'SP',
-            'plan_type' => 'player',
-            'plan_interval' => 'quarterly',
+            'plan_group' => 'g1',
+            'plan_type' => 'g1',
+            'plan_interval' => 'monthly',
+            'country' => 'Brasil',
             'subscription_status' => 'active',
             'current_period_end' => $nextQuarter,
         ]);
 
         PlayerProfile::create([
             'user_id' => $player1->id,
+            'modality' => 'campo',
+            'gender' => 'male',
             'position' => 'Atacante',
             'age' => 21,
             'height_cm' => 180,
-            'weight_kg' => 75,
             'current_club' => 'Clube Teste FC',
+            'institution_type' => 'clube',
+            'institution_name' => 'Clube Teste FC',
             'city' => 'São Paulo',
             'state' => 'SP',
+            'country' => 'Brasil',
             'dominant_foot' => 'right',
-            'bio' => 'Atacante de velocidade, bom 1x1 e finalização com a perna direita.',
+            'characteristics' => 'Atacante de velocidade, bom 1x1 e finalização com a perna direita.',
+            'is_federated' => true,
         ]);
 
         $player2 = User::create([
@@ -60,23 +67,29 @@ class DatabaseSeeder extends Seeder
             'role' => 'player',
             'city' => 'Rio de Janeiro',
             'state' => 'RJ',
-            'plan_type' => 'player',
-            'plan_interval' => 'quarterly',
+            'country' => 'Brasil',
+            'plan_group' => 'g1',
+            'plan_type' => 'g1',
+            'plan_interval' => 'monthly',
             'subscription_status' => 'active',
             'current_period_end' => $nextQuarter,
         ]);
 
         PlayerProfile::create([
             'user_id' => $player2->id,
+            'modality' => 'futsal',
+            'gender' => 'male',
             'position' => 'Zagueiro',
             'age' => 24,
             'height_cm' => 188,
-            'weight_kg' => 82,
-            'current_club' => 'Defesa Forte FC',
+            'institution_type' => 'clube',
+            'institution_name' => 'Defesa Forte FC',
             'city' => 'Rio de Janeiro',
             'state' => 'RJ',
+            'country' => 'Brasil',
             'dominant_foot' => 'left',
-            'bio' => 'Zagueiro canhoto, forte no jogo aéreo e saída de bola.',
+            'characteristics' => 'Zagueiro canhoto, forte no jogo aéreo e saída de bola.',
+            'is_federated' => false,
         ]);
 
         // Profissionais de teste
@@ -86,9 +99,11 @@ class DatabaseSeeder extends Seeder
             'email' => 'empresario@footconnect.test',
             'password' => Hash::make('password'),
             'role' => 'scout',
+            'plan_group' => 'g2',
             'city' => 'Belo Horizonte',
             'state' => 'MG',
-            'plan_type' => 'scout',
+            'country' => 'Brasil',
+            'plan_type' => 'g2',
             'plan_interval' => 'monthly',
             'subscription_status' => 'active',
             'current_period_end' => $nextMonth,
@@ -96,12 +111,15 @@ class DatabaseSeeder extends Seeder
 
         ScoutProfile::create([
             'user_id' => $scoutMonthly->id,
-            'professional_type' => 'empresario',
-            'organization' => 'Agência Talentos do Futuro',
+            'age' => 42,
+            'has_company' => true,
+            'company_name' => 'Agência Talentos do Futuro',
+            'scope' => 'nacional',
             'city' => 'Belo Horizonte',
             'state' => 'MG',
-            'website' => 'https://agenciatestes.com',
-            'bio' => 'Empresário focado em jovens talentos sub-17 e sub-20.',
+            'country' => 'Brasil',
+            'is_federated' => true,
+            'federation_name' => 'Federação Mineira de Futebol',
         ]);
 
         $scoutYearly = User::create([
@@ -110,9 +128,11 @@ class DatabaseSeeder extends Seeder
             'email' => 'olheiro@footconnect.test',
             'password' => Hash::make('password'),
             'role' => 'scout',
+            'plan_group' => 'g3',
             'city' => 'Porto Alegre',
             'state' => 'RS',
-            'plan_type' => 'scout',
+            'country' => 'Brasil',
+            'plan_type' => 'g3',
             'plan_interval' => 'yearly',
             'subscription_status' => 'active',
             'current_period_end' => $nextYear,
@@ -120,11 +140,14 @@ class DatabaseSeeder extends Seeder
 
         ScoutProfile::create([
             'user_id' => $scoutYearly->id,
-            'professional_type' => 'olheiro',
-            'organization' => 'Clube Observador FC',
+            'age' => 38,
+            'has_company' => true,
+            'company_name' => 'Clube Observador FC',
+            'scope' => 'internacional',
             'city' => 'Porto Alegre',
             'state' => 'RS',
-            'bio' => 'Olheiro especializado em mercado sul-americano.',
+            'country' => 'Brasil',
+            'is_federated' => false,
         ]);
     }
 }

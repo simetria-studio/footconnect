@@ -21,6 +21,12 @@
                             <h1 class="h5 fw-bold fc-text-primary mb-2">{{ $user->full_name ?? $user->email }}</h1>
                             <p class="small fc-text-secondary mb-2">
                                 <span class="badge bg-success me-2">{{ $profile->position ?? 'Posição não informada' }}</span>
+                                @if($profile->modality_label)
+                                    <span class="badge bg-secondary me-2">{{ $profile->modality_label }}</span>
+                                @endif
+                                @if($profile->gender_label)
+                                    <span class="badge bg-secondary me-2">{{ $profile->gender_label }}</span>
+                                @endif
                                 @if($profile->age)
                                     <span>{{ $profile->age }} anos</span>
                                 @endif
@@ -29,41 +35,30 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" class="me-1">
                                     <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
                                 </svg>
-                                {{ $profile->city }}@if($profile->state), {{ $profile->state }}@endif
+                                {{ $profile->city }}@if($profile->state), {{ $profile->state }}@endif@if($profile->country), {{ $profile->country }}@endif
                             </p>
-                            @if($profile->bio)
-                                <p class="small fc-text-secondary mb-0">{{ $profile->bio }}</p>
+                            @if($profile->institution_type_label || $profile->institution_name)
+                                <p class="small fc-text-secondary mb-2">
+                                    <strong>Instituição:</strong>
+                                    {{ $profile->institution_type_label }}{{ $profile->institution_name ? ' — '.$profile->institution_name : '' }}
+                                </p>
+                            @endif
+                            @if($profile->characteristics ?? $profile->bio)
+                                <p class="small fc-text-secondary mb-0">{{ $profile->characteristics ?? $profile->bio }}</p>
                             @else
-                                <p class="small text-muted mb-0">Jogador ainda não adicionou uma biografia.</p>
+                                <p class="small text-muted mb-0">Atleta ainda não adicionou características.</p>
                             @endif
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Estatísticas Físicas -->
             <div class="row g-3 mb-4">
                 <div class="col-6 col-md-3">
                     <div class="card fc-card h-100">
                         <div class="card-body text-center">
                             <p class="small text-muted mb-1">Altura</p>
                             <p class="fw-bold fc-text-primary mb-0">{{ $profile->height_cm ? $profile->height_cm.' cm' : '-' }}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="card fc-card h-100">
-                        <div class="card-body text-center">
-                            <p class="small text-muted mb-1">Peso</p>
-                            <p class="fw-bold fc-text-primary mb-0">{{ $profile->weight_kg ? $profile->weight_kg.' kg' : '-' }}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="card fc-card h-100">
-                        <div class="card-body text-center">
-                            <p class="small text-muted mb-1">Clube atual</p>
-                            <p class="fw-bold fc-text-primary mb-0">{{ $profile->current_club ?: '-' }}</p>
                         </div>
                     </div>
                 </div>
@@ -81,7 +76,38 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-6 col-md-3">
+                    <div class="card fc-card h-100">
+                        <div class="card-body text-center">
+                            <p class="small text-muted mb-1">Federado</p>
+                            <p class="fw-bold fc-text-primary mb-0">{{ $profile->is_federated ? 'Sim' : 'Não' }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="card fc-card h-100">
+                        <div class="card-body text-center">
+                            <p class="small text-muted mb-1">Estudante</p>
+                            <p class="fw-bold fc-text-primary mb-0">
+                                @if($profile->is_student)
+                                    Sim{{ $profile->school_grade ? ' — '.$profile->school_grade : '' }}
+                                @else
+                                    Não
+                                @endif
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            @if($profile->has_awards && $profile->awards_description)
+                <div class="card fc-card mb-4">
+                    <div class="card-body">
+                        <p class="small text-muted mb-1">Premiações</p>
+                        <p class="small fc-text-secondary mb-0">{{ $profile->awards_description }}</p>
+                    </div>
+                </div>
+            @endif
 
             @if($profile->photos->isNotEmpty())
             <div class="card fc-card mb-4">
@@ -170,10 +196,18 @@
                 </div>
             </div>
 
-            @if(auth()->id() !== $user->id)
-                <form method="GET" action="{{ route('messages.start', $user->id) }}">
-                    <button type="submit" class="btn btn-success w-100">Enviar mensagem</button>
-                </form>
+            @if(auth()->id() !== $user->id && auth()->user()->role === 'scout')
+                <div class="d-flex gap-2">
+                    <form method="POST" action="{{ route('favorites.toggle', $user) }}" class="flex-shrink-0">
+                        @csrf
+                        <button type="submit" class="btn {{ $isFavorited ? 'btn-warning' : 'btn-outline-warning' }}">
+                            {{ $isFavorited ? '★ Favorito' : '☆ Favoritar' }}
+                        </button>
+                    </form>
+                    <form method="GET" action="{{ route('messages.start', $user->id) }}" class="flex-grow-1">
+                        <button type="submit" class="btn btn-success w-100">Enviar mensagem</button>
+                    </form>
+                </div>
             @endif
         </div>
     </div>

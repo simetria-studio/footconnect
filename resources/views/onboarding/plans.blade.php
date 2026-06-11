@@ -1,5 +1,8 @@
 @php
-    $isPlayer = $role === 'player';
+    $groupConfig = config('plans.groups.'.$planGroup);
+    $isGreenAccent = ($groupConfig['accent'] ?? 'green') === 'green';
+    $monthlyKey = $planGroup.'_monthly';
+    $yearlyKey = $planGroup.'_yearly';
 @endphp
 
 <!DOCTYPE html>
@@ -66,13 +69,16 @@
         .fc-subtitle {
             font-size: 0.95rem;
             color: #9ca3af;
-            max-width: 480px;
+            max-width: 520px;
         }
         .fc-plan-card {
             border-radius: 18px;
             border: 1px solid rgba(148, 163, 184, 0.4);
             background: radial-gradient(circle at top left, rgba(34, 197, 94, 0.14), transparent 60%), rgba(15, 23, 42, 0.9);
             padding: 1.5rem 1.75rem;
+        }
+        .fc-plan-card--yellow {
+            background: radial-gradient(circle at top left, rgba(250, 204, 21, 0.14), transparent 60%), rgba(15, 23, 42, 0.95);
         }
         .fc-plan-label {
             font-size: 0.75rem;
@@ -84,9 +90,11 @@
         .fc-plan-label-secondary {
             color: #facc15;
         }
-        .fc-price {
-            font-size: 1.4rem;
+        .fc-plan-code {
+            font-size: 0.65rem;
             font-weight: 700;
+            color: #6b7280;
+            margin-left: 0.35rem;
         }
         .fc-price-note {
             font-size: 0.8rem;
@@ -96,11 +104,6 @@
             font-size: 0.85rem;
             color: #9ca3af;
             margin-top: 0.35rem;
-        }
-        .fc-plan-extra {
-            font-size: 0.75rem;
-            color: #6b7280;
-            margin-top: 0.4rem;
         }
         .fc-cta {
             margin-top: 1.5rem;
@@ -178,6 +181,14 @@
         .fc-radio-label--primary .fc-radio-title {
             color: #22c55e;
         }
+        .fc-radio-label--primary-yellow {
+            border-color: rgba(250, 204, 21, 0.9) !important;
+            background: radial-gradient(circle at top left, rgba(250, 204, 21, 0.2), transparent 60%), rgba(15, 23, 42, 0.95) !important;
+            box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.2);
+        }
+        .fc-radio-label--primary-yellow .fc-radio-title {
+            color: #facc15;
+        }
         .fc-radio-content {
             pointer-events: none;
         }
@@ -205,8 +216,7 @@
             </div>
             <h1 class="fc-title">Escolha seu plano</h1>
             <p class="fc-subtitle">
-                O acesso ao FootConnect é exclusivo para assinantes. Selecione o plano ideal para o seu perfil e siga para o
-                pagamento seguro.
+                O acesso ao FootConnect é exclusivo para assinantes. Selecione a periodicidade ideal e siga para o pagamento seguro.
             </p>
         </div>
 
@@ -225,111 +235,86 @@
         <form method="POST" action="{{ route('onboarding.checkout') }}">
             @csrf
 
-            @if ($isPlayer)
-                <input type="hidden" name="plan" value="player_quarterly">
-                <div class="fc-plan-card">
-                    <p class="fc-plan-label">Jogador</p>
-                    <h2 style="font-size: 0.95rem; font-weight: 600; margin: 0 0 0.35rem;">
-                        Plano Jogador — {{ $playerPlan ? $playerPlan->display_label : 'R$ 19,90 / 3 meses' }}
-                    </h2>
-                    <p class="fc-plan-description">
-                        Perfil esportivo completo, vitrine de vídeos, fotos, estatísticas e contato direto com empresários, agentes
-                        e olheiros dentro do app.
-                    </p>
-                    <p class="fc-plan-extra">
-                        Renovação automática a cada 3 meses. Você pode gerenciar sua assinatura na área de <strong>Plano</strong>
-                        dentro do app.
-                    </p>
-                    <div class="fc-cta">
-                        <button type="submit" class="fc-btn-primary">
-                            Assinar como Jogador e ir para pagamento
-                        </button>
-                        <span class="fc-small-note">
-                            Pagamento recorrente a cada 3 meses via Stripe.
-                        </span>
-                    </div>
-                </div>
-            @else
-                <div class="fc-plan-card" style="background: radial-gradient(circle at top left, rgba(250, 204, 21, 0.14), transparent 60%), rgba(15,23,42,0.95);">
-                    <p class="fc-plan-label fc-plan-label-secondary">Profissionais</p>
-                    <h2 style="font-size: 0.95rem; font-weight: 600; margin: 0 0 0.35rem;">
-                        Empresários, agentes, treinadores e olheiros
-                    </h2>
-                    <p class="fc-plan-description">
-                        Tenha acesso à base de jogadores, filtros avançados de busca, lista de favoritos e mensagens internas
-                        centralizadas — ideal para scouting e gestão de carreira.
-                    </p>
+            <div class="fc-plan-card {{ $isGreenAccent ? '' : 'fc-plan-card--yellow' }}">
+                <p class="fc-plan-label {{ $isGreenAccent ? '' : 'fc-plan-label-secondary' }}">
+                    {{ $groupConfig['short_label'] }}
+                    <span class="fc-plan-code">{{ $groupConfig['code'] }}</span>
+                </p>
+                <h2 style="font-size: 0.95rem; font-weight: 600; margin: 0 0 0.35rem;">
+                    {{ $groupConfig['label'] }}
+                </h2>
+                <p class="fc-plan-description">
+                    {{ $groupConfig['plan_description'] }}
+                </p>
 
-                    <div class="fc-radios">
-                        <label class="fc-radio-label fc-radio-label--primary">
-                            <input type="radio" name="plan" value="scout_monthly" checked>
-                            <div class="fc-radio-content">
-                                <div class="fc-radio-title">Plano Mensal</div>
-                                <div class="fc-radio-price">{{ $scoutMonthly ? $scoutMonthly->formatted_price : 'R$ 29,90' }} <span class="fc-price-note">/ mês</span></div>
-                                <p class="fc-radio-text">
-                                    Comece com pouco compromisso e teste o FootConnect no dia a dia da sua rotina profissional.
-                                </p>
+                <div class="fc-radios">
+                    <label class="fc-radio-label {{ $isGreenAccent ? 'fc-radio-label--primary' : 'fc-radio-label--primary-yellow' }}">
+                        <input type="radio" name="plan" value="{{ $monthlyKey }}" checked>
+                        <div class="fc-radio-content">
+                            <div class="fc-radio-title">Plano Mensal</div>
+                            <div class="fc-radio-price">
+                                {{ $monthlyPlan ? $monthlyPlan->formatted_price : '—' }}
+                                <span class="fc-price-note">/ mês</span>
                             </div>
-                        </label>
+                            <p class="fc-radio-text">
+                                Flexibilidade total com renovação mensal automática.
+                            </p>
+                        </div>
+                    </label>
 
-                        <label class="fc-radio-label" style="border-color: rgba(250, 204, 21, 0.6);">
-                            <input type="radio" name="plan" value="scout_yearly">
-                            <div class="fc-radio-content">
-                                <div class="fc-radio-title">
-                                    Plano Anual
-                                    <span class="fc-tag-saving">
-                                        30% OFF
-                                    </span>
-                                </div>
-                                <div class="fc-radio-price">{{ $scoutYearly ? $scoutYearly->formatted_price : 'R$ 251,20' }} <span class="fc-price-note">/ ano</span></div>
-                                <p class="fc-radio-text">
-                                    Economia de 30% com acesso garantido por 12 meses, ideal para clubes, agências e projetos de longo prazo.
-                                </p>
+                    <label class="fc-radio-label" style="border-color: rgba(250, 204, 21, 0.6);">
+                        <input type="radio" name="plan" value="{{ $yearlyKey }}">
+                        <div class="fc-radio-content">
+                            <div class="fc-radio-title">
+                                Plano Anual
+                                <span class="fc-tag-saving">
+                                    {{ config('plans.annual_discount_percent') }}% OFF
+                                </span>
                             </div>
-                        </label>
-                    </div>
-
-                    <div class="fc-cta">
-                        <button type="submit" class="fc-btn-primary">
-                            Assinar como Profissional e ir para pagamento
-                        </button>
-                        <span class="fc-small-note">
-                            Cobrança recorrente gerenciada pelo Stripe, com opção de cancelamento no app.
-                        </span>
-                    </div>
+                            <div class="fc-radio-price">
+                                {{ $yearlyPlan ? $yearlyPlan->formatted_price : '—' }}
+                                <span class="fc-price-note">/ ano</span>
+                            </div>
+                            <p class="fc-radio-text">
+                                Economia de {{ config('plans.annual_discount_percent') }}% com acesso garantido por 12 meses.
+                            </p>
+                        </div>
+                    </label>
                 </div>
-            @endif
+
+                <div class="fc-cta">
+                    <button type="submit" class="fc-btn-primary">
+                        Assinar e ir para pagamento
+                    </button>
+                    <span class="fc-small-note">
+                        Cobrança recorrente gerenciada pelo Stripe, com opção de cancelamento no app.
+                    </span>
+                </div>
+            </div>
         </form>
     </div>
 </div>
 
 <script>
-    // Atualiza visualmente quando um plano é selecionado
     document.addEventListener('DOMContentLoaded', function() {
         const radios = document.querySelectorAll('input[name="plan"]');
+        const isGreen = {{ $isGreenAccent ? 'true' : 'false' }};
 
-        // Função para atualizar visual
         function updateSelection() {
             radios.forEach(radio => {
                 const label = radio.closest('.fc-radio-label');
+                label.classList.remove('fc-radio-label--primary', 'fc-radio-label--primary-yellow');
                 if (radio.checked) {
-                    label.classList.add('fc-radio-label--primary');
-                } else {
-                    label.classList.remove('fc-radio-label--primary');
+                    label.classList.add(isGreen ? 'fc-radio-label--primary' : 'fc-radio-label--primary-yellow');
                 }
             });
         }
 
-        // Atualiza na inicialização
         updateSelection();
 
-        // Atualiza quando muda
         radios.forEach(radio => {
             radio.addEventListener('change', updateSelection);
-
-            // Também atualiza no clique do label
             radio.closest('.fc-radio-label').addEventListener('click', function(e) {
-                // Se clicou no label mas não no input, marca o input
                 if (e.target !== radio) {
                     radio.checked = true;
                     updateSelection();
@@ -340,4 +325,3 @@
 </script>
 </body>
 </html>
-

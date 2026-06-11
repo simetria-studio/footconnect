@@ -23,10 +23,20 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'plan_group',
+        'referral_code',
+        'referred_by_id',
+        'pix_key',
+        'pix_key_type',
+        'referral_program_blocked',
+        'referral_registration_ip',
+        'referral_is_counted',
+        'referral_invalid_reason',
         'is_admin',
         'is_active',
         'city',
         'state',
+        'country',
         'plan_type',
         'plan_interval',
         'stripe_customer_id',
@@ -58,7 +68,16 @@ class User extends Authenticatable
             'current_period_end' => 'datetime',
             'is_admin' => 'boolean',
             'is_active' => 'boolean',
+            'referral_program_blocked' => 'boolean',
+            'referral_is_counted' => 'boolean',
         ];
+    }
+
+    public function scopeValidReferralsOf($query, int $referrerId)
+    {
+        return $query->where('referred_by_id', $referrerId)
+            ->where('referral_is_counted', true)
+            ->where('is_active', true);
     }
 
     public function playerProfile()
@@ -90,6 +109,26 @@ class User extends Authenticatable
     public function favoritedByScouts()
     {
         return $this->hasMany(Favorite::class, 'player_id');
+    }
+
+    public function referrer()
+    {
+        return $this->belongsTo(User::class, 'referred_by_id');
+    }
+
+    public function referrals()
+    {
+        return $this->hasMany(User::class, 'referred_by_id');
+    }
+
+    public function referralCommissionsEarned()
+    {
+        return $this->hasMany(ReferralCommission::class, 'referrer_id');
+    }
+
+    public function referralWithdrawals()
+    {
+        return $this->hasMany(ReferralWithdrawal::class);
     }
 
     public function isAdmin(): bool

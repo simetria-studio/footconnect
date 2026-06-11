@@ -19,51 +19,45 @@
                         </div>
                         <div class="flex-grow-1">
                             <h1 class="h5 fw-bold fc-text-primary mb-2">{{ $user->full_name ?? $user->email }}</h1>
+                            @php
+                                $planGroupKey = $user->plan_group ?? $user->plan_type;
+                                $groupConfig = $planGroupKey ? config('plans.groups.'.$planGroupKey) : null;
+                            @endphp
                             <p class="small fc-text-secondary mb-2">
                                 <span class="badge bg-success me-2">
-                                    @switch($profile->professional_type)
-                                        @case('empresario') Empresário @break
-                                        @case('agente') Agente @break
-                                        @case('treinador') Treinador @break
-                                        @case('olheiro') Olheiro @break
-                                        @default Profissional do futebol
-                                    @endswitch
+                                    {{ $groupConfig['label'] ?? 'Profissional do futebol' }}
                                 </span>
+                                @if($profile->age)
+                                    <span>{{ $profile->age }} anos</span>
+                                @endif
                             </p>
                             <p class="small text-muted mb-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" class="me-1">
                                     <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
                                 </svg>
-                                {{ $profile->city }}@if($profile->state), {{ $profile->state }}@endif
+                                {{ $profile->city }}@if($profile->state), {{ $profile->state }}@endif@if($profile->country), {{ $profile->country }}@endif
                             </p>
-                            @if($profile->organization)
+                            @if($profile->has_company && ($profile->company_name || $profile->organization))
                                 <p class="small fc-text-secondary mb-2">
-                                    <strong>Organização:</strong> {{ $profile->organization }}
+                                    <strong>Empresa:</strong> {{ $profile->company_name ?? $profile->organization }}
                                 </p>
                             @endif
-                            @if($profile->bio)
-                                <p class="small fc-text-secondary mb-0">{{ $profile->bio }}</p>
-                            @else
-                                <p class="small text-muted mb-0">Profissional ainda não adicionou uma biografia.</p>
+                            @if($profile->scope_label)
+                                <p class="small fc-text-secondary mb-2">
+                                    <strong>Atuação:</strong> {{ $profile->scope_label }}
+                                </p>
+                            @endif
+                            @if($profile->is_federated && $profile->federation_name)
+                                <p class="small fc-text-secondary mb-0">
+                                    <strong>Federação:</strong> {{ $profile->federation_name }}
+                                </p>
+                            @elseif($profile->is_federated)
+                                <p class="small fc-text-secondary mb-0"><strong>Federado:</strong> Sim</p>
                             @endif
                         </div>
                     </div>
                 </div>
             </div>
-
-            @if($profile->website)
-                <div class="card fc-card mb-4">
-                    <div class="card-body">
-                        <p class="small text-muted mb-1">Site / Portfólio</p>
-                        <a href="{{ $profile->website }}" target="_blank" class="btn btn-sm btn-outline-success">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" class="me-1">
-                                <path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m19.5.5-2.5-2.5a.5.5 0 0 0-.707.707L18.293 9H10.5a.5.5 0 0 0 0 1h7.793l-2 2a.5.5 0 0 0 .707.707l2.5-2.5a.5.5 0 0 0 0-.707"/>
-                            </svg>
-                            Visitar site
-                        </a>
-                    </div>
-                </div>
-            @endif
 
             @if($profile->photos->isNotEmpty())
                 <div class="card fc-card mb-4">

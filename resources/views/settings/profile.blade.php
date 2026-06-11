@@ -37,7 +37,21 @@
                             </div>
                             <div class="col-12 col-md-6">
                                 <label for="state" class="form-label">Estado</label>
-                                <input type="text" class="form-control" id="state" name="state" value="{{ old('state', $user->state) }}" placeholder="Ex: SP">
+                                <select class="form-select" id="state" name="state">
+                                    <option value="">Selecione</option>
+                                    @foreach(config('locations.brazilian_states') as $uf => $name)
+                                        <option value="{{ $uf }}" {{ old('state', $user->state) === $uf ? 'selected' : '' }}>{{ $uf }} — {{ $name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label for="country" class="form-label">País</label>
+                                <select class="form-select" id="country" name="country">
+                                    <option value="">Selecione</option>
+                                    @foreach(config('locations.countries') as $country)
+                                        <option value="{{ $country }}" {{ old('country', $user->country ?? 'Brasil') === $country ? 'selected' : '' }}>{{ $country }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
 
@@ -55,6 +69,20 @@
                             <button type="submit" class="btn btn-success">Salvar</button>
                         </div>
                     </form>
+                </div>
+            </div>
+
+            <!-- Indique e Ganhe -->
+            <div class="card fc-card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0 fw-bold">Indique e Ganhe</h5>
+                </div>
+                <div class="card-body">
+                    <p class="small fc-text-secondary mb-3">
+                        Ganhe {{ config('referrals.commission_percent') }}% de comissão recorrente indicando novos assinantes.
+                        Recebimento automático via PIX em {{ config('referrals.payout_delay_days') }} dias após cada pagamento.
+                    </p>
+                    <a href="{{ route('referrals.index') }}" class="btn btn-outline-success btn-sm">Abrir Indique e Ganhe</a>
                 </div>
             </div>
 

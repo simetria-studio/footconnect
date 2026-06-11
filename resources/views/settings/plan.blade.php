@@ -19,7 +19,13 @@
             @endif
 
             @php
-                $tipo = $user->plan_type === 'player' ? 'Jogador' : ($user->plan_type === 'scout' ? 'Profissional' : null);
+                $planGroupKey = $user->plan_group ?? $user->plan_type;
+                $groupConfig = $planGroupKey ? config('plans.groups.'.$planGroupKey) : null;
+                $tipo = $groupConfig['label'] ?? match ($user->plan_type) {
+                    'player' => 'Jogador',
+                    'scout' => 'Profissional',
+                    default => null,
+                };
                 $intervalo = match ($user->plan_interval) {
                     'quarterly' => 'Trimestral',
                     'monthly' => 'Mensal',

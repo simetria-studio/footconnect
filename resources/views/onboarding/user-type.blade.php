@@ -41,7 +41,7 @@
         .fc-onboarding-subtitle {
             font-size: 0.95rem;
             color: #9ca3af;
-            max-width: 440px;
+            max-width: 520px;
         }
         .fc-pill {
             display: inline-flex;
@@ -77,6 +77,9 @@
             display: flex;
             gap: 1rem;
         }
+        .fc-option--yellow {
+            background: radial-gradient(circle at top left, rgba(250, 204, 21, 0.12), transparent 60%), rgba(15, 23, 42, 0.9);
+        }
         .fc-option + .fc-option {
             margin-top: 0.85rem;
         }
@@ -93,14 +96,21 @@
             font-size: 1.2rem;
         }
         .fc-option-content-title {
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
-            letter-spacing: 0.12em;
+            letter-spacing: 0.1em;
             color: #a7f3d0;
             margin-bottom: 0.15rem;
         }
         .fc-option-content-title--yellow {
             color: #facc15;
+        }
+        .fc-option-code {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            color: #6b7280;
+            margin-left: 0.35rem;
         }
         .fc-option h2 {
             font-size: 0.95rem;
@@ -116,6 +126,9 @@
             border-color: rgba(34, 197, 94, 0.7);
             box-shadow: 0 14px 40px rgba(15, 23, 42, 0.9);
             transform: translateY(-2px);
+        }
+        .fc-option--yellow:hover {
+            border-color: rgba(250, 204, 21, 0.7);
         }
         .fc-hint {
             margin-top: 1.25rem;
@@ -138,56 +151,37 @@
             </div>
             <h1 class="fc-onboarding-title">Como você quer usar o FootConnect?</h1>
             <p class="fc-onboarding-subtitle">
-                Escolha o tipo de conta que melhor representa seu papel no futebol profissional. Isso define o conteúdo e as telas que você verá dentro do app.
+                Escolha o plano que melhor representa seu papel no futebol profissional. Cada perfil tem valores e recursos adequados à sua atuação.
             </p>
         </div>
 
         <form method="POST" action="{{ route('onboarding.user-type.store') }}">
             @csrf
 
-            <button
-                type="submit"
-                name="role"
-                value="player"
-                class="fc-option"
-            >
-                <div class="fc-option-icon">⚽</div>
-                <div>
-                    <p class="fc-option-content-title">Jogador</p>
-                    <h2>Quero ser vitrine de talentos</h2>
-                    <p>
-                        Monte um perfil esportivo completo com dados físicos, posição, pé dominante, vídeos, fotos e estatísticas
-                        para apresentar a clubes, empresários e agentes.
-                    </p>
-                </div>
-            </button>
-
-            <button
-                type="submit"
-                name="role"
-                value="scout"
-                class="fc-option"
-            >
-                <div class="fc-option-icon">🎯</div>
-                <div>
-                    <p class="fc-option-content-title fc-option-content-title--yellow">
-                        Empresário / Agente / Treinador / Olheiro
-                    </p>
-                    <h2>Quero buscar talentos</h2>
-                    <p>
-                        Tenha acesso a filtros avançados de jogadores, lista de favoritos e contato direto via mensagens internas,
-                        facilitando o seu trabalho de scouting e gestão de elenco.
-                    </p>
-                </div>
-            </button>
+            @foreach(config('plans.groups') as $key => $group)
+                <button
+                    type="submit"
+                    name="plan_group"
+                    value="{{ $key }}"
+                    class="fc-option {{ $group['accent'] === 'yellow' ? 'fc-option--yellow' : '' }}"
+                >
+                    <div class="fc-option-icon">{{ $group['icon'] }}</div>
+                    <div>
+                        <p class="fc-option-content-title {{ $group['accent'] === 'yellow' ? 'fc-option-content-title--yellow' : '' }}">
+                            {{ $group['label'] }}
+                            <span class="fc-option-code">{{ $group['code'] }}</span>
+                        </p>
+                        <h2>{{ $group['title'] }}</h2>
+                        <p>{{ $group['description'] }}</p>
+                    </div>
+                </button>
+            @endforeach
 
             <p class="fc-hint">
-                Você poderá ver e gerenciar seu tipo de conta depois em <strong>Configurações &gt; Perfil</strong>, mantendo sempre
-                o foco em um uso profissional do FootConnect.
+                Você poderá ver e gerenciar seu plano depois em <strong>Configurações &gt; Plano</strong>.
             </p>
         </form>
     </div>
 </div>
 </body>
 </html>
-

@@ -6,6 +6,8 @@ use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\PlayerProfileController;
+use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\ReferralController;
 use App\Http\Controllers\ScoutProfileController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\StripeWebhookController;
@@ -41,15 +43,30 @@ Route::middleware('auth')->group(function () {
 
 Route::post('/stripe/webhook', StripeWebhookController::class)->name('stripe.webhook');
 
+Route::get('/indicacao/{code}', [ReferralController::class, 'capture'])->name('referral.capture');
+
 // Painel administrativo (apenas usuários com is_admin = true)
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/users', [AdminController::class, 'users'])->name('users');
-    Route::get('/plan-prices', [AdminController::class, 'planPrices'])->name('plan-prices');
-    Route::post('/plan-prices', [AdminController::class, 'updatePlanPrices'])->name('plan-prices.update');
+    Route::get('/users/{user}', [AdminController::class, 'showUser'])->name('users.show');
+    Route::post('/users/{user}/toggle-admin', [AdminController::class, 'toggleAdmin'])->name('users.toggle-admin');
+    Route::post('/users/{user}/block-referral', [AdminController::class, 'blockReferralProgram'])->name('users.block-referral');
+    Route::post('/users/{user}/unblock-referral', [AdminController::class, 'unblockReferralProgram'])->name('users.unblock-referral');
+    Route::post('/users/{user}/invalidate-referral', [AdminController::class, 'invalidateReferral'])->name('users.invalidate-referral');
     Route::post('/users/{user}/cancel-plan', [AdminController::class, 'cancelPlan'])->name('users.cancel-plan');
     Route::post('/users/{user}/deactivate', [AdminController::class, 'deactivate'])->name('users.deactivate');
     Route::post('/users/{user}/reactivate', [AdminController::class, 'reactivate'])->name('users.reactivate');
+
+    Route::get('/subscriptions', [AdminController::class, 'subscriptions'])->name('subscriptions');
+
+    Route::get('/referrals', [AdminController::class, 'referrals'])->name('referrals');
+    Route::get('/referrals/withdrawals', [AdminController::class, 'referralWithdrawals'])->name('referrals.withdrawals');
+    Route::post('/referrals/process-payouts', [AdminController::class, 'processReferralPayouts'])->name('referrals.process-payouts');
+
+    Route::get('/plan-prices', [AdminController::class, 'planPrices'])->name('plan-prices');
+    Route::post('/plan-prices', [AdminController::class, 'updatePlanPrices'])->name('plan-prices.update');
+    Route::post('/plan-prices/{plan}/toggle', [AdminController::class, 'togglePlanPrice'])->name('plan-prices.toggle');
 });
 
 Route::middleware(['auth', 'active', 'subscription.active'])->group(function () {
@@ -93,6 +110,14 @@ Route::middleware(['auth', 'active', 'subscription.active'])->group(function () 
 
     Route::get('/settings/plan', [SettingsController::class, 'plan'])->name('settings.plan');
     Route::post('/settings/plan/cancel', [SettingsController::class, 'cancelPlan'])->name('settings.plan.cancel');
+
+    Route::get('/indique-e-ganhe', [ReferralController::class, 'index'])->name('referrals.index');
+    Route::get('/indique-e-ganhe/ranking', [ReferralController::class, 'ranking'])->name('referrals.ranking');
+    Route::post('/indique-e-ganhe/codigo', [ReferralController::class, 'updateCode'])->name('referrals.code.update');
+    Route::post('/indique-e-ganhe/pix', [ReferralController::class, 'updatePix'])->name('referrals.pix.update');
+
+    Route::get('/favoritos', [FavoriteController::class, 'index'])->name('favorites.index');
+    Route::post('/favoritos/{player}', [FavoriteController::class, 'toggle'])->name('favorites.toggle');
     Route::post('/settings/account/cancel', [SettingsController::class, 'cancelAccount'])->name('settings.account.cancel');
     Route::post('/settings/account/delete', [SettingsController::class, 'deleteAccount'])->name('settings.account.delete');
 });

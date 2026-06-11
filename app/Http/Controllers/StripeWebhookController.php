@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Services\ReferralService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
@@ -11,7 +13,7 @@ use Stripe\Stripe;
 
 class StripeWebhookController extends Controller
 {
-    public function __invoke(Request $request): Response
+    public function __invoke(Request $request, ReferralService $referralService): Response
     {
         $payload = $request->getContent();
         $sigHeader = $request->server('HTTP_STRIPE_SIGNATURE');
@@ -36,20 +38,45 @@ class StripeWebhookController extends Controller
         Stripe::setApiKey(config('stripe.secret'));
 
         if ($event->type === 'checkout.session.completed') {
-            /** @var Event $event */
             $session = $event->data->object;
 
             $customerId = $session->customer;
             $subscriptionId = $session->subscription;
-            $planKey = $session->metadata->plan_key ?? null;
-            $userType = $session->metadata->user_type ?? null;
 
-            if (! $customerId || ! $subscriptionId || ! $planKey || ! $userType) {
-                return response('Missing data', 200);
+            if ($customerId && $subscriptionId) {
+                $user = User::where('stripe_customer_id', $customerId)->first();
+
+                if (! $user) {
+                    $user = User::where('email', $session->customer_email ?? '')->first();
+                    if ($user) {
+                        $user->stripe_customer_id = $customerId;
+                        $user->stripe_subscription_id = $subscriptionId;
+                        $user->save();
+                    }
+                }
             }
+        }
 
-            // Neste estágio ainda não temos o usuário criado.
-            // Vamos criar / atualizar depois, no registro, associando pelo customer_id se necessário.
+        if ($event->type === 'invoice.paid') {
+            $invoice = $event->data->object;
+            $customerId = $invoice->customer;
+            $amountPaid = (int) ($invoice->amount_paid ?? 0);
+            $paidAt = isset($invoice->status_transitions->paid_at)
+                ? Carbon::createFromTimestamp($invoice->status_transitions->paid_at)
+                : now();
+
+            if ($customerId && $amountPaid > 0 && $invoice->id) {
+                $user = User::where('stripe_customer_id', $customerId)->first();
+
+                if ($user) {
+                    $referralService->recordCommissionFromInvoice(
+                        $user,
+                        $invoice->id,
+                        $amountPaid,
+                        $paidAt
+                    );
+                }
+            }
         }
 
         if (str_starts_with($event->type, 'customer.subscription.')) {
@@ -61,7 +88,7 @@ class StripeWebhookController extends Controller
             if ($user) {
                 $user->subscription_status = $subscription->status;
                 if ($subscription->current_period_end) {
-                    $user->current_period_end = \Carbon\Carbon::createFromTimestamp(
+                    $user->current_period_end = Carbon::createFromTimestamp(
                         $subscription->current_period_end
                     );
                 }
@@ -72,4 +99,3 @@ class StripeWebhookController extends Controller
         return response('OK', 200);
     }
 }
-

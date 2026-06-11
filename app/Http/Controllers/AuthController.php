@@ -70,15 +70,12 @@ class AuthController extends Controller
                 if ($session->customer && $session->subscription) {
                     $user->stripe_customer_id = $session->customer;
                     $user->stripe_subscription_id = $session->subscription;
-                    $user->plan_type = $data['role'] === 'player' ? 'player' : 'scout';
-
                     $planKey = $session->metadata->plan_key ?? null;
-                    $user->plan_interval = match ($planKey) {
-                        'player_quarterly' => 'quarterly',
-                        'scout_monthly' => 'monthly',
-                        'scout_yearly' => 'yearly',
-                        default => null,
-                    };
+                    $planGroup = $session->metadata->plan_group ?? null;
+
+                    $user->plan_group = $planGroup;
+                    $user->plan_type = $planGroup ?? ($data['role'] === 'player' ? 'g1' : 'g3');
+                    $user->plan_interval = str_ends_with((string) $planKey, '_yearly') ? 'yearly' : 'monthly';
 
                     // Opcionalmente, marca como ativa até o webhook atualizar
                     $user->subscription_status = 'active';

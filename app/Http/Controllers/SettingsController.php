@@ -26,6 +26,7 @@ class SettingsController extends Controller
             'full_name' => ['nullable', 'string', 'max:255'],
             'city' => ['nullable', 'string', 'max:255'],
             'state' => ['nullable', 'string', 'max:255'],
+            'country' => ['nullable', 'string', 'max:255'],
         ]);
 
         $user->fill($data);

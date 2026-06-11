@@ -45,24 +45,38 @@ class ScoutProfileController extends Controller
         abort_unless($user->role === 'scout', 403);
 
         $data = $request->validate([
-            'full_name' => ['nullable', 'string', 'max:255'],
-            'professional_type' => ['nullable', 'in:empresario,agente,treinador,olheiro'],
-            'organization' => ['nullable', 'string', 'max:255'],
+            'full_name' => ['required', 'string', 'max:255'],
+            'age' => ['nullable', 'integer', 'min:18', 'max:99'],
             'city' => ['nullable', 'string', 'max:255'],
             'state' => ['nullable', 'string', 'max:255'],
-            'website' => ['nullable', 'string', 'max:255'],
-            'bio' => ['nullable', 'string', 'max:800'],
+            'country' => ['nullable', 'string', 'max:255'],
+            'has_company' => ['nullable', 'in:0,1'],
+            'company_name' => ['nullable', 'required_if:has_company,1', 'string', 'max:255'],
+            'scope' => ['nullable', 'in:regional,nacional,internacional'],
+            'is_federated' => ['nullable', 'in:0,1'],
+            'federation_name' => ['nullable', 'required_if:is_federated,1', 'string', 'max:255'],
         ]);
 
-        if (! empty($data['full_name'])) {
-            $user->full_name = $data['full_name'];
-            $user->city = $data['city'] ?? $user->city;
-            $user->state = $data['state'] ?? $user->state;
-            $user->save();
+        $user->full_name = $data['full_name'];
+        $user->city = $data['city'] ?? $user->city;
+        $user->state = $data['state'] ?? $user->state;
+        $user->country = $data['country'] ?? $user->country;
+        $user->save();
+
+        $profileData = collect($data)->except('full_name')->toArray();
+        $profileData['has_company'] = ($data['has_company'] ?? '0') === '1';
+        $profileData['is_federated'] = ($data['is_federated'] ?? '0') === '1';
+
+        if (! $profileData['has_company']) {
+            $profileData['company_name'] = null;
+        }
+
+        if (! $profileData['is_federated']) {
+            $profileData['federation_name'] = null;
         }
 
         $profile = $user->scoutProfile()->firstOrCreate(['user_id' => $user->id]);
-        $profile->fill(collect($data)->except('full_name')->toArray());
+        $profile->fill($profileData);
         $profile->save();
 
         return redirect()->route('me.scout-profile.edit')->with('status', 'Perfil atualizado com sucesso.');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PlanPrice;
+use App\Services\ReferralService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
@@ -13,41 +14,50 @@ use Stripe\Stripe;
 
 class OnboardingController extends Controller
 {
-    public function chooseUserType()
+    public function chooseUserType(Request $request)
     {
+        if ($ref = $request->query('ref')) {
+            Session::put('referral.code', strtoupper($ref));
+        }
+
         return view('onboarding.user-type');
     }
 
     public function storeUserType(Request $request)
     {
         $data = $request->validate([
-            'role' => ['required', 'in:player,scout'],
+            'plan_group' => ['required', 'in:g1,g2,g3,g4'],
         ]);
 
-        Session::put('onboarding.role', $data['role']);
+        $group = config('plans.groups.'.$data['plan_group']);
 
-        // Agora redireciona para criar conta primeiro
+        Session::put('onboarding.plan_group', $data['plan_group']);
+        Session::put('onboarding.role', $group['role']);
+
         return redirect()->route('onboarding.register');
     }
 
     public function showRegister()
     {
         $role = Session::get('onboarding.role');
+        $planGroup = Session::get('onboarding.plan_group');
 
-        if (! $role) {
+        if (! $role || ! $planGroup) {
             return redirect()->route('onboarding.user-type');
         }
 
         return view('onboarding.register', [
             'role' => $role,
+            'planGroup' => $planGroup,
         ]);
     }
 
     public function register(Request $request)
     {
         $role = Session::get('onboarding.role');
+        $planGroup = Session::get('onboarding.plan_group');
 
-        if (! $role) {
+        if (! $role || ! $planGroup) {
             return redirect()->route('onboarding.user-type');
         }
 
@@ -56,7 +66,6 @@ class OnboardingController extends Controller
             'password' => ['required', 'confirmed', 'min:8'],
         ]);
 
-        // Extrai o nome do email
         $name = explode('@', $data['email'])[0];
         $name = ucfirst($name);
 
@@ -65,9 +74,16 @@ class OnboardingController extends Controller
             'email' => $data['email'],
             'password' => \Illuminate\Support\Facades\Hash::make($data['password']),
             'role' => $role,
+            'plan_group' => $planGroup,
         ]);
 
-        // Autentica o usuário
+        app(ReferralService::class)->attributeReferral(
+            $user,
+            Session::get('referral.code'),
+            $request->ip()
+        );
+        Session::forget('referral.code');
+
         \Illuminate\Support\Facades\Auth::login($user);
 
         // Redireciona para escolher plano
@@ -82,16 +98,19 @@ class OnboardingController extends Controller
             return redirect()->route('onboarding.user-type');
         }
 
-        $planPrices = PlanPrice::getPlansForOnboarding();
-        $playerPlan = $planPrices->firstWhere('plan_key', 'player_quarterly');
-        $scoutMonthly = $planPrices->firstWhere('plan_key', 'scout_monthly');
-        $scoutYearly = $planPrices->firstWhere('plan_key', 'scout_yearly');
+        $planGroup = $user->plan_group ?? Session::get('onboarding.plan_group');
+
+        if (! $planGroup || ! config('plans.groups.'.$planGroup)) {
+            return redirect()->route('onboarding.user-type');
+        }
+
+        $monthlyKey = $planGroup.'_monthly';
+        $yearlyKey = $planGroup.'_yearly';
 
         return view('onboarding.plans', [
-            'role' => $user->role,
-            'playerPlan' => $playerPlan,
-            'scoutMonthly' => $scoutMonthly,
-            'scoutYearly' => $scoutYearly,
+            'planGroup' => $planGroup,
+            'monthlyPlan' => PlanPrice::getByKey($monthlyKey),
+            'yearlyPlan' => PlanPrice::getByKey($yearlyKey),
         ]);
     }
 
@@ -106,8 +125,10 @@ class OnboardingController extends Controller
 
         $role = $user->role;
 
+        $validPlans = implode(',', config('plans.valid_plan_keys'));
+
         $data = $request->validate([
-            'plan' => ['required', 'in:player_quarterly,scout_monthly,scout_yearly'],
+            'plan' => ['required', 'in:'.$validPlans],
         ]);
 
         $stripeKey = config('stripe.secret');
@@ -135,6 +156,7 @@ class OnboardingController extends Controller
             ],
             'metadata' => [
                 'user_type' => $role,
+                'plan_group' => $user->plan_group,
                 'plan_key' => $data['plan'],
             ],
             'locale' => 'pt-BR', // Português brasileiro
@@ -165,6 +187,7 @@ class OnboardingController extends Controller
                 'metadata' => [
                     'user_id' => $user->id,
                     'user_type' => $role,
+                    'plan_group' => $user->plan_group,
                     'plan_key' => $data['plan'],
                     'plan_name' => $planInfo['name'],
                 ],
@@ -208,8 +231,9 @@ class OnboardingController extends Controller
             'interval_count' => $planModel->interval_count,
         ];
 
-        // Busca produto existente ou cria um novo
-        $productName = 'FootConnect - '.($planKey === 'player_quarterly' ? 'Jogador' : 'Olheiro');
+        $planGroup = $this->resolvePlanGroupFromKey($planKey);
+        $groupConfig = config('plans.groups.'.$planGroup);
+        $productName = 'FootConnect '.$groupConfig['code'].' — '.$groupConfig['short_label'];
         $products = Product::all(['limit' => 100, 'active' => true]);
         $product = null;
 
@@ -221,12 +245,7 @@ class OnboardingController extends Controller
         }
 
         if (! $product) {
-            $productDescription = $planKey === 'player_quarterly'
-                ? 'Acesso completo à plataforma FootConnect para jogadores. Crie seu perfil profissional, adicione vídeos e estatísticas, e conecte-se com olheiros e profissionais do futebol.'
-                : 'Acesso completo à plataforma FootConnect para profissionais. Busque jogadores com filtros avançados, visualize perfis detalhados, e comunique-se diretamente com os talentos.';
-
-            // URL da imagem do produto (pode ser uma imagem hospedada publicamente)
-            // Por enquanto, vamos usar uma imagem placeholder ou você pode adicionar uma URL real
+            $productDescription = $groupConfig['plan_description'];
             $productImageUrl = $this->getProductImageUrl($planKey);
 
             $productData = [
@@ -234,7 +253,8 @@ class OnboardingController extends Controller
                 'description' => $productDescription,
                 'metadata' => [
                     'platform' => 'footconnect',
-                    'user_type' => $planKey === 'player_quarterly' ? 'player' : 'scout',
+                    'plan_group' => $planGroup,
+                    'user_type' => $groupConfig['role'],
                 ],
             ];
 
@@ -305,7 +325,8 @@ class OnboardingController extends Controller
         $baseUrl = rtrim(config('app.url'), '/');
 
         // Tenta encontrar uma imagem na pasta public
-        $imagePath = $planKey === 'player_quarterly'
+        $planGroup = $this->resolvePlanGroupFromKey($planKey);
+        $imagePath = $planGroup === 'g1'
             ? '/images/products/player-plan.png'
             : '/images/products/scout-plan.png';
 
@@ -319,7 +340,9 @@ class OnboardingController extends Controller
      */
     private function getProductForPlan(string $planKey)
     {
-        $productName = 'FootConnect - '.($planKey === 'player_quarterly' ? 'Jogador' : 'Olheiro');
+        $planGroup = $this->resolvePlanGroupFromKey($planKey);
+        $groupConfig = config('plans.groups.'.$planGroup);
+        $productName = 'FootConnect '.$groupConfig['code'].' — '.$groupConfig['short_label'];
         $products = Product::all(['limit' => 100, 'active' => true]);
 
         foreach ($products->data as $p) {
@@ -329,6 +352,11 @@ class OnboardingController extends Controller
         }
 
         return null;
+    }
+
+    private function resolvePlanGroupFromKey(string $planKey): string
+    {
+        return explode('_', $planKey)[0];
     }
 
     /**
@@ -374,15 +402,12 @@ class OnboardingController extends Controller
                 if ($session->customer && $session->subscription) {
                     $user->stripe_customer_id = $session->customer;
                     $user->stripe_subscription_id = $session->subscription;
-                    $user->plan_type = $user->role === 'player' ? 'player' : 'scout';
-
                     $planKey = $session->metadata->plan_key ?? null;
-                    $user->plan_interval = match ($planKey) {
-                        'player_quarterly' => 'quarterly',
-                        'scout_monthly' => 'monthly',
-                        'scout_yearly' => 'yearly',
-                        default => null,
-                    };
+                    $planGroup = $session->metadata->plan_group ?? $user->plan_group;
+
+                    $user->plan_group = $planGroup;
+                    $user->plan_type = $planGroup;
+                    $user->plan_interval = str_ends_with((string) $planKey, '_yearly') ? 'yearly' : 'monthly';
 
                     $user->subscription_status = 'active';
                     $user->save();
@@ -392,8 +417,7 @@ class OnboardingController extends Controller
             }
         }
 
-        // Limpa a sessão de onboarding
-        Session::forget('onboarding.role');
+        Session::forget(['onboarding.role', 'onboarding.plan_group']);
 
         // Redireciona para home (usuário já está autenticado)
         return redirect()->route('home')->with('status', 'Pagamento aprovado! Bem-vindo ao FootConnect.');

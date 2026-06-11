@@ -11,13 +11,28 @@ class ScoutProfile extends Model
 
     protected $fillable = [
         'user_id',
+        'age',
         'professional_type',
         'organization',
+        'has_company',
+        'company_name',
+        'scope',
         'city',
         'state',
+        'country',
+        'is_federated',
+        'federation_name',
         'website',
         'bio',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'has_company' => 'boolean',
+            'is_federated' => 'boolean',
+        ];
+    }
 
     public function user()
     {
@@ -28,5 +43,14 @@ class ScoutProfile extends Model
     {
         return $this->hasMany(ScoutPhoto::class);
     }
-}
 
+    public function getScopeLabelAttribute(): ?string
+    {
+        return match ($this->scope) {
+            'regional' => 'Regional',
+            'nacional' => 'Nacional',
+            'internacional' => 'Internacional',
+            default => null,
+        };
+    }
+}

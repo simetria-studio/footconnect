@@ -17,7 +17,15 @@ class PlayerProfileController extends Controller
         $query = PlayerProfile::query()->with('user');
 
         if ($position = $request->string('position')->toString()) {
-            $query->where('position', $position);
+            $query->where('position', 'like', '%'.$position.'%');
+        }
+
+        if ($modality = $request->string('modality')->toString()) {
+            $query->where('modality', $modality);
+        }
+
+        if ($gender = $request->string('gender')->toString()) {
+            $query->where('gender', $gender);
         }
 
         if ($city = $request->string('city')->toString()) {
@@ -25,11 +33,23 @@ class PlayerProfileController extends Controller
         }
 
         if ($state = $request->string('state')->toString()) {
-            $query->where('state', 'like', '%'.$state.'%');
+            $query->where('state', $state);
+        }
+
+        if ($country = $request->string('country')->toString()) {
+            $query->where('country', $country);
         }
 
         if ($foot = $request->string('dominant_foot')->toString()) {
             $query->where('dominant_foot', $foot);
+        }
+
+        if ($institutionType = $request->string('institution_type')->toString()) {
+            $query->where('institution_type', $institutionType);
+        }
+
+        if ($request->filled('is_federated')) {
+            $query->where('is_federated', $request->boolean('is_federated'));
         }
 
         if ($minAge = $request->integer('age_min')) {
@@ -40,14 +60,32 @@ class PlayerProfileController extends Controller
             $query->where('age', '<=', $maxAge);
         }
 
+        if ($minHeight = $request->integer('height_min')) {
+            $query->where('height_cm', '>=', $minHeight);
+        }
+
+        if ($maxHeight = $request->integer('height_max')) {
+            $query->where('height_cm', '<=', $maxHeight);
+        }
+
+        if ($request->boolean('favorites_only') && $request->user()?->role === 'scout') {
+            $favoriteIds = $request->user()->favoritePlayers()->pluck('player_id');
+            $query->whereIn('user_id', $favoriteIds);
+        }
+
         $players = $query->paginate(12)->withQueryString();
+
+        $favoritePlayerIds = $request->user()?->role === 'scout'
+            ? $request->user()->favoritePlayers()->pluck('player_id')->all()
+            : [];
 
         return view('players.index', [
             'players' => $players,
+            'favoritePlayerIds' => $favoritePlayerIds,
         ]);
     }
 
-    public function show(User $user)
+    public function show(Request $request, User $user)
     {
         abort_unless($user->role === 'player', 404);
 
@@ -55,9 +93,17 @@ class PlayerProfileController extends Controller
             ->with(['videos', 'photos', 'stats'])
             ->firstOrCreate(['user_id' => $user->id]);
 
+        $isFavorited = false;
+        if ($request->user()?->role === 'scout') {
+            $isFavorited = $request->user()->favoritePlayers()
+                ->where('player_id', $user->id)
+                ->exists();
+        }
+
         return view('players.show', [
             'user' => $user,
             'profile' => $profile,
+            'isFavorited' => $isFavorited,
         ]);
     }
 
@@ -82,27 +128,50 @@ class PlayerProfileController extends Controller
         abort_unless($user->role === 'player', 403);
 
         $data = $request->validate([
-            'full_name' => ['nullable', 'string', 'max:255'],
+            'full_name' => ['required', 'string', 'max:255'],
+            'modality' => ['nullable', 'in:campo,futsal,fut7'],
+            'gender' => ['nullable', 'in:male,female'],
             'position' => ['nullable', 'string', 'max:100'],
             'age' => ['nullable', 'integer', 'min:10', 'max:60'],
+            'birth_date' => ['nullable', 'date', 'before:today'],
             'height_cm' => ['nullable', 'integer', 'min:120', 'max:230'],
-            'weight_kg' => ['nullable', 'integer', 'min:40', 'max:130'],
-            'current_club' => ['nullable', 'string', 'max:255'],
+            'dominant_foot' => ['nullable', 'in:right,left,both'],
+            'characteristics' => ['nullable', 'string', 'max:1500'],
+            'is_student' => ['nullable', 'in:0,1'],
+            'school_name' => ['nullable', 'required_if:is_student,1', 'string', 'max:255'],
+            'school_grade' => ['nullable', 'required_if:is_student,1', 'string', 'max:100'],
             'city' => ['nullable', 'string', 'max:255'],
             'state' => ['nullable', 'string', 'max:255'],
-            'dominant_foot' => ['nullable', 'in:right,left,both'],
-            'bio' => ['nullable', 'string', 'max:800'],
+            'country' => ['nullable', 'string', 'max:255'],
+            'institution_type' => ['nullable', 'in:clube,projeto,escolinha'],
+            'institution_name' => ['nullable', 'string', 'max:255'],
+            'is_federated' => ['nullable', 'in:0,1'],
+            'has_awards' => ['nullable', 'in:0,1'],
+            'awards_description' => ['nullable', 'required_if:has_awards,1', 'string', 'max:500'],
         ]);
 
-        if (! empty($data['full_name'])) {
-            $user->full_name = $data['full_name'];
-            $user->city = $data['city'] ?? $user->city;
-            $user->state = $data['state'] ?? $user->state;
-            $user->save();
+        $user->full_name = $data['full_name'];
+        $user->city = $data['city'] ?? $user->city;
+        $user->state = $data['state'] ?? $user->state;
+        $user->country = $data['country'] ?? $user->country;
+        $user->save();
+
+        $profileData = collect($data)->except('full_name')->toArray();
+        $profileData['is_student'] = ($data['is_student'] ?? '0') === '1';
+        $profileData['is_federated'] = ($data['is_federated'] ?? '0') === '1';
+        $profileData['has_awards'] = ($data['has_awards'] ?? '0') === '1';
+
+        if (! $profileData['is_student']) {
+            $profileData['school_name'] = null;
+            $profileData['school_grade'] = null;
+        }
+
+        if (! $profileData['has_awards']) {
+            $profileData['awards_description'] = null;
         }
 
         $profile = $user->playerProfile()->firstOrCreate(['user_id' => $user->id]);
-        $profile->fill(collect($data)->except('full_name')->toArray());
+        $profile->fill($profileData);
         $profile->save();
 
         return redirect()->route('me.player-profile.edit')->with('status', 'Perfil atualizado com sucesso.');
