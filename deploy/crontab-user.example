@@ -1,0 +1,7 @@
+# Alternativa: crontab do usuário (sem /etc/cron.d/)
+# Instalar: crontab -e e colar a linha abaixo
+#
+# Se o app roda como usuário deploy:
+# * * * * * cd /var/www/footconnect && php artisan schedule:run >> /var/www/footconnect/storage/logs/scheduler.log 2>&1
+
+* * * * * cd /var/www/footconnect && /usr/bin/php artisan schedule:run >> /var/www/footconnect/storage/logs/scheduler.log 2>&1

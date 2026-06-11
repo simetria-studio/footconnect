@@ -340,16 +340,69 @@ Arquivo: `routes/console.php`
 Schedule::command('referrals:process-payouts')->hourly();
 ```
 
-### Produção — adicionar ao crontab do servidor
+### Produção — `/var/www/footconnect` (recomendado)
 
-```cron
-* * * * * cd /caminho/para/FootConnect && php artisan schedule:run >> /dev/null 2>&1
+No servidor Linux, dentro da pasta do projeto:
+
+```bash
+cd /var/www/footconnect
+sudo bash deploy/install-cron.sh
 ```
 
-### Desenvolvimento local
+Isso cria `/etc/cron.d/footconnect` com:
+
+```cron
+* * * * * www-data cd /var/www/footconnect && /usr/bin/php artisan schedule:run >> /var/www/footconnect/storage/logs/scheduler.log 2>&1
+```
+
+**Verificar instalação:**
+
+```bash
+# Listar tarefas do Laravel
+cd /var/www/footconnect && php artisan schedule:list
+
+# Testar manualmente
+php artisan schedule:run -v
+
+# Processar indicações na hora
+php artisan referrals:process-payouts
+
+# Acompanhar log
+tail -f /var/www/footconnect/storage/logs/scheduler.log
+```
+
+**Instalação manual** (sem script):
+
+```bash
+sudo cp /var/www/footconnect/deploy/cron-footconnect /etc/cron.d/footconnect
+sudo chmod 644 /etc/cron.d/footconnect
+```
+
+**Variáveis opcionais** ao rodar o script:
+
+```bash
+sudo WEB_USER=www-data PHP_BIN=/usr/bin/php8.3 bash deploy/install-cron.sh
+```
+
+**Permissões:** o usuário do cron (`www-data`) precisa escrever em `storage/logs/`.
+
+```bash
+sudo chown -R www-data:www-data /var/www/footconnect/storage
+sudo chmod -R ug+rwx /var/www/footconnect/storage
+```
+
+### Desenvolvimento local (Windows / Laragon)
+
+O cron do Linux não se aplica. Use:
 
 ```bash
 php artisan schedule:work
+```
+
+Ou o Agendador de Tarefas do Windows para rodar a cada minuto:
+
+```
+php F:\laragon\www\FootConnect\artisan schedule:run
 ```
 
 ---

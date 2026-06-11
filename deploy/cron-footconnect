@@ -1,0 +1,7 @@
+# FootConnect — Laravel Scheduler
+# Instala com: sudo cp deploy/cron-footconnect /etc/cron.d/footconnect && sudo chmod 644 /etc/cron.d/footconnect
+#
+# Executa a cada minuto. O Laravel decide o que rodar (ex: referrals:process-payouts a cada hora).
+# Usuário www-data: ajuste se o PHP-FPM/Nginx usar outro usuário.
+
+* * * * * www-data cd /var/www/footconnect && /usr/bin/php artisan schedule:run >> /var/www/footconnect/storage/logs/scheduler.log 2>&1
