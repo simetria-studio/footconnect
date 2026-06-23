@@ -6,6 +6,7 @@ use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\OnboardingController;
+use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\PlayerProfileController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\ReferralController;
@@ -23,6 +24,11 @@ Route::get('/register', [AuthController::class, 'showRegister'])->name('register
 Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+Route::get('/password/esqueci', [PasswordResetController::class, 'showForgotForm'])->name('password.request');
+Route::post('/password/esqueci', [PasswordResetController::class, 'sendResetLink'])->name('password.email');
+Route::get('/password/redefinir/{token}', [PasswordResetController::class, 'showResetForm'])->name('password.reset');
+Route::post('/password/redefinir', [PasswordResetController::class, 'reset'])->name('password.update');
 
 Route::view('/subscription/required', 'subscription.required')->name('subscription.required');
 Route::view('/conta-desativada', 'account.deactivated')->name('account.deactivated');
