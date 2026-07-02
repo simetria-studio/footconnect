@@ -329,6 +329,7 @@
             border-radius: 999px;
             background: var(--fc-green);
             color: #000;
+            z-index: 1;
         }
 
         .fc-plan-price {
