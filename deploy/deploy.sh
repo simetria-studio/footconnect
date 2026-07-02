@@ -16,6 +16,31 @@ log() {
     echo "[deploy $(date '+%Y-%m-%d %H:%M:%S')] $*"
 }
 
+ensure_github_ssh() {
+    local ssh_dir="${HOME}/.ssh"
+    local known_hosts="$ssh_dir/known_hosts"
+    local deploy_key="$ssh_dir/footconnect_deploy"
+
+    mkdir -p "$ssh_dir"
+    chmod 700 "$ssh_dir"
+
+    if [[ ! -f "$known_hosts" ]] || ! grep -q "^github.com" "$known_hosts" 2>/dev/null; then
+        log "Registrando chave do GitHub em known_hosts..."
+        ssh-keyscan -t ed25519,rsa github.com >> "$known_hosts" 2>/dev/null
+        chmod 600 "$known_hosts"
+    fi
+
+    if [[ -f "$deploy_key" ]]; then
+        export GIT_SSH_COMMAND="ssh -i $deploy_key -o IdentitiesOnly=yes"
+        log "Usando chave de deploy: $deploy_key"
+    elif [[ -f "$ssh_dir/config" ]] && grep -q "Host github.com" "$ssh_dir/config" 2>/dev/null; then
+        export GIT_SSH_COMMAND="ssh -F $ssh_dir/config"
+        log "Usando ~/.ssh/config para GitHub"
+    else
+        log "Aviso: chave footconnect_deploy não encontrada — git usará credenciais padrão do usuário."
+    fi
+}
+
 if [[ ! -d "$APP_DIR" ]]; then
     echo "Erro: diretório não encontrado: $APP_DIR"
     exit 1
@@ -46,6 +71,8 @@ cleanup() {
     "$PHP_BIN" artisan up || true
 }
 trap cleanup EXIT
+
+ensure_github_ssh
 
 log "Atualizando código (origin/$BRANCH)..."
 git fetch origin "$BRANCH"
