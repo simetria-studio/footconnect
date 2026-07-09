@@ -702,69 +702,272 @@
             .fc-mod-panel:hover { transform: none; }
         }
 
-        /* Landing banners & news */
-        .fc-landing-banners { padding: 0 0 1rem; }
-        .fc-landing-banners .carousel-item { border-radius: 20px; overflow: hidden; }
-        .fc-landing-banner {
+        /* Landing banners & news — fullscreen spotlight */
+        .fc-landing-banners {
+            padding: 0;
+            margin: 0 0 2.5rem;
+            width: 100vw;
+            margin-left: calc(50% - 50vw);
+            margin-right: calc(50% - 50vw);
+            position: relative;
+        }
+
+        .fc-landing-banners .carousel,
+        .fc-landing-banners .carousel-inner,
+        .fc-landing-banners .carousel-item {
+            height: min(72vh, 620px);
+            min-height: 380px;
+        }
+
+        .fc-spotlight {
             position: relative;
             display: block;
-            min-height: 220px;
-            border-radius: 20px;
+            width: 100%;
+            height: 100%;
+            min-height: inherit;
             overflow: hidden;
             text-decoration: none;
             color: inherit;
             background:
-                radial-gradient(ellipse 80% 80% at 15% 20%, rgba(34, 197, 94, 0.28), transparent 55%),
-                linear-gradient(135deg, #0f172a 0%, #020617 60%, #111827 100%);
-            border: 1px solid var(--fc-border);
+                radial-gradient(ellipse 70% 60% at 20% 30%, rgba(34, 197, 94, 0.22), transparent 55%),
+                linear-gradient(135deg, #071a10 0%, #020617 55%, #0f172a 100%);
         }
-        .fc-landing-banner--image { min-height: 260px; }
-        .fc-landing-banner-img {
-            position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+
+        a.fc-spotlight:hover { color: inherit; }
+
+        .fc-spotlight-media {
+            position: absolute;
+            inset: 0;
         }
-        .fc-landing-banner-overlay {
-            position: relative; z-index: 1; min-height: inherit;
-            display: flex; align-items: flex-end;
-            padding: 1.75rem 1.75rem 1.5rem;
-            background: linear-gradient(180deg, rgba(2,6,23,0.1) 0%, rgba(2,6,23,0.75) 55%, rgba(2,6,23,0.95) 100%);
+
+        .fc-spotlight-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transform: scale(1.02);
+            transition: transform 6s ease;
         }
-        .fc-landing-banner-kicker {
-            display: inline-block; font-size: 0.7rem; font-weight: 700;
-            letter-spacing: 0.14em; text-transform: uppercase; color: var(--fc-green); margin-bottom: 0.4rem;
+
+        a.fc-spotlight:hover .fc-spotlight-media img {
+            transform: scale(1.06);
         }
-        .fc-landing-banner-title {
-            font-size: clamp(1.35rem, 3.5vw, 2rem); font-weight: 800; margin: 0 0 0.4rem;
-            letter-spacing: -0.02em; color: #fff;
+
+        .fc-spotlight-shade {
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(90deg, rgba(2, 6, 23, 0.88) 0%, rgba(2, 6, 23, 0.55) 42%, rgba(2, 6, 23, 0.2) 70%, rgba(2, 6, 23, 0.35) 100%),
+                linear-gradient(180deg, rgba(2, 6, 23, 0.25) 0%, transparent 35%, rgba(2, 6, 23, 0.75) 100%);
+            pointer-events: none;
         }
-        .fc-landing-banner-subtitle {
-            font-size: 0.95rem; color: var(--fc-muted); margin: 0 0 1rem; max-width: 36rem;
+
+        .fc-spotlight-copy {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: clamp(1.75rem, 5vw, 4rem);
+            max-width: 720px;
+            gap: 0.85rem;
         }
-        .fc-landing-banner-cta {
-            display: inline-flex; align-items: center; padding: 0.5rem 1rem;
-            border-radius: 999px; background: var(--fc-green); color: #000;
-            font-size: 0.85rem; font-weight: 700;
+
+        .fc-spotlight-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            align-self: flex-start;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: #86efac;
+            background: rgba(2, 6, 23, 0.55);
+            border: 1px solid rgba(34, 197, 94, 0.4);
+            border-radius: 999px;
+            padding: 0.4rem 0.85rem;
+            backdrop-filter: blur(8px);
         }
+
+        .fc-spotlight-kicker::before {
+            content: '';
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--fc-green);
+            box-shadow: 0 0 12px rgba(34, 197, 94, 0.9);
+        }
+
+        .fc-spotlight-title {
+            font-size: clamp(2rem, 5vw, 3.25rem);
+            font-weight: 800;
+            letter-spacing: -0.035em;
+            line-height: 1.05;
+            margin: 0;
+            color: #fff;
+            text-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+        }
+
+        .fc-spotlight-subtitle {
+            font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+            line-height: 1.55;
+            color: #cbd5e1;
+            margin: 0;
+            max-width: 38ch;
+            text-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+        }
+
+        .fc-spotlight-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.35rem;
+            align-self: flex-start;
+            padding: 0.8rem 1.35rem;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--fc-green), #16a34a);
+            color: #04140b;
+            font-size: 0.95rem;
+            font-weight: 700;
+            box-shadow: 0 12px 32px rgba(34, 197, 94, 0.35);
+        }
+
+        .fc-spotlight-cta::after {
+            content: '→';
+            font-weight: 800;
+        }
+
+        .fc-landing-banners .carousel-indicators {
+            margin-bottom: 1.25rem;
+            gap: 0.45rem;
+            z-index: 5;
+        }
+
+        .fc-landing-banners .carousel-indicators [data-bs-target] {
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            border: 0;
+            background: rgba(248, 250, 252, 0.35);
+            opacity: 1;
+            transition: width 0.2s, background 0.2s;
+        }
+
+        .fc-landing-banners .carousel-indicators .active {
+            width: 28px;
+            background: var(--fc-green);
+        }
+
+        .fc-landing-banners .carousel-control-prev,
+        .fc-landing-banners .carousel-control-next {
+            width: 48px;
+            height: 48px;
+            top: 50%;
+            transform: translateY(-50%);
+            bottom: auto;
+            opacity: 1;
+            border-radius: 14px;
+            background: rgba(2, 6, 23, 0.55);
+            border: 1px solid rgba(248, 250, 252, 0.18);
+            backdrop-filter: blur(10px);
+            z-index: 5;
+        }
+
+        .fc-landing-banners .carousel-control-prev { left: 1.25rem; }
+        .fc-landing-banners .carousel-control-next { right: 1.25rem; }
+
+        .fc-landing-banners .carousel-control-prev-icon,
+        .fc-landing-banners .carousel-control-next-icon {
+            width: 1.1rem;
+            height: 1.1rem;
+        }
+
+        @media (max-width: 767.98px) {
+            .fc-landing-banners .carousel,
+            .fc-landing-banners .carousel-inner,
+            .fc-landing-banners .carousel-item {
+                height: min(68vh, 520px);
+                min-height: 340px;
+            }
+
+            .fc-spotlight-shade {
+                background:
+                    linear-gradient(180deg, rgba(2, 6, 23, 0.2) 0%, rgba(2, 6, 23, 0.45) 40%, rgba(2, 6, 23, 0.92) 100%);
+            }
+
+            .fc-landing-banners .carousel-control-prev,
+            .fc-landing-banners .carousel-control-next {
+                display: none;
+            }
+        }
+
         .fc-landing-news-card {
-            display: block; height: 100%; text-decoration: none; color: inherit;
-            background: var(--fc-card); border: 1px solid var(--fc-border);
-            border-radius: 16px; overflow: hidden; transition: transform 0.2s, border-color 0.2s;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            text-decoration: none;
+            color: inherit;
+            background: var(--fc-card);
+            border: 1px solid var(--fc-border);
+            border-radius: 18px;
+            overflow: hidden;
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
         }
+
         .fc-landing-news-card:hover {
-            transform: translateY(-3px); border-color: rgba(34, 197, 94, 0.35); color: inherit;
+            transform: translateY(-4px);
+            border-color: rgba(34, 197, 94, 0.35);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+            color: inherit;
         }
+
         .fc-landing-news-img {
-            width: 100%; height: 160px; object-fit: cover; display: block;
-            border-bottom: 1px solid var(--fc-border);
+            width: 100%;
+            height: 170px;
+            object-fit: cover;
+            display: block;
         }
-        .fc-landing-news-body { padding: 1.25rem 1.35rem 1.4rem; }
+
+        .fc-landing-news-body {
+            padding: 1.35rem 1.4rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
         .fc-landing-news-date {
-            font-size: 0.75rem; color: var(--fc-muted); margin-bottom: 0.4rem;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--fc-green);
+            margin-bottom: 0.55rem;
         }
+
         .fc-landing-news-title {
-            font-size: 1.05rem; font-weight: 700; margin: 0 0 0.45rem; color: var(--fc-text);
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 0 0 0.55rem;
+            color: var(--fc-text);
+            letter-spacing: -0.02em;
+            line-height: 1.25;
         }
+
         .fc-landing-news-excerpt {
-            font-size: 0.88rem; color: var(--fc-muted); margin: 0; line-height: 1.5;
+            font-size: 0.88rem;
+            color: var(--fc-muted);
+            margin: 0;
+            line-height: 1.55;
+        }
+
+        .fc-landing-news-more {
+            margin-top: auto;
+            padding-top: 1rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--fc-green);
         }
     </style>
 </head>
@@ -864,60 +1067,61 @@
             </div>
         </section>
 
-        {{-- Banners / destaques --}}
+        {{-- Banners / destaques fullscreen --}}
         @if(isset($banners) && $banners->isNotEmpty())
-            <section class="fc-landing-banners" id="destaques">
-                <div class="container">
-                    <div id="fcLandingBannerCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5500">
-                        @if($banners->count() > 1)
-                            <div class="carousel-indicators">
-                                @foreach($banners as $index => $banner)
-                                    <button type="button" data-bs-target="#fcLandingBannerCarousel" data-bs-slide-to="{{ $index }}" class="{{ $index === 0 ? 'active' : '' }}" aria-label="Destaque {{ $index + 1 }}"></button>
-                                @endforeach
-                            </div>
-                        @endif
-                        <div class="carousel-inner">
-                            @foreach($banners as $index => $banner)
-                                <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
-                                    @if($banner->link_url)
-                                        <a href="{{ $banner->link_url }}" target="_blank" rel="noopener noreferrer" class="fc-landing-banner {{ $banner->image_url ? 'fc-landing-banner--image' : '' }}">
-                                    @else
-                                        <div class="fc-landing-banner {{ $banner->image_url ? 'fc-landing-banner--image' : '' }}">
+            <section class="fc-landing-banners" id="destaques" aria-label="Destaques">
+                <div id="fcLandingBannerCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="6500">
+                    <div class="carousel-inner">
+                        @foreach($banners as $index => $banner)
+                            <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                                @if($banner->link_url)
+                                    <a href="{{ $banner->link_url }}" target="_blank" rel="noopener noreferrer" class="fc-spotlight">
+                                @else
+                                    <div class="fc-spotlight">
+                                @endif
+
+                                    @if($banner->image_url)
+                                        <div class="fc-spotlight-media">
+                                            <img src="{{ $banner->image_url }}" alt="{{ $banner->title }}">
+                                        </div>
                                     @endif
-                                        @if($banner->image_url)
-                                            <img src="{{ $banner->image_url }}" alt="{{ $banner->title }}" class="fc-landing-banner-img">
+                                    <div class="fc-spotlight-shade"></div>
+
+                                    <div class="fc-spotlight-copy">
+                                        <span class="fc-spotlight-kicker">Destaque</span>
+                                        <h3 class="fc-spotlight-title">{{ $banner->title }}</h3>
+                                        @if($banner->subtitle)
+                                            <p class="fc-spotlight-subtitle">{{ $banner->subtitle }}</p>
                                         @endif
-                                        <div class="fc-landing-banner-overlay">
-                                            <div>
-                                                <span class="fc-landing-banner-kicker">Destaque</span>
-                                                <h2 class="fc-landing-banner-title">{{ $banner->title }}</h2>
-                                                @if($banner->subtitle)
-                                                    <p class="fc-landing-banner-subtitle">{{ $banner->subtitle }}</p>
-                                                @endif
-                                                @if($banner->link_url && $banner->cta_label)
-                                                    <span class="fc-landing-banner-cta">{{ $banner->cta_label }}</span>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    @if($banner->link_url)
-                                        </a>
-                                    @else
-                                        </div>
-                                    @endif
-                                </div>
+                                        @if($banner->link_url)
+                                            <span class="fc-spotlight-cta">{{ $banner->cta_label ?: 'Saiba mais' }}</span>
+                                        @endif
+                                    </div>
+
+                                @if($banner->link_url)
+                                    </a>
+                                @else
+                                    </div>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+
+                    @if($banners->count() > 1)
+                        <button class="carousel-control-prev" type="button" data-bs-target="#fcLandingBannerCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Anterior</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#fcLandingBannerCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Próximo</span>
+                        </button>
+                        <div class="carousel-indicators">
+                            @foreach($banners as $index => $banner)
+                                <button type="button" data-bs-target="#fcLandingBannerCarousel" data-bs-slide-to="{{ $index }}" class="{{ $index === 0 ? 'active' : '' }}" aria-label="Destaque {{ $index + 1 }}"></button>
                             @endforeach
                         </div>
-                        @if($banners->count() > 1)
-                            <button class="carousel-control-prev" type="button" data-bs-target="#fcLandingBannerCarousel" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Anterior</span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#fcLandingBannerCarousel" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Próximo</span>
-                            </button>
-                        @endif
-                    </div>
+                    @endif
                 </div>
             </section>
         @endif
@@ -1008,6 +1212,7 @@
                                         </p>
                                         <h3 class="fc-landing-news-title">{{ $post->title }}</h3>
                                         <p class="fc-landing-news-excerpt">{{ $post->excerpt_or_body }}</p>
+                                        <span class="fc-landing-news-more">Ler notícia →</span>
                                     </div>
                                 </a>
                             </div>

@@ -75,7 +75,7 @@
             <div class="col-12">
                 <label class="form-label" for="image">Imagem {{ $banner->exists ? '(deixe em branco para manter)' : '' }}</label>
                 <input type="file" class="form-control bg-dark border-secondary text-white" id="image" name="image" accept="image/*">
-                <div class="form-text">Recomendado: 1200×400 px, até 5 MB.</div>
+                <div class="form-text">Recomendado: 1920×1080 px (widescreen), até 5 MB. O banner ocupa a largura toda da tela.</div>
                 @if($banner->image_url)
                     <img src="{{ $banner->image_url }}" alt="" class="rounded mt-2" style="max-width: 100%; max-height: 160px; object-fit: cover;">
                 @endif
