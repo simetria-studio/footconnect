@@ -701,6 +701,71 @@
             .fc-mod-panel { animation: none; }
             .fc-mod-panel:hover { transform: none; }
         }
+
+        /* Landing banners & news */
+        .fc-landing-banners { padding: 0 0 1rem; }
+        .fc-landing-banners .carousel-item { border-radius: 20px; overflow: hidden; }
+        .fc-landing-banner {
+            position: relative;
+            display: block;
+            min-height: 220px;
+            border-radius: 20px;
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            background:
+                radial-gradient(ellipse 80% 80% at 15% 20%, rgba(34, 197, 94, 0.28), transparent 55%),
+                linear-gradient(135deg, #0f172a 0%, #020617 60%, #111827 100%);
+            border: 1px solid var(--fc-border);
+        }
+        .fc-landing-banner--image { min-height: 260px; }
+        .fc-landing-banner-img {
+            position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+        }
+        .fc-landing-banner-overlay {
+            position: relative; z-index: 1; min-height: inherit;
+            display: flex; align-items: flex-end;
+            padding: 1.75rem 1.75rem 1.5rem;
+            background: linear-gradient(180deg, rgba(2,6,23,0.1) 0%, rgba(2,6,23,0.75) 55%, rgba(2,6,23,0.95) 100%);
+        }
+        .fc-landing-banner-kicker {
+            display: inline-block; font-size: 0.7rem; font-weight: 700;
+            letter-spacing: 0.14em; text-transform: uppercase; color: var(--fc-green); margin-bottom: 0.4rem;
+        }
+        .fc-landing-banner-title {
+            font-size: clamp(1.35rem, 3.5vw, 2rem); font-weight: 800; margin: 0 0 0.4rem;
+            letter-spacing: -0.02em; color: #fff;
+        }
+        .fc-landing-banner-subtitle {
+            font-size: 0.95rem; color: var(--fc-muted); margin: 0 0 1rem; max-width: 36rem;
+        }
+        .fc-landing-banner-cta {
+            display: inline-flex; align-items: center; padding: 0.5rem 1rem;
+            border-radius: 999px; background: var(--fc-green); color: #000;
+            font-size: 0.85rem; font-weight: 700;
+        }
+        .fc-landing-news-card {
+            display: block; height: 100%; text-decoration: none; color: inherit;
+            background: var(--fc-card); border: 1px solid var(--fc-border);
+            border-radius: 16px; overflow: hidden; transition: transform 0.2s, border-color 0.2s;
+        }
+        .fc-landing-news-card:hover {
+            transform: translateY(-3px); border-color: rgba(34, 197, 94, 0.35); color: inherit;
+        }
+        .fc-landing-news-img {
+            width: 100%; height: 160px; object-fit: cover; display: block;
+            border-bottom: 1px solid var(--fc-border);
+        }
+        .fc-landing-news-body { padding: 1.25rem 1.35rem 1.4rem; }
+        .fc-landing-news-date {
+            font-size: 0.75rem; color: var(--fc-muted); margin-bottom: 0.4rem;
+        }
+        .fc-landing-news-title {
+            font-size: 1.05rem; font-weight: 700; margin: 0 0 0.45rem; color: var(--fc-text);
+        }
+        .fc-landing-news-excerpt {
+            font-size: 0.88rem; color: var(--fc-muted); margin: 0; line-height: 1.5;
+        }
     </style>
 </head>
 <body>
@@ -719,7 +784,9 @@
                 </a>
                 <div class="d-flex align-items-center gap-2 gap-md-3">
                     <div class="fc-nav-links d-flex gap-1">
+                        <a href="#destaques" class="fc-nav-link">Destaques</a>
                         <a href="#modalidades" class="fc-nav-link">Modalidades</a>
+                        <a href="#noticias" class="fc-nav-link">Notícias</a>
                         <a href="#perfis" class="fc-nav-link">Perfis</a>
                         <a href="#planos" class="fc-nav-link">Planos</a>
                         <a href="#faq" class="fc-nav-link">FAQ</a>
@@ -797,6 +864,64 @@
             </div>
         </section>
 
+        {{-- Banners / destaques --}}
+        @if(isset($banners) && $banners->isNotEmpty())
+            <section class="fc-landing-banners" id="destaques">
+                <div class="container">
+                    <div id="fcLandingBannerCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5500">
+                        @if($banners->count() > 1)
+                            <div class="carousel-indicators">
+                                @foreach($banners as $index => $banner)
+                                    <button type="button" data-bs-target="#fcLandingBannerCarousel" data-bs-slide-to="{{ $index }}" class="{{ $index === 0 ? 'active' : '' }}" aria-label="Destaque {{ $index + 1 }}"></button>
+                                @endforeach
+                            </div>
+                        @endif
+                        <div class="carousel-inner">
+                            @foreach($banners as $index => $banner)
+                                <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                                    @if($banner->link_url)
+                                        <a href="{{ $banner->link_url }}" target="_blank" rel="noopener noreferrer" class="fc-landing-banner {{ $banner->image_url ? 'fc-landing-banner--image' : '' }}">
+                                    @else
+                                        <div class="fc-landing-banner {{ $banner->image_url ? 'fc-landing-banner--image' : '' }}">
+                                    @endif
+                                        @if($banner->image_url)
+                                            <img src="{{ $banner->image_url }}" alt="{{ $banner->title }}" class="fc-landing-banner-img">
+                                        @endif
+                                        <div class="fc-landing-banner-overlay">
+                                            <div>
+                                                <span class="fc-landing-banner-kicker">Destaque</span>
+                                                <h2 class="fc-landing-banner-title">{{ $banner->title }}</h2>
+                                                @if($banner->subtitle)
+                                                    <p class="fc-landing-banner-subtitle">{{ $banner->subtitle }}</p>
+                                                @endif
+                                                @if($banner->link_url && $banner->cta_label)
+                                                    <span class="fc-landing-banner-cta">{{ $banner->cta_label }}</span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    @if($banner->link_url)
+                                        </a>
+                                    @else
+                                        </div>
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
+                        @if($banners->count() > 1)
+                            <button class="carousel-control-prev" type="button" data-bs-target="#fcLandingBannerCarousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Anterior</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#fcLandingBannerCarousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Próximo</span>
+                            </button>
+                        @endif
+                    </div>
+                </div>
+            </section>
+        @endif
+
         {{-- Modalidades --}}
         <section class="fc-mod" id="modalidades" aria-labelledby="modalidades-title">
             <div class="container">
@@ -857,6 +982,40 @@
                 </p>
             </div>
         </section>
+
+        {{-- Notícias --}}
+        @if(isset($news) && $news->isNotEmpty())
+            <section class="fc-section" id="noticias">
+                <div class="container">
+                    <div class="d-flex flex-wrap align-items-end justify-content-between gap-3 mb-4">
+                        <div>
+                            <p class="fc-pill mb-2"><span class="fc-pill-dot"></span> Notícias</p>
+                            <h2 class="fc-section-title mb-1">No radar do FootConnect</h2>
+                            <p class="fc-section-lead mb-0">Campanhas, novidades e comunicados do mercado.</p>
+                        </div>
+                        <a href="{{ route('news.index') }}" class="fc-btn-ghost" style="font-size: 0.85rem;">Ver todas</a>
+                    </div>
+                    <div class="row g-3">
+                        @foreach($news as $post)
+                            <div class="col-md-6 col-lg-4">
+                                <a href="{{ route('news.show', $post->slug) }}" class="fc-landing-news-card">
+                                    @if($post->image_url)
+                                        <img src="{{ $post->image_url }}" alt="{{ $post->title }}" class="fc-landing-news-img">
+                                    @endif
+                                    <div class="fc-landing-news-body">
+                                        <p class="fc-landing-news-date">
+                                            {{ optional($post->published_at)->format('d/m/Y') ?? $post->created_at->format('d/m/Y') }}
+                                        </p>
+                                        <h3 class="fc-landing-news-title">{{ $post->title }}</h3>
+                                        <p class="fc-landing-news-excerpt">{{ $post->excerpt_or_body }}</p>
+                                    </div>
+                                </a>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </section>
+        @endif
 
         {{-- Perfis G1–G4 --}}
         <section class="fc-section" id="perfis">

@@ -1,14 +1,17 @@
 <?php
 
+use App\Http\Controllers\Admin\MarketingBannerController;
+use App\Http\Controllers\Admin\NewsPostController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ConversationController;
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\NewsController;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\PlayerProfileController;
-use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\ReferralController;
 use App\Http\Controllers\ScoutProfileController;
 use App\Http\Controllers\SettingsController;
@@ -50,6 +53,9 @@ Route::post('/stripe/webhook', StripeWebhookController::class)->name('stripe.web
 
 Route::get('/indicacao/{code}', [ReferralController::class, 'capture'])->name('referral.capture');
 
+Route::get('/noticias', [NewsController::class, 'index'])->name('news.index');
+Route::get('/noticias/{slug}', [NewsController::class, 'show'])->name('news.show');
+
 // Painel administrativo (apenas usuários com is_admin = true)
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
@@ -72,6 +78,22 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/plan-prices', [AdminController::class, 'planPrices'])->name('plan-prices');
     Route::post('/plan-prices', [AdminController::class, 'updatePlanPrices'])->name('plan-prices.update');
     Route::post('/plan-prices/{plan}/toggle', [AdminController::class, 'togglePlanPrice'])->name('plan-prices.toggle');
+
+    Route::get('/banners', [MarketingBannerController::class, 'index'])->name('banners.index');
+    Route::get('/banners/create', [MarketingBannerController::class, 'create'])->name('banners.create');
+    Route::post('/banners', [MarketingBannerController::class, 'store'])->name('banners.store');
+    Route::get('/banners/{banner}/edit', [MarketingBannerController::class, 'edit'])->name('banners.edit');
+    Route::put('/banners/{banner}', [MarketingBannerController::class, 'update'])->name('banners.update');
+    Route::delete('/banners/{banner}', [MarketingBannerController::class, 'destroy'])->name('banners.destroy');
+    Route::post('/banners/{banner}/toggle', [MarketingBannerController::class, 'toggle'])->name('banners.toggle');
+
+    Route::get('/news', [NewsPostController::class, 'index'])->name('news.index');
+    Route::get('/news/create', [NewsPostController::class, 'create'])->name('news.create');
+    Route::post('/news', [NewsPostController::class, 'store'])->name('news.store');
+    Route::get('/news/{news}/edit', [NewsPostController::class, 'edit'])->name('news.edit');
+    Route::put('/news/{news}', [NewsPostController::class, 'update'])->name('news.update');
+    Route::delete('/news/{news}', [NewsPostController::class, 'destroy'])->name('news.destroy');
+    Route::post('/news/{news}/toggle', [NewsPostController::class, 'toggle'])->name('news.toggle');
 });
 
 Route::middleware(['auth', 'active', 'subscription.active'])->group(function () {

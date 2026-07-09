@@ -670,3 +670,112 @@ body *, body *::before, body *::after {
 .fc-nav-bottom {
     background: rgba(13, 40, 24, 0.95) !important;
 }
+
+/* Home banners */
+.fc-home-banners .carousel-item {
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.fc-home-banner {
+    position: relative;
+    display: block;
+    min-height: 180px;
+    border-radius: 18px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    background:
+        radial-gradient(ellipse 80% 80% at 15% 20%, rgba(34, 197, 94, 0.35), transparent 55%),
+        linear-gradient(135deg, #10291c 0%, #0a1f14 55%, #163524 100%);
+    border: 1px solid rgba(34, 197, 94, 0.25);
+}
+
+.fc-home-banner--image {
+    min-height: 200px;
+}
+
+.fc-home-banner-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.fc-home-banner-overlay {
+    position: relative;
+    z-index: 1;
+    min-height: inherit;
+    display: flex;
+    align-items: flex-end;
+    padding: 1.25rem 1.35rem;
+    background: linear-gradient(180deg, rgba(7, 26, 16, 0.15) 0%, rgba(7, 26, 16, 0.82) 70%, rgba(7, 26, 16, 0.95) 100%);
+}
+
+.fc-home-banner-kicker {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #86efac;
+    margin-bottom: 0.35rem;
+}
+
+.fc-home-banner-title {
+    font-size: clamp(1.15rem, 3vw, 1.5rem);
+    font-weight: 800;
+    margin: 0 0 0.35rem;
+    color: #fff;
+    letter-spacing: -0.02em;
+}
+
+.fc-home-banner-subtitle {
+    font-size: 0.9rem;
+    color: #c0d4c8;
+    margin: 0 0 0.85rem;
+    max-width: 36rem;
+}
+
+.fc-home-banner-cta {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.45rem 0.9rem;
+    border-radius: 999px;
+    background: #22c55e;
+    color: #04140b;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.fc-home-banners .carousel-indicators {
+    margin-bottom: 0.5rem;
+}
+
+.fc-home-banners .carousel-control-prev,
+.fc-home-banners .carousel-control-next {
+    width: 8%;
+}
+
+/* News cards */
+.fc-news-card-img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-bottom: 1px solid var(--fc-border);
+}
+
+.fc-news-hero-img {
+    width: 100%;
+    max-height: 280px;
+    object-fit: cover;
+    border-bottom: 1px solid var(--fc-border);
+}
+
+.fc-news-body {
+    color: var(--fc-text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    white-space: pre-wrap;
+}
