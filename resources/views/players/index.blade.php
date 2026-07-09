@@ -28,16 +28,22 @@
         <div class="card-body">
             <form method="GET" action="{{ route('players.index') }}" class="row g-3">
                 <div class="col-6 col-md-3">
-                    <label for="position" class="form-label small">Posição</label>
-                    <input type="text" class="form-control form-control-sm" id="position" name="position" value="{{ request('position') }}" placeholder="Ex: Atacante">
-                </div>
-                <div class="col-6 col-md-3">
                     <label for="modality" class="form-label small">Modalidade</label>
                     <select class="form-select form-select-sm" id="modality" name="modality">
                         <option value="">Todas</option>
                         <option value="campo" {{ request('modality') === 'campo' ? 'selected' : '' }}>Futebol de Campo</option>
                         <option value="futsal" {{ request('modality') === 'futsal' ? 'selected' : '' }}>Futsal</option>
                         <option value="fut7" {{ request('modality') === 'fut7' ? 'selected' : '' }}>Fut 7</option>
+                    </select>
+                </div>
+                <div class="col-6 col-md-3">
+                    <label for="position" class="form-label small">Posição</label>
+                    <select class="form-select form-select-sm" id="position" name="position">
+                        <option value="">Todas</option>
+                        @php $currentModality = request('modality'); @endphp
+                        @foreach(($currentModality ? (config('positions.by_modality.'.$currentModality) ?? []) : collect(config('positions.by_modality'))->flatten()->unique()) as $pos)
+                            <option value="{{ $pos }}" {{ request('position') === $pos ? 'selected' : '' }}>{{ $pos }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="col-6 col-md-3">
@@ -58,16 +64,21 @@
                     </select>
                 </div>
                 <div class="col-6 col-md-3">
-                    <label for="city" class="form-label small">Cidade</label>
-                    <input type="text" class="form-control form-control-sm" id="city" name="city" value="{{ request('city') }}">
-                </div>
-                <div class="col-6 col-md-3">
                     <label for="state" class="form-label small">Estado</label>
                     <select class="form-select form-select-sm" id="state" name="state">
                         <option value="">Todos</option>
                         @foreach(config('locations.brazilian_states') as $uf => $name)
                             <option value="{{ $uf }}" {{ request('state') === $uf ? 'selected' : '' }}>{{ $uf }}</option>
                         @endforeach
+                    </select>
+                </div>
+                <div class="col-6 col-md-3">
+                    <label for="city" class="form-label small">Cidade</label>
+                    <select class="form-select form-select-sm" id="city" name="city" {{ request('state') ? '' : 'disabled' }}>
+                        <option value="">{{ request('state') ? 'Todas as cidades' : 'Selecione o estado' }}</option>
+                        @if(request('city'))
+                            <option value="{{ request('city') }}" selected>{{ request('city') }}</option>
+                        @endif
                     </select>
                 </div>
                 <div class="col-6 col-md-3">
@@ -175,3 +186,13 @@
     @endif
 </div>
 @endsection
+
+@push('scripts')
+    @include('partials.dynamic-filters-script', [
+        'selectedPosition' => request('position'),
+        'selectedCity' => request('city'),
+        'requireModality' => false,
+        'positionEmptyLabel' => 'Todas',
+        'cityEmptyLabel' => 'Todas as cidades',
+    ])
+@endpush

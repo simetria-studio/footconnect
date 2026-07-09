@@ -76,7 +76,22 @@
 
                         <div class="col-12 col-md-6">
                             <label for="position" class="form-label">Posição</label>
-                            <input type="text" class="form-control" id="position" name="position" value="{{ old('position', $profile->position) }}" placeholder="Ex: Atacante">
+                            @php
+                                $editModality = old('modality', $profile->modality);
+                                $editPosition = old('position', $profile->position);
+                                $editPositions = $editModality
+                                    ? (config('positions.by_modality.'.$editModality) ?? [])
+                                    : [];
+                            @endphp
+                            <select class="form-select" id="position" name="position" {{ $editModality ? '' : 'disabled' }}>
+                                <option value="">{{ $editModality ? 'Selecione' : 'Selecione a modalidade' }}</option>
+                                @foreach($editPositions as $pos)
+                                    <option value="{{ $pos }}" {{ $editPosition === $pos ? 'selected' : '' }}>{{ $pos }}</option>
+                                @endforeach
+                                @if($editPosition && ! in_array($editPosition, $editPositions, true))
+                                    <option value="{{ $editPosition }}" selected>{{ $editPosition }}</option>
+                                @endif
+                            </select>
                         </div>
 
                         <div class="col-12 col-md-6">
@@ -109,17 +124,26 @@
                         </div>
 
                         <div class="col-12 col-md-4">
-                            <label for="city" class="form-label">Cidade</label>
-                            <input type="text" class="form-control" id="city" name="city" value="{{ old('city', $profile->city ?? $user->city) }}">
-                        </div>
-
-                        <div class="col-12 col-md-4">
                             <label for="state" class="form-label">Estado</label>
                             <select class="form-select" id="state" name="state">
                                 <option value="">Selecione</option>
                                 @foreach(config('locations.brazilian_states') as $uf => $name)
                                     <option value="{{ $uf }}" {{ old('state', $profile->state ?? $user->state) === $uf ? 'selected' : '' }}>{{ $uf }} — {{ $name }}</option>
                                 @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-12 col-md-4">
+                            <label for="city" class="form-label">Cidade</label>
+                            @php
+                                $editState = old('state', $profile->state ?? $user->state);
+                                $editCity = old('city', $profile->city ?? $user->city);
+                            @endphp
+                            <select class="form-select" id="city" name="city" {{ $editState ? '' : 'disabled' }}>
+                                <option value="">{{ $editState ? 'Selecione a cidade' : 'Selecione o estado' }}</option>
+                                @if($editCity)
+                                    <option value="{{ $editCity }}" selected>{{ $editCity }}</option>
+                                @endif
                             </select>
                         </div>
 
@@ -214,3 +238,13 @@
     });
 </script>
 @endsection
+
+@push('scripts')
+    @include('partials.dynamic-filters-script', [
+        'selectedPosition' => old('position', $profile->position),
+        'selectedCity' => old('city', $profile->city ?? $user->city),
+        'requireModality' => true,
+        'positionEmptyLabel' => 'Selecione',
+        'cityEmptyLabel' => 'Selecione a cidade',
+    ])
+@endpush

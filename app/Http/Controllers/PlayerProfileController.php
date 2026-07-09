@@ -17,7 +17,7 @@ class PlayerProfileController extends Controller
         $query = PlayerProfile::query()->with('user');
 
         if ($position = $request->string('position')->toString()) {
-            $query->where('position', 'like', '%'.$position.'%');
+            $query->where('position', $position);
         }
 
         if ($modality = $request->string('modality')->toString()) {

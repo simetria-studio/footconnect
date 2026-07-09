@@ -314,6 +314,13 @@
         .fc-plan-card {
             position: relative;
             padding: 1.75rem;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .fc-plan-card .fc-btn-green {
+            margin-top: auto;
         }
 
         .fc-plan-card--featured::before {
@@ -425,9 +432,274 @@
         .fc-price-yearly, .fc-price-monthly { display: none; }
         .fc-price-yearly.active, .fc-price-monthly.active { display: block; }
 
+        /* Modalidades — faixa de destaque */
+        .fc-mod {
+            position: relative;
+            padding: 4.5rem 0;
+            overflow: hidden;
+            border-block: 1px solid rgba(34, 197, 94, 0.2);
+            background:
+                linear-gradient(90deg, rgba(34, 197, 94, 0.06) 0%, transparent 40%, transparent 60%, rgba(250, 204, 21, 0.05) 100%),
+                repeating-linear-gradient(
+                    -12deg,
+                    transparent,
+                    transparent 28px,
+                    rgba(148, 163, 184, 0.03) 28px,
+                    rgba(148, 163, 184, 0.03) 29px
+                ),
+                #070b14;
+        }
+
+        .fc-mod::before {
+            content: 'MODALIDADES';            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-size: clamp(3.5rem, 14vw, 9rem);
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            color: rgba(248, 250, 252, 0.03);
+            white-space: nowrap;
+            pointer-events: none;
+            user-select: none;
+            z-index: 0;
+        }
+
+        .fc-mod .container { position: relative; z-index: 1; }
+
+        .fc-mod-head {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 1.25rem;
+            margin-bottom: 2.25rem;
+        }
+
+        .fc-mod-kicker {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--fc-green);
+            margin-bottom: 0.5rem;
+        }
+
+        .fc-mod-title {
+            font-size: clamp(1.75rem, 4vw, 2.6rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin: 0;
+            max-width: 16ch;
+        }
+
+        .fc-mod-title em {
+            font-style: normal;
+            color: var(--fc-green);
+        }
+
+        .fc-mod-genders {
+            display: flex;
+            gap: 0.5rem;
+            align-items: stretch;
+        }
+
+        .fc-mod-gender {
+            min-width: 7.5rem;
+            padding: 0.65rem 0.9rem;
+            border-radius: 12px;
+            border: 1px solid var(--fc-border);
+            background: rgba(15, 23, 42, 0.85);
+            text-align: left;
+        }
+
+        .fc-mod-gender strong {
+            display: block;
+            font-size: 0.95rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .fc-mod-gender span {
+            font-size: 0.7rem;
+            color: var(--fc-muted);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .fc-mod-gender--m {
+            border-color: rgba(34, 197, 94, 0.45);
+            box-shadow: inset 3px 0 0 var(--fc-green);
+        }
+
+        .fc-mod-gender--f {
+            border-color: rgba(250, 204, 21, 0.45);
+            box-shadow: inset 3px 0 0 var(--fc-yellow);
+        }
+
+        .fc-mod-track {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+        }
+
+        .fc-mod-panel {
+            position: relative;
+            min-height: 220px;
+            padding: 1.5rem 1.35rem 1.35rem;
+            border-radius: 18px;
+            border: 1px solid var(--fc-border);
+            background: rgba(15, 23, 42, 0.72);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.25s, box-shadow 0.35s;
+            animation: fc-mod-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        .fc-mod-panel:nth-child(1) { animation-delay: 0.05s; }
+        .fc-mod-panel:nth-child(2) { animation-delay: 0.15s; }
+        .fc-mod-panel:nth-child(3) { animation-delay: 0.25s; }
+
+        .fc-mod-panel:hover {
+            transform: translateY(-6px) scale(1.01);
+            border-color: rgba(248, 250, 252, 0.28);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+        }
+
+        .fc-mod-panel::before {
+            content: attr(data-num);
+            position: absolute;
+            top: -0.35rem;
+            right: 0.6rem;
+            font-size: 5.5rem;
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -0.06em;
+            color: rgba(248, 250, 252, 0.04);
+            transition: color 0.3s, transform 0.35s;
+        }
+
+        .fc-mod-panel:hover::before {
+            color: rgba(248, 250, 252, 0.08);
+            transform: translateY(4px);
+        }
+
+        .fc-mod-panel--campo {
+            background:
+                radial-gradient(ellipse 90% 70% at 10% 0%, rgba(34, 197, 94, 0.22), transparent 55%),
+                rgba(15, 23, 42, 0.85);
+        }
+
+        .fc-mod-panel--futsal {
+            background:
+                radial-gradient(ellipse 90% 70% at 90% 0%, rgba(59, 130, 246, 0.2), transparent 55%),
+                rgba(15, 23, 42, 0.85);
+        }
+
+        .fc-mod-panel--fut7 {
+            background:
+                radial-gradient(ellipse 90% 70% at 50% 0%, rgba(250, 204, 21, 0.18), transparent 55%),
+                rgba(15, 23, 42, 0.85);
+        }
+
+        .fc-mod-code {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--fc-muted);
+            margin-bottom: 0.35rem;
+        }
+
+        .fc-mod-name {
+            font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin: 0 0 0.4rem;
+            line-height: 1.1;
+        }
+
+        .fc-mod-tagline {
+            font-size: 0.85rem;
+            color: var(--fc-muted);
+            line-height: 1.45;
+            margin: 0 0 1rem;
+            max-width: 22ch;
+        }
+
+        .fc-mod-mf {
+            display: flex;
+            gap: 0.4rem;
+            margin-top: auto;
+        }
+
+        .fc-mod-mf b {
+            flex: 1;
+            text-align: center;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 0.4rem 0.35rem;
+            border-radius: 8px;
+            border: 1px solid transparent;
+        }
+
+        .fc-mod-mf b:first-child {
+            color: #86efac;
+            background: rgba(34, 197, 94, 0.12);
+            border-color: rgba(34, 197, 94, 0.35);
+        }
+
+        .fc-mod-mf b:last-child {
+            color: #fde047;
+            background: rgba(250, 204, 21, 0.1);
+            border-color: rgba(250, 204, 21, 0.35);
+        }
+
+        .fc-mod-foot {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--fc-muted);
+            max-width: 40rem;
+        }
+
+        .fc-mod-foot strong {
+            color: var(--fc-text);
+            font-weight: 600;
+        }
+
+        @keyframes fc-mod-in {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         @media (max-width: 991.98px) {
             .fc-nav-links { display: none !important; }
             .fc-hero { padding: 2.5rem 0 2rem; }
+            .fc-mod-track { grid-template-columns: 1fr; }
+            .fc-mod-panel { min-height: 180px; }
+            .fc-mod-title { max-width: none; }
+        }
+
+        @media (min-width: 768px) and (max-width: 991.98px) {
+            .fc-mod-track { grid-template-columns: repeat(3, 1fr); }
+            .fc-mod-panel { min-height: 200px; }
+            .fc-mod-tagline { max-width: none; font-size: 0.78rem; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .fc-mod-panel { animation: none; }
+            .fc-mod-panel:hover { transform: none; }
         }
     </style>
 </head>
@@ -447,6 +719,7 @@
                 </a>
                 <div class="d-flex align-items-center gap-2 gap-md-3">
                     <div class="fc-nav-links d-flex gap-1">
+                        <a href="#modalidades" class="fc-nav-link">Modalidades</a>
                         <a href="#perfis" class="fc-nav-link">Perfis</a>
                         <a href="#planos" class="fc-nav-link">Planos</a>
                         <a href="#faq" class="fc-nav-link">FAQ</a>
@@ -479,16 +752,16 @@
                         </div>
                         <div class="fc-trust-row">
                             <div class="fc-trust-item">
-                                <strong>4 perfis</strong>
-                                <span>G1 a G4 para cada atuação</span>
+                                <strong>3 modalidades</strong>
+                                <span>Campo, Futsal e Fut 7</span>
+                            </div>
+                            <div class="fc-trust-item">
+                                <strong>Masc. + Fem.</strong>
+                                <span>Todas as categorias</span>
                             </div>
                             <div class="fc-trust-item">
                                 <strong>{{ $annualDiscount }}% OFF</strong>
                                 <span>No plano anual</span>
-                            </div>
-                            <div class="fc-trust-item">
-                                <strong>25%</strong>
-                                <span>Comissão no Indique e Ganhe</span>
                             </div>
                         </div>
                     </div>
@@ -524,8 +797,69 @@
             </div>
         </section>
 
+        {{-- Modalidades --}}
+        <section class="fc-mod" id="modalidades" aria-labelledby="modalidades-title">
+            <div class="container">
+                <div class="fc-mod-head">
+                    <div>
+                        <p class="fc-mod-kicker">Onde o talento joga</p>
+                        <h2 class="fc-mod-title" id="modalidades-title">
+                            Três gramados.<br><em>Dois gêneros.</em><br>Um só mercado.
+                        </h2>
+                    </div>
+                    <div class="fc-mod-genders" aria-label="Categorias disponíveis">
+                        <div class="fc-mod-gender fc-mod-gender--m">
+                            <strong>Masculino</strong>
+                            <span>Ativo agora</span>
+                        </div>
+                        <div class="fc-mod-gender fc-mod-gender--f">
+                            <strong>Feminino</strong>
+                            <span>Ativo agora</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fc-mod-track">
+                    <article class="fc-mod-panel fc-mod-panel--campo" data-num="01">
+                        <p class="fc-mod-code">Modalidade</p>
+                        <h3 class="fc-mod-name">Futebol de Campo</h3>
+                        <p class="fc-mod-tagline">11×11. O palco clássico — do amador ao profissional.</p>
+                        <div class="fc-mod-mf">
+                            <b>Masculino</b>
+                            <b>Feminino</b>
+                        </div>
+                    </article>
+
+                    <article class="fc-mod-panel fc-mod-panel--futsal" data-num="02">
+                        <p class="fc-mod-code">Modalidade</p>
+                        <h3 class="fc-mod-name">Futsal</h3>
+                        <p class="fc-mod-tagline">Quadra rápida. Decisão em cada toque.</p>
+                        <div class="fc-mod-mf">
+                            <b>Masculino</b>
+                            <b>Feminino</b>
+                        </div>
+                    </article>
+
+                    <article class="fc-mod-panel fc-mod-panel--fut7" data-num="03">
+                        <p class="fc-mod-code">Modalidade</p>
+                        <h3 class="fc-mod-name">Fut 7</h3>
+                        <p class="fc-mod-tagline">Society em alta. Ritmo intenso, vitrine real.</p>
+                        <div class="fc-mod-mf">
+                            <b>Masculino</b>
+                            <b>Feminino</b>
+                        </div>
+                    </article>
+                </div>
+
+                <p class="fc-mod-foot">
+                    Perfis e buscas no FootConnect cobrem <strong>Campo, Futsal e Fut 7</strong> —
+                    com atletas e profissionais do <strong>masculino e do feminino</strong> no mesmo ecossistema.
+                </p>
+            </div>
+        </section>
+
         {{-- Perfis G1–G4 --}}
-        <section class="fc-section" id="perfis" style="padding-top: 0;">
+        <section class="fc-section" id="perfis">
             <div class="container">
                 <p class="fc-pill mb-2"><span class="fc-pill-dot"></span> Perfis</p>
                 <h2 class="fc-section-title">Um plano para cada papel no futebol</h2>

@@ -35,7 +35,7 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" class="me-1">
                                     <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
                                 </svg>
-                                {{ $profile->city }}@if($profile->state), {{ $profile->state }}@endif@if($profile->country), {{ $profile->country }}@endif
+                                {{ collect([$profile->city, $profile->state, $profile->country])->filter()->implode(', ') }}
                             </p>
                             @if($profile->institution_type_label || $profile->institution_name)
                                 <p class="small fc-text-secondary mb-2">

@@ -30,7 +30,6 @@ Route::post('/password/esqueci', [PasswordResetController::class, 'sendResetLink
 Route::get('/password/redefinir/{token}', [PasswordResetController::class, 'showResetForm'])->name('password.reset');
 Route::post('/password/redefinir', [PasswordResetController::class, 'reset'])->name('password.update');
 
-Route::view('/subscription/required', 'subscription.required')->name('subscription.required');
 Route::view('/conta-desativada', 'account.deactivated')->name('account.deactivated');
 
 // Onboarding / pagamento
@@ -41,6 +40,7 @@ Route::get('/onboarding/criar-conta', [OnboardingController::class, 'showRegiste
 Route::post('/onboarding/criar-conta', [OnboardingController::class, 'register'])->name('onboarding.register.post');
 
 Route::middleware('auth')->group(function () {
+    Route::view('/subscription/required', 'subscription.required')->name('subscription.required');
     Route::get('/onboarding/planos', [OnboardingController::class, 'plans'])->name('onboarding.plans');
     Route::post('/onboarding/checkout', [OnboardingController::class, 'checkout'])->name('onboarding.checkout');
     Route::get('/onboarding/sucesso', [OnboardingController::class, 'success'])->name('onboarding.success');

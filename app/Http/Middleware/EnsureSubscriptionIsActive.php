@@ -19,14 +19,23 @@ class EnsureSubscriptionIsActive
             return redirect()->route('login');
         }
 
+        if ($user->isAdmin()) {
+            return $next($request);
+        }
+
         $isActive = $user->subscription_status === 'active'
             && (! $user->current_period_end || $user->current_period_end->isFuture());
 
         if (! $isActive) {
-            return redirect()->route('subscription.required');
+            $planGroup = $user->plan_group;
+
+            if ($planGroup && config('plans.groups.'.$planGroup)) {
+                return redirect()->route('onboarding.plans');
+            }
+
+            return redirect()->route('onboarding.user-type');
         }
 
         return $next($request);
     }
 }
-

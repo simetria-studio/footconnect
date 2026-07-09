@@ -24,6 +24,21 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
 
+            $user = Auth::user();
+
+            if ($user && ! $user->isAdmin()) {
+                $hasActiveSubscription = $user->subscription_status === 'active'
+                    && (! $user->current_period_end || $user->current_period_end->isFuture());
+
+                if (! $hasActiveSubscription) {
+                    if ($user->plan_group && config('plans.groups.'.$user->plan_group)) {
+                        return redirect()->route('onboarding.plans');
+                    }
+
+                    return redirect()->route('onboarding.user-type');
+                }
+            }
+
             return redirect()->intended('/home');
         }
 
