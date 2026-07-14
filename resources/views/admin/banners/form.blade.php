@@ -2,7 +2,7 @@
 
 @section('title', $banner->exists ? 'Editar banner' : 'Novo banner')
 @section('page-title', $banner->exists ? 'Editar banner' : 'Novo banner')
-@section('page-subtitle', 'Aparece na landing pública (site) — use público "Todos"')
+@section('page-subtitle', 'A arte da imagem é o destaque na landing')
 
 @section('content')
 <div class="mb-3">
@@ -75,7 +75,7 @@
             <div class="col-12">
                 <label class="form-label" for="image">Imagem {{ $banner->exists ? '(deixe em branco para manter)' : '' }}</label>
                 <input type="file" class="form-control bg-dark border-secondary text-white" id="image" name="image" accept="image/*">
-                <div class="form-text">Recomendado: 1920×1080 px (widescreen), até 5 MB. O banner ocupa a largura toda da tela.</div>
+                <div class="form-text">A imagem é o banner. Envie a arte pronta (com textos/CTA nela). Largura ideal ~1920px; a altura acompanha a imagem automaticamente. Se houver link, a arte inteira fica clicável.</div>
                 @if($banner->image_url)
                     <img src="{{ $banner->image_url }}" alt="" class="rounded mt-2" style="max-width: 100%; max-height: 160px; object-fit: cover;">
                 @endif
