@@ -19,7 +19,7 @@ class EnsureSubscriptionIsActive
             return redirect()->route('login');
         }
 
-        if ($user->isAdmin()) {
+        if ($user->skipsSubscription()) {
             return $next($request);
         }
 

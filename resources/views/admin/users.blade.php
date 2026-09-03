@@ -18,6 +18,7 @@
                     <option value="">Todos</option>
                     <option value="player" {{ request('role') === 'player' ? 'selected' : '' }}>Jogador</option>
                     <option value="scout" {{ request('role') === 'scout' ? 'selected' : '' }}>Profissional</option>
+                    <option value="influencer" {{ request('role') === 'influencer' ? 'selected' : '' }}>Influenciador</option>
                 </select>
             </div>
             <div class="col-6 col-md-2">
@@ -84,13 +85,17 @@
                                 @if($u->referral_code)<br><code class="small">{{ $u->referral_code }}</code>@endif
                             </td>
                             <td>
-                                @if($u->role === 'player')<span class="badge bg-success">Jogador</span>@else<span class="badge bg-info">Prof.</span>@endif
+                                @if($u->role === 'player')<span class="badge bg-success">Jogador</span>
+                                @elseif($u->role === 'influencer')<span class="badge bg-info text-dark">Influenciador</span>
+                                @else<span class="badge bg-info">Prof.</span>@endif
                                 @if($u->plan_group)<span class="badge bg-secondary">{{ strtoupper($u->plan_group) }}</span>@endif
                                 @if($u->is_admin)<span class="badge bg-warning text-dark">Admin</span>@endif
                                 @if($u->referral_program_blocked)<span class="badge bg-danger">Bloq.</span>@endif
                             </td>
                             <td class="small">
-                                @if($u->subscription_status === 'active')
+                                @if($u->isInfluencer())
+                                    <span class="text-info">Cortesia</span>
+                                @elseif($u->subscription_status === 'active')
                                     <span class="text-success">Ativa</span>
                                     <br><span class="fc-text-secondary">{{ $u->plan_interval ?? '—' }}</span>
                                     @if($u->current_period_end)<br><span class="fc-text-secondary">até {{ $u->current_period_end->format('d/m/Y') }}</span>@endif

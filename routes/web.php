@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\InfluencerController;
 use App\Http\Controllers\Admin\MarketingBannerController;
 use App\Http\Controllers\Admin\NewsPostController;
 use App\Http\Controllers\AdminController;
@@ -59,6 +60,14 @@ Route::get('/noticias/{slug}', [NewsController::class, 'show'])->name('news.show
 // Painel administrativo (apenas usuários com is_admin = true)
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/influencers', [InfluencerController::class, 'index'])->name('influencers.index');
+    Route::get('/influencers/create', [InfluencerController::class, 'create'])->name('influencers.create');
+    Route::post('/influencers', [InfluencerController::class, 'store'])->name('influencers.store');
+    Route::get('/influencers/{influencer}', [InfluencerController::class, 'show'])->name('influencers.show');
+    Route::get('/influencers/{influencer}/edit', [InfluencerController::class, 'edit'])->name('influencers.edit');
+    Route::put('/influencers/{influencer}', [InfluencerController::class, 'update'])->name('influencers.update');
+    Route::post('/influencers/{influencer}/reset-password', [InfluencerController::class, 'resetPassword'])->name('influencers.reset-password');
+
     Route::get('/users', [AdminController::class, 'users'])->name('users');
     Route::get('/users/{user}', [AdminController::class, 'showUser'])->name('users.show');
     Route::post('/users/{user}/toggle-admin', [AdminController::class, 'toggleAdmin'])->name('users.toggle-admin');

@@ -8,7 +8,7 @@
         <div class="col-12 col-md-10 col-lg-8">
             <div class="d-flex align-items-center justify-content-between mb-4">
                 <h1 class="h5 fw-bold fc-text-primary mb-0">Plano FootConnect</h1>
-                <a href="{{ route('home') }}" class="btn btn-sm btn-outline-secondary">Voltar</a>
+                <a href="{{ $user->isInfluencer() ? route('referrals.index') : route('home') }}" class="btn btn-sm btn-outline-secondary">Voltar</a>
             </div>
 
             @if (session('status'))
@@ -37,7 +37,14 @@
             <!-- Status da Assinatura -->
             <div class="card fc-card mb-4">
                 <div class="card-body">
-                    @if ($user->subscription_status === 'active')
+                    @if ($user->isInfluencer())
+                        <div class="alert alert-success mb-0">
+                            <h6 class="fw-bold mb-1">Conta cortesia</h6>
+                            <p class="small mb-0">
+                                Influenciadores não pagam plano. Seu acesso ao Indique e Ganhe está liberado pelo administrador.
+                            </p>
+                        </div>
+                    @elseif ($user->subscription_status === 'active')
                         <div class="alert alert-success mb-3">
                             <h6 class="fw-bold mb-1">Assinatura ativa</h6>
                             <p class="mb-1">

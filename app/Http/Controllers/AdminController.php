@@ -25,6 +25,7 @@ class AdminController extends Controller
             'total_users' => User::count(),
             'players' => User::where('role', 'player')->count(),
             'scouts' => User::where('role', 'scout')->count(),
+            'influencers' => User::where('role', 'influencer')->count(),
             'active_subscriptions' => User::where('subscription_status', 'active')->count(),
             'canceled_subscriptions' => User::where('subscription_status', 'canceled')->count(),
             'inactive_accounts' => User::where('is_active', false)->count(),

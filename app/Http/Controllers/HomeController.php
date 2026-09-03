@@ -10,6 +10,10 @@ class HomeController extends Controller
     {
         $user = $request->user();
 
+        if ($user->isInfluencer()) {
+            return redirect()->route('referrals.index');
+        }
+
         if ($user->role === 'player') {
             return view('home.player', [
                 'user' => $user,

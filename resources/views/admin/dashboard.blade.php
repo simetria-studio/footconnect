@@ -29,6 +29,7 @@
             <div class="card-body">
                 <p class="stat-label mb-1">Jogadores / Profissionais</p>
                 <p class="stat-value fc-text-primary mb-0">{{ $stats['players'] }} / {{ $stats['scouts'] }}</p>
+                <p class="stat-trend fc-text-secondary mt-1">{{ $stats['influencers'] }} influenciadores</p>
             </div>
         </div>
     </div>

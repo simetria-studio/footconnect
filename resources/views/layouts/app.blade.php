@@ -67,6 +67,7 @@
         <nav class="fc-nav-bottom">
             <div class="container-fluid px-2">
                 <ul class="nav nav-pills nav-fill">
+                    @unless(auth()->user()->isInfluencer())
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
@@ -92,6 +93,7 @@
                             <span>Mensagens</span>
                         </a>
                     </li>
+                    @endunless
                     <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('referrals.*') ? 'active' : '' }}" href="{{ route('referrals.index') }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">

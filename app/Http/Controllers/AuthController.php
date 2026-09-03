@@ -26,7 +26,11 @@ class AuthController extends Controller
 
             $user = Auth::user();
 
-            if ($user && ! $user->isAdmin()) {
+            if ($user && $user->isInfluencer()) {
+                return redirect()->intended(route('referrals.index'));
+            }
+
+            if ($user && ! $user->skipsSubscription()) {
                 $hasActiveSubscription = $user->subscription_status === 'active'
                     && (! $user->current_period_end || $user->current_period_end->isFuture());
 

@@ -8,7 +8,7 @@
         <div class="col-12 col-md-10 col-lg-8">
             <div class="d-flex align-items-center justify-content-between mb-4">
                 <h1 class="h5 fw-bold fc-text-primary mb-0">Configurações da conta</h1>
-                <a href="{{ route('home') }}" class="btn btn-sm btn-outline-secondary">Voltar</a>
+                <a href="{{ $user->isInfluencer() ? route('referrals.index') : route('home') }}" class="btn btn-sm btn-outline-secondary">Voltar</a>
             </div>
 
             @if (session('status'))
@@ -87,6 +87,7 @@
             </div>
 
             <!-- Perfil público e fotos -->
+            @if(in_array($user->role, ['player', 'scout'], true))
             <div class="card fc-card mb-4">
                 <div class="card-header">
                     <h5 class="mb-0 fw-bold">Perfil público e fotos</h5>
@@ -112,6 +113,7 @@
                     </div>
                 </div>
             </div>
+            @endif
 
             <!-- Alterar Senha -->
             <div class="card fc-card mb-4">

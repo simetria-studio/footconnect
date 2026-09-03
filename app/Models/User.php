@@ -137,6 +137,26 @@ class User extends Authenticatable
         return (bool) $this->is_admin;
     }
 
+    public function isInfluencer(): bool
+    {
+        return $this->role === 'influencer';
+    }
+
+    public function skipsSubscription(): bool
+    {
+        return $this->isAdmin() || $this->isInfluencer();
+    }
+
+    public function roleLabel(): string
+    {
+        return match ($this->role) {
+            'player' => 'Jogador',
+            'scout' => 'Profissional',
+            'influencer' => 'Influenciador',
+            default => (string) $this->role,
+        };
+    }
+
     public function isActive(): bool
     {
         return (bool) ($this->is_active ?? true);

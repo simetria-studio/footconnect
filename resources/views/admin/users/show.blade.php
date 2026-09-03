@@ -5,8 +5,11 @@
 @section('page-subtitle', $user->email)
 
 @section('content')
-<div class="mb-3">
+<div class="mb-3 d-flex gap-2 flex-wrap">
     <a href="{{ route('admin.users') }}" class="btn btn-sm btn-outline-secondary">← Voltar à lista</a>
+    @if($user->isInfluencer())
+        <a href="{{ route('admin.influencers.show', $user) }}" class="btn btn-sm btn-outline-success">Ficha do influenciador</a>
+    @endif
 </div>
 
 <div class="row g-3 mb-4">
@@ -15,7 +18,9 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0 fw-bold">Informações gerais</h5>
                 <div class="d-flex gap-1 flex-wrap">
-                    @if($user->role === 'player')<span class="badge bg-success">Jogador</span>@else<span class="badge bg-info">Profissional</span>@endif
+                    @if($user->role === 'player')<span class="badge bg-success">Jogador</span>
+                    @elseif($user->role === 'influencer')<span class="badge bg-info text-dark">Influenciador</span>
+                    @else<span class="badge bg-info">Profissional</span>@endif
                     @if($user->plan_group)<span class="badge bg-secondary">{{ strtoupper($user->plan_group) }}</span>@endif
                     @if($user->is_admin)<span class="badge bg-warning text-dark">Admin</span>@endif
                     @if(!$user->isActive())<span class="badge bg-danger">Conta inativa</span>@endif
@@ -47,7 +52,8 @@
             <div class="card-header"><h5 class="mb-0 fw-bold">Assinatura</h5></div>
             <div class="card-body small">
                 <p class="mb-1"><span class="fc-text-secondary">Status:</span>
-                    @if($user->subscription_status === 'active')<span class="text-success fw-semibold">Ativa</span>
+                    @if($user->isInfluencer())<span class="text-success fw-semibold">Cortesia (sem plano)</span>
+                    @elseif($user->subscription_status === 'active')<span class="text-success fw-semibold">Ativa</span>
                     @elseif($user->subscription_status === 'canceled')<span class="text-warning">Cancelada</span>
                     @else<span class="fc-text-secondary">{{ $user->subscription_status ?: 'Sem assinatura' }}</span>@endif
                 </p>

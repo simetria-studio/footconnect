@@ -98,6 +98,10 @@ class OnboardingController extends Controller
             return redirect()->route('onboarding.user-type');
         }
 
+        if ($user->skipsSubscription()) {
+            return redirect()->route('home');
+        }
+
         $planGroup = $user->plan_group ?? Session::get('onboarding.plan_group');
 
         if (! $planGroup || ! config('plans.groups.'.$planGroup)) {
@@ -121,6 +125,10 @@ class OnboardingController extends Controller
 
         if (! $user) {
             return redirect()->route('onboarding.user-type');
+        }
+
+        if ($user->skipsSubscription()) {
+            return redirect()->route('home');
         }
 
         $role = $user->role;

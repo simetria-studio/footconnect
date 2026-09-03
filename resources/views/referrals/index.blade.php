@@ -13,7 +13,7 @@
                         {{ $stats['commission_percent'] }}% de comissão recorrente enquanto seu indicado assinar.
                     </p>
                 </div>
-                <a href="{{ route('home') }}" class="btn btn-sm btn-outline-secondary">Voltar</a>
+                <a href="{{ auth()->user()->isInfluencer() ? route('settings.profile') : route('home') }}" class="btn btn-sm btn-outline-secondary">Voltar</a>
             </div>
 
             @if (session('status'))
