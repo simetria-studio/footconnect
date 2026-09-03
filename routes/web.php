@@ -52,8 +52,6 @@ Route::middleware('auth')->group(function () {
 
 Route::post('/stripe/webhook', StripeWebhookController::class)->name('stripe.webhook');
 
-Route::get('/indicacao/{code}', [ReferralController::class, 'capture'])->name('referral.capture');
-
 Route::get('/noticias', [NewsController::class, 'index'])->name('news.index');
 Route::get('/noticias/{slug}', [NewsController::class, 'show'])->name('news.show');
 
@@ -157,3 +155,11 @@ Route::middleware(['auth', 'active', 'subscription.active'])->group(function () 
     Route::post('/settings/account/cancel', [SettingsController::class, 'cancelAccount'])->name('settings.account.cancel');
     Route::post('/settings/account/delete', [SettingsController::class, 'deleteAccount'])->name('settings.account.delete');
 });
+
+Route::get('/indicacao/{code}', function (string $code) {
+    return redirect('/'.strtoupper($code), 301);
+})->where('code', '(?i)FOOT[A-Z0-9]{2,12}');
+
+Route::get('/{code}', [ReferralController::class, 'capture'])
+    ->where('code', '(?i)FOOT[A-Z0-9]{2,12}')
+    ->name('referral.capture');

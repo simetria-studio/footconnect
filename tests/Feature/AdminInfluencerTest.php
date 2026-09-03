@@ -49,7 +49,8 @@ class AdminInfluencerTest extends TestCase
         $response->assertSessionHas('influencer_credentials.email', 'ana@influencers.test');
         $response->assertSessionHas('influencer_credentials.referral_code', 'FOOTANA');
         $this->assertNotEmpty(session('influencer_credentials.password'));
-        $this->assertStringContainsString('/indicacao/FOOTANA', session('influencer_credentials.referral_link'));
+        $this->assertStringContainsString('/FOOTANA', session('influencer_credentials.referral_link'));
+        $this->assertStringNotContainsString('/indicacao/', session('influencer_credentials.referral_link'));
 
         Notification::assertSentTo($influencer, InfluencerCredentialsNotification::class);
     }
