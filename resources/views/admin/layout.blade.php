@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'Painel Admin') — FootConnect</title>
+    @include('partials.favicon')
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -19,11 +20,11 @@
             flex-direction: column;
         }
         .fc-admin-brand {
-            padding: 1.25rem 1.5rem;
+            padding: 1.1rem 1.25rem;
             border-bottom: 1px solid rgba(148, 163, 184, 0.12);
         }
-        .fc-admin-brand h1 { font-size: 1rem; font-weight: 700; margin: 0; color: #f9fafb; }
-        .fc-admin-brand p { font-size: 0.7rem; color: #6b7280; margin: 0.15rem 0 0; text-transform: uppercase; letter-spacing: 0.08em; }
+        .fc-admin-brand a { text-decoration: none; display: block; }
+        .fc-admin-brand p { font-size: 0.7rem; color: #6b7280; margin: 0.4rem 0 0; text-transform: uppercase; letter-spacing: 0.08em; }
         .fc-admin-nav { padding: 1rem 0.75rem; flex: 1; overflow-y: auto; }
         .fc-admin-nav-section {
             font-size: 0.65rem;
@@ -86,7 +87,9 @@
 <div class="fc-admin-shell">
     <aside class="fc-admin-sidebar">
         <div class="fc-admin-brand">
-            <h1>FootConnect</h1>
+            <a href="{{ route('admin.dashboard') }}">
+                @include('partials.brand-logo', ['height' => 52])
+            </a>
             <p>Painel administrativo</p>
         </div>
 

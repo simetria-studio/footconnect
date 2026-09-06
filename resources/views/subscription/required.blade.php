@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Finalize sua assinatura — FootConnect</title>
+    @include('partials.favicon')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         :root {
@@ -116,8 +117,7 @@
 <body>
 <main class="fc-gate">
     <div class="fc-gate-brand">
-        <span class="fc-gate-logo">FC</span>
-        FootConnect
+        @include('partials.brand-logo', ['height' => 64])
     </div>
 
     <h1>Finalize sua assinatura</h1>

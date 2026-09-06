@@ -8,6 +8,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Pagamento aprovado — FootConnect</title>
+    @include('partials.favicon')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         body {
@@ -171,6 +172,9 @@
 <body>
 <div class="fc-onboarding-wrapper">
     <div class="fc-onboarding-card">
+        <a href="{{ route('landing') }}" class="d-inline-block mb-3 text-decoration-none">
+            @include('partials.brand-logo', ['height' => 64])
+        </a>
         <div class="fc-pill">
             <span class="fc-pill-dot"></span>
             Passo 3 de 3 • Criar acesso

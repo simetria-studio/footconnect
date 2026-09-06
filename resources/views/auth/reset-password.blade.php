@@ -4,13 +4,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Nova senha — FootConnect</title>
+    @include('partials.favicon')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @include('auth.partials.card-styles')
 </head>
 <body>
 <div class="fc-login-wrapper">
     <div class="fc-login-card">
-        <div class="fc-logo-badge">FC</div>
+        <div class="fc-logo-badge">
+            <a href="{{ route('landing') }}">@include('partials.brand-logo', ['height' => 72])</a>
+        </div>
 
         <h1 class="fc-title">Nova senha</h1>
         <p class="fc-subtitle">

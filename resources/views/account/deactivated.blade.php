@@ -6,6 +6,9 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-12 col-md-8 col-lg-6 text-center py-5">
+            <div class="d-flex justify-content-center mb-4">
+                @include('partials.brand-logo', ['height' => 64])
+            </div>
             <h1 class="h4 fw-bold fc-text-primary mb-3">Conta desativada</h1>
             <p class="fc-text-secondary mb-4">
                 Sua conta foi desativada. Isso pode ter sido feito por você ou por um administrador.

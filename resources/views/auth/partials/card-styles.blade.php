@@ -22,18 +22,16 @@
         padding: 2.5rem 2rem;
     }
     .fc-logo-badge {
-        width: 56px;
-        height: 56px;
-        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-        border-radius: 16px;
         display: flex;
-        align-items: center;
         justify-content: center;
-        font-weight: 800;
-        font-size: 1.5rem;
-        color: #020617;
-        box-shadow: 0 8px 24px rgba(34, 197, 94, 0.4);
         margin: 0 auto 1.5rem;
+        max-width: 340px;
+    }
+    .fc-logo-badge img {
+        height: 72px;
+        width: auto;
+        max-width: 100%;
+        object-fit: contain;
     }
     .fc-title {
         font-size: 1.75rem;

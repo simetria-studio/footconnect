@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'FootConnect')</title>
+    @include('partials.favicon')
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -32,6 +33,9 @@
             <div class="container-fluid px-4">
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="d-flex align-items-center gap-3">
+                        <a href="{{ auth()->user()->isInfluencer() ? route('referrals.index') : route('home') }}" class="text-decoration-none">
+                            @include('partials.brand-logo', ['height' => 48])
+                        </a>
                         <div class="fc-avatar">
                             {{ strtoupper(substr(auth()->user()->full_name ?? auth()->user()->email, 0, 2)) }}
                         </div>

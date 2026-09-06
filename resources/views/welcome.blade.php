@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>FootConnect — Conectando talentos ao futebol profissional</title>
     <meta name="description" content="Plataforma profissional de networking esportivo. Perfis G1 a G4 para atletas, empresários, treinadores e clubes.">
+    @include('partials.favicon')
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -62,17 +63,11 @@
         }
 
         .fc-logo {
-            width: 42px;
-            height: 42px;
-            border-radius: 11px;
-            background: linear-gradient(135deg, var(--fc-green), #16a34a);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 1rem;
-            color: #000;
-            box-shadow: 0 4px 16px rgba(34, 197, 94, 0.35);
+            height: 64px;
+            width: auto;
+            max-width: 320px;
+            display: block;
+            object-fit: contain;
         }
 
         .fc-nav-link {
@@ -904,12 +899,8 @@
         {{-- Nav --}}
         <nav class="fc-nav navbar py-3 sticky-top">
             <div class="container d-flex align-items-center justify-content-between">
-                <a href="{{ route('landing') }}" class="d-flex align-items-center gap-2 text-decoration-none">
-                    <div class="fc-logo">FC</div>
-                    <div>
-                        <div class="fw-bold text-white" style="font-size: 1rem; line-height: 1.2;">FootConnect</div>
-                        <div style="font-size: 0.7rem; color: var(--fc-muted);">Networking esportivo profissional</div>
-                    </div>
+                <a href="{{ route('landing') }}" class="d-flex align-items-center text-decoration-none">
+                    @include('partials.brand-logo', ['height' => 64, 'class' => 'fc-logo'])
                 </a>
                 <div class="d-flex align-items-center gap-2 gap-md-3">
                     <div class="fc-nav-links d-flex gap-1">
@@ -1417,7 +1408,7 @@
             <div class="container">
                 <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
                     <div class="d-flex align-items-center gap-2">
-                        <div class="fc-logo" style="width: 32px; height: 32px; font-size: 0.75rem;">FC</div>
+                        @include('partials.brand-logo', ['height' => 44, 'class' => 'fc-logo'])
                         <span style="font-size: 0.8rem; color: var(--fc-muted);">
                             © {{ date('Y') }} FootConnect. Conexão profissional no futebol.
                         </span>

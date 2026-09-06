@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $post->title }} — FootConnect</title>
+    @include('partials.favicon')
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -46,9 +47,8 @@
 <body>
     <nav class="py-3 border-bottom" style="border-color: var(--fc-border) !important;">
         <div class="container d-flex align-items-center justify-content-between">
-            <a href="{{ route('landing') }}" class="d-flex align-items-center gap-2 text-decoration-none text-white">
-                <div class="fc-logo">FC</div>
-                <strong>FootConnect</strong>
+            <a href="{{ route('landing') }}" class="d-flex align-items-center text-decoration-none text-white">
+                @include('partials.brand-logo', ['height' => 52])
             </a>
             <a href="{{ route('news.index') }}" class="fc-btn-ghost">Todas as notícias</a>
         </div>
