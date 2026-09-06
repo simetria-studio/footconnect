@@ -162,6 +162,21 @@ class User extends Authenticatable
         return (bool) ($this->is_active ?? true);
     }
 
+    public function hasActiveSubscription(): bool
+    {
+        if (! in_array($this->subscription_status, ['active', 'trialing'], true)) {
+            return false;
+        }
+
+        return ! $this->current_period_end || $this->current_period_end->isFuture();
+    }
+
+    public function isOnTrial(): bool
+    {
+        return $this->subscription_status === 'trialing'
+            && (! $this->current_period_end || $this->current_period_end->isFuture());
+    }
+
     public function sendPasswordResetNotification($token): void
     {
         $this->notify(new ResetPasswordNotification($token));

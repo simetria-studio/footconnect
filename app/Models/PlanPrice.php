@@ -17,6 +17,7 @@ class PlanPrice extends Model
         'display_label',
         'sort_order',
         'is_active',
+        'trial_days',
     ];
 
     protected function casts(): array
@@ -24,6 +25,7 @@ class PlanPrice extends Model
         return [
             'amount_cents' => 'integer',
             'is_active' => 'boolean',
+            'trial_days' => 'integer',
         ];
     }
 
@@ -45,5 +47,35 @@ class PlanPrice extends Model
     public static function getPlansForOnboarding(): \Illuminate\Support\Collection
     {
         return static::where('is_active', true)->orderBy('sort_order')->get();
+    }
+
+    public function hasTrial(): bool
+    {
+        return (int) $this->trial_days > 0;
+    }
+
+    public function trialLabel(): ?string
+    {
+        if (! $this->hasTrial()) {
+            return null;
+        }
+
+        return ((int) $this->trial_days) === 30
+            ? '1 mês grátis'
+            : $this->trial_days.' dias grátis';
+    }
+
+    public function groupKey(): string
+    {
+        return explode('_', (string) $this->plan_key)[0] ?? '';
+    }
+
+    public static function groupHasTrial(string $groupKey): bool
+    {
+        return static::query()
+            ->where('plan_key', 'like', $groupKey.'_%')
+            ->where('is_active', true)
+            ->where('trial_days', '>', 0)
+            ->exists();
     }
 }

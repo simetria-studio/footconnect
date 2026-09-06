@@ -137,7 +137,8 @@
                                     </td>
                                     <td class="small">{{ strtoupper($u->plan_group ?? '—') }}</td>
                                     <td>
-                                        @if($u->subscription_status === 'active')<span class="badge bg-success">Ativa</span>
+                                        @if($u->subscription_status === 'trialing')<span class="badge bg-info text-dark">1 mês grátis</span>
+                                        @elseif($u->subscription_status === 'active')<span class="badge bg-success">Ativa</span>
                                         @else<span class="badge bg-secondary">{{ $u->subscription_status ?: '—' }}</span>@endif
                                     </td>
                                 </tr>

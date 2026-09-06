@@ -356,6 +356,15 @@ class AdminController extends Controller
             $plan->save();
         }
 
+        foreach (['g2', 'g3', 'g4'] as $group) {
+            if (! $request->exists('trial_'.$group)) {
+                continue;
+            }
+
+            $days = $request->boolean('trial_'.$group) ? 30 : 0;
+            PlanPrice::where('plan_key', 'like', $group.'_%')->update(['trial_days' => $days]);
+        }
+
         return redirect()->route('admin.plan-prices')->with('status', 'Preços atualizados com sucesso.');
     }
 

@@ -23,10 +23,7 @@ class EnsureSubscriptionIsActive
             return $next($request);
         }
 
-        $isActive = $user->subscription_status === 'active'
-            && (! $user->current_period_end || $user->current_period_end->isFuture());
-
-        if (! $isActive) {
+        if (! $user->hasActiveSubscription()) {
             $planGroup = $user->plan_group;
 
             if ($planGroup && config('plans.groups.'.$planGroup)) {

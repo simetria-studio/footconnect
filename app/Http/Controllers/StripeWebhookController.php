@@ -87,10 +87,9 @@ class StripeWebhookController extends Controller
 
             if ($user) {
                 $user->subscription_status = $subscription->status;
-                if ($subscription->current_period_end) {
-                    $user->current_period_end = Carbon::createFromTimestamp(
-                        $subscription->current_period_end
-                    );
+                $periodEnd = $subscription->trial_end ?: ($subscription->current_period_end ?? null);
+                if ($periodEnd) {
+                    $user->current_period_end = Carbon::createFromTimestamp($periodEnd);
                 }
                 $user->save();
             }

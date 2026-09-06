@@ -216,7 +216,11 @@
             </div>
             <h1 class="fc-title">Escolha seu plano</h1>
             <p class="fc-subtitle">
-                O acesso ao FootConnect é exclusivo para assinantes. Selecione a periodicidade ideal e siga para o pagamento seguro.
+                @if(($monthlyPlan?->hasTrial() || $yearlyPlan?->hasTrial()))
+                    Comece com 1 mês grátis. Você cadastra o cartão agora e a primeira cobrança só acontece depois do período promocional.
+                @else
+                    O acesso ao FootConnect é exclusivo para assinantes. Selecione a periodicidade ideal e siga para o pagamento seguro.
+                @endif
             </p>
         </div>
 
@@ -251,13 +255,22 @@
                     <label class="fc-radio-label {{ $isGreenAccent ? 'fc-radio-label--primary' : 'fc-radio-label--primary-yellow' }}">
                         <input type="radio" name="plan" value="{{ $monthlyKey }}" checked>
                         <div class="fc-radio-content">
-                            <div class="fc-radio-title">Plano Mensal</div>
+                            <div class="fc-radio-title">
+                                Plano Mensal
+                                @if($monthlyPlan?->hasTrial())
+                                    <span class="fc-tag-saving">1 mês grátis</span>
+                                @endif
+                            </div>
                             <div class="fc-radio-price">
                                 {{ $monthlyPlan ? $monthlyPlan->formatted_price : '—' }}
                                 <span class="fc-price-note">/ mês</span>
                             </div>
                             <p class="fc-radio-text">
-                                Flexibilidade total com renovação mensal automática.
+                                @if($monthlyPlan?->hasTrial())
+                                    {{ $monthlyPlan->trialLabel() }} — depois {{ $monthlyPlan->formatted_price }}/mês.
+                                @else
+                                    Flexibilidade total com renovação mensal automática.
+                                @endif
                             </p>
                         </div>
                     </label>
@@ -267,16 +280,24 @@
                         <div class="fc-radio-content">
                             <div class="fc-radio-title">
                                 Plano Anual
-                                <span class="fc-tag-saving">
-                                    {{ config('plans.annual_discount_percent') }}% OFF
-                                </span>
+                                @if($yearlyPlan?->hasTrial())
+                                    <span class="fc-tag-saving">1 mês grátis</span>
+                                @else
+                                    <span class="fc-tag-saving">
+                                        {{ config('plans.annual_discount_percent') }}% OFF
+                                    </span>
+                                @endif
                             </div>
                             <div class="fc-radio-price">
                                 {{ $yearlyPlan ? $yearlyPlan->formatted_price : '—' }}
                                 <span class="fc-price-note">/ ano</span>
                             </div>
                             <p class="fc-radio-text">
-                                Economia de {{ config('plans.annual_discount_percent') }}% com acesso garantido por 12 meses.
+                                @if($yearlyPlan?->hasTrial())
+                                    {{ $yearlyPlan->trialLabel() }}, depois {{ $yearlyPlan->formatted_price }}/ano ({{ config('plans.annual_discount_percent') }}% OFF).
+                                @else
+                                    Economia de {{ config('plans.annual_discount_percent') }}% com acesso garantido por 12 meses.
+                                @endif
                             </p>
                         </div>
                     </label>
@@ -284,10 +305,18 @@
 
                 <div class="fc-cta">
                     <button type="submit" class="fc-btn-primary">
-                        Assinar e ir para pagamento
+                        @if($monthlyPlan?->hasTrial() || $yearlyPlan?->hasTrial())
+                            Começar 1 mês grátis
+                        @else
+                            Assinar e ir para pagamento
+                        @endif
                     </button>
                     <span class="fc-small-note">
-                        Cobrança recorrente gerenciada pelo Stripe, com opção de cancelamento no app.
+                        @if($monthlyPlan?->hasTrial() || $yearlyPlan?->hasTrial())
+                            Sem cobrança agora. Cancele quando quiser, antes do fim do mês grátis.
+                        @else
+                            Cobrança recorrente gerenciada pelo Stripe, com opção de cancelamento no app.
+                        @endif
                     </span>
                 </div>
             </div>

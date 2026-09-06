@@ -10,11 +10,19 @@
 @endphp
 
 @foreach($groups as $key => $label)
-    @php $groupPlans = $plans->filter(fn($p) => str_starts_with($p->plan_key, $key.'_')); @endphp
+    @php
+        $groupPlans = $plans->filter(fn($p) => str_starts_with($p->plan_key, $key.'_'));
+        $groupHasTrial = $groupPlans->contains(fn ($p) => $p->hasTrial());
+    @endphp
     @if($groupPlans->isNotEmpty())
         <div class="card fc-card mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
                 <h5 class="mb-0 fw-bold">{{ $label }}</h5>
+                @if($key === 'g1')
+                    <span class="badge bg-secondary">Sem mês grátis</span>
+                @elseif($groupHasTrial)
+                    <span class="badge bg-success">1 mês grátis ativo</span>
+                @endif
             </div>
             <div class="card-body p-0">
                 <form method="POST" action="{{ route('admin.plan-prices.update') }}">
@@ -58,8 +66,15 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="p-3 border-top fc-border">
-                        <button type="submit" class="btn btn-success btn-sm">Salvar preços {{ strtoupper($key) }}</button>
+                    <div class="p-3 border-top fc-border d-flex flex-wrap align-items-center gap-3">
+                        @if($key !== 'g1')
+                            <div class="form-check mb-0">
+                                <input type="hidden" name="trial_{{ $key }}" value="0">
+                                <input class="form-check-input" type="checkbox" value="1" id="trial_{{ $key }}" name="trial_{{ $key }}" {{ $groupHasTrial ? 'checked' : '' }}>
+                                <label class="form-check-label small" for="trial_{{ $key }}">1 mês grátis (cartão agora, cobra depois)</label>
+                            </div>
+                        @endif
+                        <button type="submit" class="btn btn-success btn-sm">Salvar {{ strtoupper($key) }}</button>
                     </div>
                 </form>
                 <div class="px-3 pb-3 d-flex flex-wrap gap-2">
@@ -82,6 +97,7 @@
         <ul class="mb-0 mt-2">
             <li>Alterações de preço afetam novos checkouts. Assinaturas ativas mantêm o valor contratado.</li>
             <li>Planos inativos não aparecem no onboarding.</li>
+            <li>O mês grátis vale só para G2, G3 e G4. Desmarque e salve para desativar em novos cadastros; quem já está no trial não é afetado.</li>
             <li>O Stripe pode criar novos price IDs automaticamente quando o valor mudar.</li>
         </ul>
     </div>

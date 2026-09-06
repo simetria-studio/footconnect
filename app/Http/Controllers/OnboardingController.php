@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PlanPrice;
 use App\Services\ReferralService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
@@ -11,6 +12,7 @@ use Stripe\Checkout\Session as StripeCheckoutSession;
 use Stripe\Price;
 use Stripe\Product;
 use Stripe\Stripe;
+use Stripe\Subscription as StripeSubscription;
 
 class OnboardingController extends Controller
 {
@@ -20,7 +22,12 @@ class OnboardingController extends Controller
             Session::put('referral.code', strtoupper($ref));
         }
 
-        return view('onboarding.user-type');
+        return view('onboarding.user-type', [
+            'trialGroups' => collect(array_keys(config('plans.groups')))
+                ->filter(fn (string $key) => $key !== 'g1' && PlanPrice::groupHasTrial($key))
+                ->values()
+                ->all(),
+        ]);
     }
 
     public function storeUserType(Request $request)
@@ -153,8 +160,10 @@ class OnboardingController extends Controller
 
         // Obtém informações do plano para melhorar a experiência
         $planInfo = $this->getPlanInfo($data['plan']);
+        $planModel = PlanPrice::getByKey($data['plan']);
+        $trialDays = (int) ($planModel?->trial_days ?? 0);
 
-        $session = StripeCheckoutSession::create([
+        $sessionPayload = [
             'mode' => 'subscription',
             'line_items' => [
                 [
@@ -182,7 +191,9 @@ class OnboardingController extends Controller
             // ],
             'custom_text' => [
                 'submit' => [
-                    'message' => '🔒 Pagamento seguro processado pelo Stripe. Ao assinar, você concorda com nossos Termos de Serviço e Política de Privacidade. Cancele a qualquer momento.',
+                    'message' => $trialDays > 0
+                        ? '🔒 Você não será cobrado agora. A primeira cobrança ocorre após o período grátis. Cancele a qualquer momento.'
+                        : '🔒 Pagamento seguro processado pelo Stripe. Ao assinar, você concorda com nossos Termos de Serviço e Política de Privacidade. Cancele a qualquer momento.',
                 ],
                 // Nota: shipping_address requer shipping_address_collection habilitado
                 // Como é uma assinatura digital, não precisamos de endereço de entrega
@@ -203,7 +214,13 @@ class OnboardingController extends Controller
             'customer_email' => $user->email, // Preenche email do usuário autenticado
             'success_url' => route('onboarding.success').'?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => route('onboarding.plans').'?canceled=1',
-        ]);
+        ];
+
+        if ($trialDays > 0) {
+            $sessionPayload['subscription_data']['trial_period_days'] = $trialDays;
+        }
+
+        $session = StripeCheckoutSession::create($sessionPayload);
 
         Log::info('Stripe checkout session created', ['session' => $session]);
         return redirect($session->url);
@@ -417,8 +434,21 @@ class OnboardingController extends Controller
                     $user->plan_type = $planGroup;
                     $user->plan_interval = str_ends_with((string) $planKey, '_yearly') ? 'yearly' : 'monthly';
 
-                    $user->subscription_status = 'active';
+                    $subscription = StripeSubscription::retrieve($session->subscription);
+                    $user->subscription_status = $subscription->status ?: 'active';
+                    $periodEnd = $subscription->trial_end ?: $subscription->current_period_end;
+                    if ($periodEnd) {
+                        $user->current_period_end = Carbon::createFromTimestamp($periodEnd);
+                    }
                     $user->save();
+
+                    $statusMessage = $user->subscription_status === 'trialing'
+                        ? '1 mês grátis ativado! Bem-vindo ao FootConnect.'
+                        : 'Pagamento aprovado! Bem-vindo ao FootConnect.';
+
+                    Session::forget(['onboarding.role', 'onboarding.plan_group']);
+
+                    return redirect()->route('home')->with('status', $statusMessage);
                 }
             } catch (\Throwable $e) {
                 Log::error('Error linking subscription', ['error' => $e->getMessage()]);

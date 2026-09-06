@@ -44,6 +44,19 @@
                                 Influenciadores não pagam plano. Seu acesso ao Indique e Ganhe está liberado pelo administrador.
                             </p>
                         </div>
+                    @elseif ($user->isOnTrial())
+                        <div class="alert alert-success mb-3">
+                            <h6 class="fw-bold mb-1">1 mês grátis ativo</h6>
+                            <p class="mb-1">
+                                <span class="fw-semibold">{{ $tipo ?? 'Plano ativo' }}</span>
+                                @if($intervalo) — {{ $intervalo }} @endif
+                            </p>
+                            @if($user->current_period_end)
+                                <p class="small mb-0">
+                                    Primeira cobrança em {{ $user->current_period_end->format('d/m/Y') }}. Cancele antes dessa data para não ser cobrado.
+                                </p>
+                            @endif
+                        </div>
                     @elseif ($user->subscription_status === 'active')
                         <div class="alert alert-success mb-3">
                             <h6 class="fw-bold mb-1">Assinatura ativa</h6>
@@ -75,7 +88,7 @@
                 </div>
             </div>
 
-            @if ($user->subscription_status === 'active')
+            @if ($user->hasActiveSubscription())
                 <!-- Cancelar Assinatura -->
                 <div class="card fc-card">
                     <div class="card-header">
@@ -83,7 +96,11 @@
                     </div>
                     <div class="card-body">
                         <p class="small fc-text-secondary mb-3">
-                            O cancelamento interrompe futuras renovações. Seu acesso permanece até o fim do período já pago.
+                            @if($user->isOnTrial())
+                                Se cancelar agora, você não será cobrado no fim do mês grátis. O acesso permanece até {{ $user->current_period_end?->format('d/m/Y') ?? 'o fim do trial' }}.
+                            @else
+                                O cancelamento interrompe futuras renovações. Seu acesso permanece até o fim do período já pago.
+                            @endif
                         </p>
                         <form method="POST" action="{{ route('settings.plan.cancel') }}">
                             @csrf

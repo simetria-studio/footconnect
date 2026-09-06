@@ -1258,7 +1258,12 @@
                                     <span style="font-size: 1.25rem;">{{ $group['icon'] }}</span>
                                     <span class="fc-profile-code">{{ $group['code'] }}</span>
                                 </div>
-                                <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.25rem;">{{ $group['short_label'] }}</h3>
+                                <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.25rem;">
+                                    {{ $group['short_label'] }}
+                                    @if(($monthly?->hasTrial() || $yearly?->hasTrial()) && $group['key'] !== 'g1')
+                                        <span class="fc-tag-off" style="background: var(--fc-green-dim); color: var(--fc-green); border-color: rgba(34, 197, 94, 0.4);">1 mês grátis</span>
+                                    @endif
+                                </h3>
                                 <p style="font-size: 0.8rem; color: var(--fc-muted); margin-bottom: 0; line-height: 1.45;">{{ $group['plan_description'] }}</p>
 
                                 <div class="fc-price-monthly active">
@@ -1302,7 +1307,11 @@
                                 </ul>
 
                                 <a href="{{ route('onboarding.user-type') }}" class="fc-btn-green w-100 text-center" style="font-size: 0.85rem;">
-                                    Assinar {{ $group['code'] }}
+                                    @if(($monthly?->hasTrial() || $yearly?->hasTrial()) && $group['key'] !== 'g1')
+                                        Começar 1 mês grátis
+                                    @else
+                                        Assinar {{ $group['code'] }}
+                                    @endif
                                 </a>
                             </div>
                         </div>
@@ -1310,7 +1319,14 @@
                 </div>
 
                 <p class="text-center mt-4 mb-0" style="font-size: 0.8rem; color: var(--fc-muted);">
-                    Todos os planos incluem acesso imediato após confirmação do pagamento. Valores em reais (BRL).
+                    @php
+                        $landingHasTrial = $planGroups->contains(fn ($g) => ($g['key'] ?? '') !== 'g1' && (($g['monthly']?->hasTrial()) || ($g['yearly']?->hasTrial())));
+                    @endphp
+                    @if($landingHasTrial)
+                        Planos profissionais (G2–G4) com 1 mês grátis. Jogador (G1) cobra a partir do primeiro mês. Valores em reais (BRL).
+                    @else
+                        Todos os planos incluem acesso após a confirmação do pagamento. Valores em reais (BRL).
+                    @endif
                 </p>
             </div>
         </section>

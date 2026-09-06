@@ -170,6 +170,9 @@
                         <p class="fc-option-content-title {{ $group['accent'] === 'yellow' ? 'fc-option-content-title--yellow' : '' }}">
                             {{ $group['label'] }}
                             <span class="fc-option-code">{{ $group['code'] }}</span>
+                            @if($key !== 'g1' && in_array($key, $trialGroups ?? [], true))
+                                <span class="fc-option-code" style="color: #22c55e; letter-spacing: 0;">· 1 mês grátis</span>
+                            @endif
                         </p>
                         <h2>{{ $group['title'] }}</h2>
                         <p>{{ $group['description'] }}</p>

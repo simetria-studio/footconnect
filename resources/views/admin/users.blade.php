@@ -95,6 +95,9 @@
                             <td class="small">
                                 @if($u->isInfluencer())
                                     <span class="text-info">Cortesia</span>
+                                @elseif($u->subscription_status === 'trialing')
+                                    <span class="text-info">1 mês grátis</span>
+                                    @if($u->current_period_end)<br><span class="fc-text-secondary">até {{ $u->current_period_end->format('d/m/Y') }}</span>@endif
                                 @elseif($u->subscription_status === 'active')
                                     <span class="text-success">Ativa</span>
                                     <br><span class="fc-text-secondary">{{ $u->plan_interval ?? '—' }}</span>

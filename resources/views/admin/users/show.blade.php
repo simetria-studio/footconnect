@@ -53,6 +53,7 @@
             <div class="card-body small">
                 <p class="mb-1"><span class="fc-text-secondary">Status:</span>
                     @if($user->isInfluencer())<span class="text-success fw-semibold">Cortesia (sem plano)</span>
+                    @elseif($user->subscription_status === 'trialing')<span class="text-info fw-semibold">1 mês grátis</span>
                     @elseif($user->subscription_status === 'active')<span class="text-success fw-semibold">Ativa</span>
                     @elseif($user->subscription_status === 'canceled')<span class="text-warning">Cancelada</span>
                     @else<span class="fc-text-secondary">{{ $user->subscription_status ?: 'Sem assinatura' }}</span>@endif
@@ -80,7 +81,7 @@
             <form method="POST" action="{{ route('admin.users.toggle-admin', $user) }}">@csrf
                 <button class="btn btn-sm btn-outline-warning">{{ $user->is_admin ? 'Remover admin' : 'Tornar admin' }}</button>
             </form>
-            @if($user->subscription_status === 'active')
+            @if(in_array($user->subscription_status, ['active', 'trialing'], true))
                 <form method="POST" action="{{ route('admin.users.cancel-plan', $user) }}" onsubmit="return confirm('Cancelar assinatura?');">@csrf
                     <button class="btn btn-sm btn-outline-warning">Cancelar plano</button>
                 </form>
