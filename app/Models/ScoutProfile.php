@@ -24,6 +24,8 @@ class ScoutProfile extends Model
         'federation_name',
         'website',
         'bio',
+        'story',
+        'video_url',
     ];
 
     protected function casts(): array

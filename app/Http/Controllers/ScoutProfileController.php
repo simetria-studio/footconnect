@@ -55,6 +55,8 @@ class ScoutProfileController extends Controller
             'scope' => ['nullable', 'in:regional,nacional,internacional'],
             'is_federated' => ['nullable', 'in:0,1'],
             'federation_name' => ['nullable', 'required_if:is_federated,1', 'string', 'max:255'],
+            'story' => ['nullable', 'string', 'max:5000'],
+            'video_url' => ['nullable', 'url', 'max:500'],
         ]);
 
         $user->full_name = $data['full_name'];

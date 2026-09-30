@@ -5,6 +5,7 @@ return [
 
     'nav' => [
         'highlights' => 'À la une',
+        'monthly_highlight' => 'Du mois',
         'modalities' => 'Formats',
         'news' => 'Actualités',
         'profiles' => 'Profils',
@@ -110,6 +111,35 @@ return [
         'footer_tagline' => 'La connexion professionnelle dans le football.',
         'footer_closed' => 'Application réservée aux abonnés',
         'footer_stripe' => 'Paiement sécurisé via Stripe',
+    ],
+
+    'highlights' => [
+        'pill' => 'Coup de cœur du mois',
+        'title' => 'Ceux qui sont à l’honneur',
+        'lead' => 'Un joueur, un entraîneur et un agent choisis par FootConnect pour raconter leur histoire ce mois-ci.',
+        'story' => 'Histoire',
+        'watch_video' => 'Voir la vidéo',
+        'pending_story' => 'Histoire bientôt — ajoutez-la dans votre profil.',
+        'empty' => 'Les coups de cœur de ce mois seront publiés bientôt.',
+        'categories' => [
+            'player' => 'Joueur',
+            'coach' => 'Entraîneur',
+            'businessman' => 'Agent',
+        ],
+        'months' => [
+            1 => 'Janvier',
+            2 => 'Février',
+            3 => 'Mars',
+            4 => 'Avril',
+            5 => 'Mai',
+            6 => 'Juin',
+            7 => 'Juillet',
+            8 => 'Août',
+            9 => 'Septembre',
+            10 => 'Octobre',
+            11 => 'Novembre',
+            12 => 'Décembre',
+        ],
     ],
 
     'plans' => [

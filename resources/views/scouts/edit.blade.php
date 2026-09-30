@@ -97,6 +97,18 @@
                             detail-label="Qual federação?"
                             :detail-value="$profile->federation_name"
                         />
+
+                        <div class="col-12">
+                            <label for="story" class="form-label">Sua história</label>
+                            <textarea class="form-control" id="story" name="story" rows="5" maxlength="5000" placeholder="Conte sua trajetória, conquistas e o que te motiva no futebol...">{{ old('story', $profile->story) }}</textarea>
+                            <div class="form-text">Se você for escolhido como destaque do mês, essa história aparece na página inicial junto com suas fotos e vídeos.</div>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="video_url" class="form-label">Vídeo (link YouTube / Vimeo)</label>
+                            <input type="url" class="form-control" id="video_url" name="video_url" value="{{ old('video_url', $profile->video_url) }}" placeholder="https://youtube.com/watch?v=...">
+                            <div class="form-text">Opcional. Usado no destaque do mês e para enriquecer seu perfil.</div>
+                        </div>
                     </div>
 
                     @if ($errors->any())

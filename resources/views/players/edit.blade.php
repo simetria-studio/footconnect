@@ -109,6 +109,12 @@
                             <textarea class="form-control" id="characteristics" name="characteristics" rows="4" placeholder="Descreva suas características técnicas, físicas e comportamentais...">{{ old('characteristics', $profile->characteristics ?? $profile->bio) }}</textarea>
                         </div>
 
+                        <div class="col-12">
+                            <label for="story" class="form-label">Sua história</label>
+                            <textarea class="form-control" id="story" name="story" rows="5" maxlength="5000" placeholder="Conte sua trajetória, conquistas e o que te motiva no futebol...">{{ old('story', $profile->story) }}</textarea>
+                            <div class="form-text">Se você for escolhido como destaque do mês, essa história aparece na página inicial junto com suas fotos e vídeos.</div>
+                        </div>
+
                         <x-yes-no-field
                             name="is_student"
                             label="Estudante"

@@ -890,6 +890,127 @@
             font-weight: 700;
             color: var(--fc-green);
         }
+
+        .fc-month-grid {
+            display: grid;
+            gap: 1.25rem;
+            grid-template-columns: 1fr;
+        }
+
+        @media (min-width: 992px) {
+            .fc-month-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .fc-month-card {
+            background: var(--fc-card);
+            border: 1px solid var(--fc-border);
+            border-radius: 18px;
+            overflow: hidden;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .fc-month-media {
+            position: relative;
+            aspect-ratio: 4 / 3;
+            background: #020617;
+            overflow: hidden;
+        }
+
+        .fc-month-media img,
+        .fc-month-media video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .fc-month-media iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            display: block;
+        }
+
+        .fc-month-media-empty {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--fc-muted);
+            font-size: 0.85rem;
+            background: radial-gradient(circle at top, rgba(34,197,94,0.12), transparent 70%);
+        }
+
+        .fc-month-badge {
+            position: absolute;
+            top: 0.85rem;
+            left: 0.85rem;
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 0.35rem 0.65rem;
+            border-radius: 999px;
+            background: rgba(2, 6, 23, 0.85);
+            border: 1px solid rgba(34, 197, 94, 0.45);
+            color: var(--fc-green);
+        }
+
+        .fc-month-body {
+            padding: 1.25rem 1.35rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
+            flex: 1;
+        }
+
+        .fc-month-name {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: -0.02em;
+        }
+
+        .fc-month-meta {
+            font-size: 0.82rem;
+            color: var(--fc-muted);
+            margin: 0;
+        }
+
+        .fc-month-story-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--fc-green);
+            margin: 0.4rem 0 0;
+        }
+
+        .fc-month-story {
+            font-size: 0.9rem;
+            color: var(--fc-muted);
+            line-height: 1.6;
+            margin: 0;
+            white-space: pre-line;
+        }
+
+        .fc-month-video-link {
+            margin-top: auto;
+            padding-top: 0.85rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--fc-green);
+            text-decoration: none;
+        }
+
+        .fc-month-video-link:hover {
+            color: #86efac;
+        }
     </style>
 </head>
 <body>
@@ -905,6 +1026,7 @@
                 <div class="d-flex align-items-center gap-2 gap-md-3">
                     <div class="fc-nav-links d-flex gap-1">
                         <a href="#destaques" class="fc-nav-link">{{ __('ui.nav.highlights') }}</a>
+                        <a href="#destaque-mes" class="fc-nav-link">{{ __('ui.nav.monthly_highlight') }}</a>
                         <a href="#modalidades" class="fc-nav-link">{{ __('ui.nav.modalities') }}</a>
                         <a href="#noticias" class="fc-nav-link">{{ __('ui.nav.news') }}</a>
                         <a href="#perfis" class="fc-nav-link">{{ __('ui.nav.profiles') }}</a>
@@ -1034,6 +1156,74 @@
                                 @endforeach
                             </div>
                         @endif
+                    </div>
+                </div>
+            </section>
+        @endif
+
+        {{-- Destaque do mês --}}
+        @php
+            $highlightOrder = [
+                \App\Models\MonthlyHighlight::CATEGORY_PLAYER,
+                \App\Models\MonthlyHighlight::CATEGORY_COACH,
+                \App\Models\MonthlyHighlight::CATEGORY_BUSINESSMAN,
+            ];
+            $hasMonthlyHighlights = isset($monthlyHighlights) && $monthlyHighlights->isNotEmpty();
+        @endphp
+        @if($hasMonthlyHighlights)
+            <section class="fc-section" id="destaque-mes" aria-labelledby="destaque-mes-title">
+                <div class="container">
+                    <div class="mb-4">
+                        <p class="fc-pill mb-2"><span class="fc-pill-dot"></span> {{ __('ui.highlights.pill') }}</p>
+                        <h2 class="fc-section-title" id="destaque-mes-title">{{ __('ui.highlights.title') }}</h2>
+                        <p class="fc-section-lead mb-0">{{ __('ui.highlights.lead') }}</p>
+                    </div>
+
+                    <div class="fc-month-grid">
+                        @foreach($highlightOrder as $category)
+                            @php $item = $monthlyHighlights->get($category); @endphp
+                            @if($item)
+                                <article class="fc-month-card">
+                                    <div class="fc-month-media">
+                                        <span class="fc-month-badge">{{ $item->category_label }}</span>
+                                        @if($item->displayEmbedVideoUrl())
+                                            <iframe src="{{ $item->displayEmbedVideoUrl() }}" title="{{ $item->displayName() }}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+                                        @elseif($item->displayPhotoUrl())
+                                            <img src="{{ $item->displayPhotoUrl() }}" alt="{{ $item->displayName() }}">
+                                        @else
+                                            <div class="fc-month-media-empty">{{ $item->category_label }}</div>
+                                        @endif
+                                    </div>
+                                    <div class="fc-month-body">
+                                        <h3 class="fc-month-name">{{ $item->displayName() }}</h3>
+                                        <p class="fc-month-meta">
+                                            @if($item->displayRoleTitle())
+                                                {{ $item->displayRoleTitle() }}
+                                                @if($item->displayOrganization()) · {{ $item->displayOrganization() }} @endif
+                                                ·
+                                            @elseif($item->displayOrganization())
+                                                {{ $item->displayOrganization() }} ·
+                                            @endif
+                                            {{ $item->period_label }}
+                                        </p>
+                                        @if(filled($item->displayStory()))
+                                            <p class="fc-month-story-label">{{ __('ui.highlights.story') }}</p>
+                                            <p class="fc-month-story">{{ $item->displayStory() }}</p>
+                                        @else
+                                            <p class="fc-month-story">{{ __('ui.highlights.pending_story') }}</p>
+                                        @endif
+                                        @if($item->displayVideoUrl() && ! $item->displayEmbedVideoUrl())
+                                            <a href="{{ $item->displayVideoUrl() }}" target="_blank" rel="noopener noreferrer" class="fc-month-video-link">{{ __('ui.highlights.watch_video') }} →</a>
+                                        @endif
+                                        @if($item->displayPhotoUrl() && $item->displayEmbedVideoUrl())
+                                            <div class="mt-2">
+                                                <img src="{{ $item->displayPhotoUrl() }}" alt="{{ $item->displayName() }}" class="rounded" style="width: 72px; height: 72px; object-fit: cover;">
+                                            </div>
+                                        @endif
+                                    </div>
+                                </article>
+                            @endif
+                        @endforeach
                     </div>
                 </div>
             </section>

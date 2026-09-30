@@ -5,6 +5,7 @@ return [
 
     'nav' => [
         'highlights' => 'Highlights',
+        'monthly_highlight' => 'Of the month',
         'modalities' => 'Formats',
         'news' => 'News',
         'profiles' => 'Profiles',
@@ -110,6 +111,35 @@ return [
         'footer_tagline' => 'Professional connections in football.',
         'footer_closed' => 'Members-only app',
         'footer_stripe' => 'Secure payment via Stripe',
+    ],
+
+    'highlights' => [
+        'pill' => 'Highlight of the month',
+        'title' => 'In the spotlight',
+        'lead' => 'A player, coach and agent chosen by FootConnect to share their stories this month.',
+        'story' => 'Story',
+        'watch_video' => 'Watch video',
+        'pending_story' => 'Story coming soon — add it in your profile.',
+        'empty' => 'This month’s highlights will be published soon.',
+        'categories' => [
+            'player' => 'Player',
+            'coach' => 'Coach',
+            'businessman' => 'Agent',
+        ],
+        'months' => [
+            1 => 'January',
+            2 => 'February',
+            3 => 'March',
+            4 => 'April',
+            5 => 'May',
+            6 => 'June',
+            7 => 'July',
+            8 => 'August',
+            9 => 'September',
+            10 => 'October',
+            11 => 'November',
+            12 => 'December',
+        ],
     ],
 
     'plans' => [

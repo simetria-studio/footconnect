@@ -28,6 +28,7 @@ class PlayerProfile extends Model
         'profile_photo_path',
         'bio',
         'characteristics',
+        'story',
         'is_student',
         'school_name',
         'school_grade',

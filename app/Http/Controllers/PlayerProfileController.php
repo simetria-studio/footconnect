@@ -137,6 +137,7 @@ class PlayerProfileController extends Controller
             'height_cm' => ['nullable', 'integer', 'min:120', 'max:230'],
             'dominant_foot' => ['nullable', 'in:right,left,both'],
             'characteristics' => ['nullable', 'string', 'max:1500'],
+            'story' => ['nullable', 'string', 'max:5000'],
             'is_student' => ['nullable', 'in:0,1'],
             'school_name' => ['nullable', 'required_if:is_student,1', 'string', 'max:255'],
             'school_grade' => ['nullable', 'required_if:is_student,1', 'string', 'max:100'],

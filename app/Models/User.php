@@ -107,6 +107,21 @@ class User extends Authenticatable
         return $this->hasMany(Favorite::class, 'scout_id');
     }
 
+    public function monthlyHighlights()
+    {
+        return $this->hasMany(MonthlyHighlight::class);
+    }
+
+    public function currentMonthlyHighlight(): ?MonthlyHighlight
+    {
+        return $this->monthlyHighlights()
+            ->where('is_active', true)
+            ->orderByDesc('year')
+            ->orderByDesc('month')
+            ->orderByDesc('id')
+            ->first();
+    }
+
     public function favoritedByScouts()
     {
         return $this->hasMany(Favorite::class, 'player_id');

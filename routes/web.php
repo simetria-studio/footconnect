@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\InfluencerController;
 use App\Http\Controllers\Admin\MarketingBannerController;
+use App\Http\Controllers\Admin\MonthlyHighlightController;
 use App\Http\Controllers\Admin\NewsPostController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
@@ -97,6 +98,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::put('/banners/{banner}', [MarketingBannerController::class, 'update'])->name('banners.update');
     Route::delete('/banners/{banner}', [MarketingBannerController::class, 'destroy'])->name('banners.destroy');
     Route::post('/banners/{banner}/toggle', [MarketingBannerController::class, 'toggle'])->name('banners.toggle');
+
+    Route::get('/highlights', [MonthlyHighlightController::class, 'index'])->name('highlights.index');
+    Route::get('/highlights/create', [MonthlyHighlightController::class, 'create'])->name('highlights.create');
+    Route::post('/highlights', [MonthlyHighlightController::class, 'store'])->name('highlights.store');
+    Route::get('/highlights/{highlight}/edit', [MonthlyHighlightController::class, 'edit'])->name('highlights.edit');
+    Route::put('/highlights/{highlight}', [MonthlyHighlightController::class, 'update'])->name('highlights.update');
+    Route::delete('/highlights/{highlight}', [MonthlyHighlightController::class, 'destroy'])->name('highlights.destroy');
+    Route::post('/highlights/{highlight}/toggle', [MonthlyHighlightController::class, 'toggle'])->name('highlights.toggle');
 
     Route::get('/news', [NewsPostController::class, 'index'])->name('news.index');
     Route::get('/news/create', [NewsPostController::class, 'create'])->name('news.create');

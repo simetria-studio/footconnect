@@ -5,6 +5,7 @@ return [
 
     'nav' => [
         'highlights' => 'Destaques',
+        'monthly_highlight' => 'Do mês',
         'modalities' => 'Modalidades',
         'news' => 'Notícias',
         'profiles' => 'Perfis',
@@ -110,6 +111,35 @@ return [
         'footer_tagline' => 'Conexão profissional no futebol.',
         'footer_closed' => 'App fechado para assinantes',
         'footer_stripe' => 'Pagamento seguro via Stripe',
+    ],
+
+    'highlights' => [
+        'pill' => 'Destaque do mês',
+        'title' => 'Quem está em evidência',
+        'lead' => 'Jogador, treinador e empresário escolhidos pelo FootConnect para contar suas histórias este mês.',
+        'story' => 'História',
+        'watch_video' => 'Assistir vídeo',
+        'pending_story' => 'História em breve — complete no perfil esportivo.',
+        'empty' => 'Os destaques deste mês serão publicados em breve.',
+        'categories' => [
+            'player' => 'Jogador',
+            'coach' => 'Treinador',
+            'businessman' => 'Empresário',
+        ],
+        'months' => [
+            1 => 'Janeiro',
+            2 => 'Fevereiro',
+            3 => 'Março',
+            4 => 'Abril',
+            5 => 'Maio',
+            6 => 'Junho',
+            7 => 'Julho',
+            8 => 'Agosto',
+            9 => 'Setembro',
+            10 => 'Outubro',
+            11 => 'Novembro',
+            12 => 'Dezembro',
+        ],
     ],
 
     'plans' => [
