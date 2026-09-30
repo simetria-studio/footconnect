@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="{{ config('locales.supported.'.app()->getLocale().'.html', 'pt-BR') }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Entrar — FootConnect</title>
+    <title>{{ __('ui.auth.login_title') }}</title>
     @include('partials.favicon')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @include('auth.partials.card-styles')
@@ -44,20 +44,23 @@
 <body>
 <div class="fc-login-wrapper">
     <div class="fc-login-card">
+        <div class="d-flex justify-content-end mb-2">
+            <x-locale-switcher />
+        </div>
         <div class="fc-logo-badge">
             <a href="{{ route('landing') }}">@include('partials.brand-logo', ['height' => 72])</a>
         </div>
         
-        <h1 class="fc-title">Bem-vindo de volta</h1>
+        <h1 class="fc-title">{{ __('ui.auth.welcome_back') }}</h1>
         <p class="fc-subtitle">
-            Acesse sua conta para continuar no FootConnect.
+            {{ __('ui.auth.login_lead') }}
         </p>
 
         <form method="POST" action="{{ route('login.post') }}">
             @csrf
 
             <div class="fc-form-group">
-                <label for="email" class="fc-form-label">Email</label>
+                <label for="email" class="fc-form-label">{{ __('ui.auth.email') }}</label>
                 <input
                     id="email"
                     type="email"
@@ -71,24 +74,24 @@
             </div>
 
             <div class="fc-form-group">
-                <label for="password" class="fc-form-label">Senha</label>
+                <label for="password" class="fc-form-label">{{ __('ui.auth.password') }}</label>
                 <input
                     id="password"
                     type="password"
                     name="password"
                     required
                     class="fc-form-input"
-                    placeholder="Digite sua senha"
+                    placeholder="{{ __('ui.auth.password_placeholder') }}"
                 >
                 <div class="fc-forgot-link">
-                    <a href="{{ route('password.request') }}">Esqueci minha senha</a>
+                    <a href="{{ route('password.request') }}">{{ __('ui.auth.forgot') }}</a>
                 </div>
             </div>
 
             <div class="fc-remember-group">
                 <label class="fc-checkbox-wrapper">
                     <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-                    <span class="fc-checkbox-label">Lembrar-me</span>
+                    <span class="fc-checkbox-label">{{ __('ui.auth.remember') }}</span>
                 </label>
             </div>
 
@@ -105,12 +108,12 @@
             @endif
 
             <button type="submit" class="fc-btn-primary">
-                Entrar
+                {{ __('ui.auth.login') }}
             </button>
 
             <p class="fc-link-text">
-                Ainda não tem conta?
-                <a href="{{ route('landing') }}">Criar conta</a>
+                {{ __('ui.auth.no_account') }}
+                <a href="{{ route('landing') }}">{{ __('ui.auth.signup') }}</a>
             </p>
         </form>
     </div>

@@ -42,7 +42,7 @@ class AuthController extends Controller
         }
 
         return back()
-            ->withErrors(['email' => 'Credenciais inválidas.'])
+            ->withErrors(['email' => __('ui.auth.invalid_credentials')])
             ->onlyInput('email');
     }
 

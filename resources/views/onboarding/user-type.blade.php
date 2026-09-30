@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="{{ config('locales.supported.'.app()->getLocale().'.html', 'pt-BR') }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Escolha seu perfil — FootConnect</title>
+    <title>{{ __('ui.onboarding.user_type_title') }}</title>
     @include('partials.favicon')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
@@ -146,16 +146,19 @@
 <div class="fc-onboarding-wrapper">
     <div class="fc-onboarding-card">
         <div class="mb-4">
-            <a href="{{ route('landing') }}" class="d-inline-block mb-3 text-decoration-none">
-                @include('partials.brand-logo', ['height' => 64])
-            </a>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <a href="{{ route('landing') }}" class="d-inline-block text-decoration-none">
+                    @include('partials.brand-logo', ['height' => 64])
+                </a>
+                <x-locale-switcher />
+            </div>
             <div class="fc-pill">
                 <span class="fc-pill-dot"></span>
-                Passo 1 de 4 • Escolha seu perfil
+                {{ __('ui.onboarding.step_profile') }}
             </div>
-            <h1 class="fc-onboarding-title">Como você quer usar o FootConnect?</h1>
+            <h1 class="fc-onboarding-title">{{ __('ui.onboarding.user_type_heading') }}</h1>
             <p class="fc-onboarding-subtitle">
-                Escolha o plano que melhor representa seu papel no futebol profissional. Cada perfil tem valores e recursos adequados à sua atuação.
+                {{ __('ui.onboarding.user_type_lead') }}
             </p>
         </div>
 
@@ -172,20 +175,20 @@
                     <div class="fc-option-icon">{{ $group['icon'] }}</div>
                     <div>
                         <p class="fc-option-content-title {{ $group['accent'] === 'yellow' ? 'fc-option-content-title--yellow' : '' }}">
-                            {{ $group['label'] }}
+                            {{ __('ui.plans.groups.'.$key.'.label') }}
                             <span class="fc-option-code">{{ $group['code'] }}</span>
                             @if($key !== 'g1' && in_array($key, $trialGroups ?? [], true))
-                                <span class="fc-option-code" style="color: #22c55e; letter-spacing: 0;">· 1 mês grátis</span>
+                                <span class="fc-option-code" style="color: #22c55e; letter-spacing: 0;">· {{ __('ui.landing.free_month') }}</span>
                             @endif
                         </p>
-                        <h2>{{ $group['title'] }}</h2>
-                        <p>{{ $group['description'] }}</p>
+                        <h2>{{ __('ui.plans.groups.'.$key.'.title') }}</h2>
+                        <p>{{ __('ui.plans.groups.'.$key.'.description') }}</p>
                     </div>
                 </button>
             @endforeach
 
             <p class="fc-hint">
-                Você poderá ver e gerenciar seu plano depois em <strong>Configurações &gt; Plano</strong>.
+                {!! __('ui.onboarding.user_type_hint') !!}
             </p>
         </form>
     </div>

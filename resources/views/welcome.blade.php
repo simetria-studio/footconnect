@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ config('locales.supported.'.app()->getLocale().'.html', 'pt-BR') }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>FootConnect — Conectando talentos ao futebol profissional</title>
-    <meta name="description" content="Plataforma profissional de networking esportivo. Perfis G1 a G4 para atletas, empresários, treinadores e clubes.">
+    <title>{{ __('ui.landing.meta_title') }}</title>
+    <meta name="description" content="{{ __('ui.landing.meta_description') }}">
     @include('partials.favicon')
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -904,15 +904,16 @@
                 </a>
                 <div class="d-flex align-items-center gap-2 gap-md-3">
                     <div class="fc-nav-links d-flex gap-1">
-                        <a href="#destaques" class="fc-nav-link">Destaques</a>
-                        <a href="#modalidades" class="fc-nav-link">Modalidades</a>
-                        <a href="#noticias" class="fc-nav-link">Notícias</a>
-                        <a href="#perfis" class="fc-nav-link">Perfis</a>
-                        <a href="#planos" class="fc-nav-link">Planos</a>
-                        <a href="#faq" class="fc-nav-link">FAQ</a>
+                        <a href="#destaques" class="fc-nav-link">{{ __('ui.nav.highlights') }}</a>
+                        <a href="#modalidades" class="fc-nav-link">{{ __('ui.nav.modalities') }}</a>
+                        <a href="#noticias" class="fc-nav-link">{{ __('ui.nav.news') }}</a>
+                        <a href="#perfis" class="fc-nav-link">{{ __('ui.nav.profiles') }}</a>
+                        <a href="#planos" class="fc-nav-link">{{ __('ui.nav.plans') }}</a>
+                        <a href="#faq" class="fc-nav-link">{{ __('ui.nav.faq') }}</a>
                     </div>
-                    <a href="{{ route('login') }}" class="fc-nav-link d-none d-sm-inline">Entrar</a>
-                    <a href="{{ route('onboarding.user-type') }}" class="fc-btn-green">Criar conta</a>
+                    <x-locale-switcher />
+                    <a href="{{ route('login') }}" class="fc-nav-link d-none d-sm-inline">{{ __('ui.nav.login') }}</a>
+                    <a href="{{ route('onboarding.user-type') }}" class="fc-btn-green">{{ __('ui.nav.signup') }}</a>
                 </div>
             </div>
         </nav>
@@ -924,57 +925,56 @@
                     <div class="col-lg-7">
                         <div class="fc-pill">
                             <span class="fc-pill-dot"></span>
-                            Plataforma exclusiva para assinantes
+                            {{ __('ui.landing.pill') }}
                         </div>
                         <h1 class="fc-hero-title">
-                            O futebol profissional<br><span>começa na conexão certa</span>
+                            {!! __('ui.landing.hero_title') !!}
                         </h1>
                         <p class="fc-hero-lead">
-                            FootConnect une atletas, empresários, treinadores e clubes em um ambiente fechado e profissional.
-                            Perfis completos, busca avançada, favoritos e mensagens — tudo em um só lugar.
+                            {{ __('ui.landing.hero_lead') }}
                         </p>
                         <div class="d-flex flex-wrap gap-3">
-                            <a href="{{ route('onboarding.user-type') }}" class="fc-btn-green">Começar agora</a>
-                            <a href="#planos" class="fc-btn-ghost">Ver planos e valores</a>
+                            <a href="{{ route('onboarding.user-type') }}" class="fc-btn-green">{{ __('ui.landing.start_now') }}</a>
+                            <a href="#planos" class="fc-btn-ghost">{{ __('ui.landing.see_plans') }}</a>
                         </div>
                         <div class="fc-trust-row">
                             <div class="fc-trust-item">
-                                <strong>3 modalidades</strong>
-                                <span>Campo, Futsal e Fut 7</span>
+                                <strong>{{ __('ui.landing.trust_modalities') }}</strong>
+                                <span>{{ __('ui.landing.trust_modalities_detail') }}</span>
                             </div>
                             <div class="fc-trust-item">
-                                <strong>Masc. + Fem.</strong>
-                                <span>Todas as categorias</span>
+                                <strong>{{ __('ui.landing.trust_genders') }}</strong>
+                                <span>{{ __('ui.landing.trust_genders_detail') }}</span>
                             </div>
                             <div class="fc-trust-item">
-                                <strong>{{ $annualDiscount }}% OFF</strong>
-                                <span>No plano anual</span>
+                                <strong>{{ __('ui.landing.trust_discount', ['discount' => $annualDiscount]) }}</strong>
+                                <span>{{ __('ui.landing.trust_discount_detail') }}</span>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-5">
                         <div class="fc-card p-0 overflow-hidden" style="border-color: rgba(34,197,94,0.25);">
                             <div style="padding: 1.75rem; background: radial-gradient(circle at top, rgba(34,197,94,0.12), transparent 70%);">
-                                <p class="mb-3" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--fc-muted);">Como funciona</p>
+                                <p class="mb-3" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--fc-muted);">{{ __('ui.landing.how_it_works') }}</p>
                                 <div class="d-flex gap-3 mb-3">
                                     <div class="fc-step-num">1</div>
                                     <div>
-                                        <strong style="font-size: 0.9rem;">Escolha seu perfil</strong>
-                                        <p class="mb-0" style="font-size: 0.8rem; color: var(--fc-muted);">Atleta, empresário, treinador ou clube</p>
+                                        <strong style="font-size: 0.9rem;">{{ __('ui.landing.step1_title') }}</strong>
+                                        <p class="mb-0" style="font-size: 0.8rem; color: var(--fc-muted);">{{ __('ui.landing.step1_text') }}</p>
                                     </div>
                                 </div>
                                 <div class="d-flex gap-3 mb-3">
                                     <div class="fc-step-num">2</div>
                                     <div>
-                                        <strong style="font-size: 0.9rem;">Assine o plano ideal</strong>
-                                        <p class="mb-0" style="font-size: 0.8rem; color: var(--fc-muted);">Mensal ou anual com pagamento seguro</p>
+                                        <strong style="font-size: 0.9rem;">{{ __('ui.landing.step2_title') }}</strong>
+                                        <p class="mb-0" style="font-size: 0.8rem; color: var(--fc-muted);">{{ __('ui.landing.step2_text') }}</p>
                                     </div>
                                 </div>
                                 <div class="d-flex gap-3">
                                     <div class="fc-step-num">3</div>
                                     <div>
-                                        <strong style="font-size: 0.9rem;">Conecte-se ao mercado</strong>
-                                        <p class="mb-0" style="font-size: 0.8rem; color: var(--fc-muted);">Perfil, busca, favoritos e mensagens</p>
+                                        <strong style="font-size: 0.9rem;">{{ __('ui.landing.step3_title') }}</strong>
+                                        <p class="mb-0" style="font-size: 0.8rem; color: var(--fc-muted);">{{ __('ui.landing.step3_text') }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -986,7 +986,7 @@
 
         {{-- Banners: só a imagem (a arte já traz o conteúdo) --}}
         @if(isset($banners) && $banners->isNotEmpty())
-            <section class="fc-landing-banners" id="destaques" aria-label="Destaques">
+            <section class="fc-landing-banners" id="destaques" aria-label="{{ __('ui.nav.highlights') }}">
                 <div class="container">
                     <div id="fcLandingBannerCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="6500">
                         <div class="carousel-inner">
@@ -1022,15 +1022,15 @@
                         @if($banners->count() > 1)
                             <button class="carousel-control-prev" type="button" data-bs-target="#fcLandingBannerCarousel" data-bs-slide="prev">
                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Anterior</span>
+                                <span class="visually-hidden">{{ __('ui.nav.previous') }}</span>
                             </button>
                             <button class="carousel-control-next" type="button" data-bs-target="#fcLandingBannerCarousel" data-bs-slide="next">
                                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Próximo</span>
+                                <span class="visually-hidden">{{ __('ui.nav.next') }}</span>
                             </button>
                             <div class="carousel-indicators">
                                 @foreach($banners as $index => $banner)
-                                    <button type="button" data-bs-target="#fcLandingBannerCarousel" data-bs-slide-to="{{ $index }}" class="{{ $index === 0 ? 'active' : '' }}" aria-label="Destaque {{ $index + 1 }}"></button>
+                                    <button type="button" data-bs-target="#fcLandingBannerCarousel" data-bs-slide-to="{{ $index }}" class="{{ $index === 0 ? 'active' : '' }}" aria-label="{{ __('ui.nav.highlight_n', ['n' => $index + 1]) }}"></button>
                                 @endforeach
                             </div>
                         @endif
@@ -1044,58 +1044,57 @@
             <div class="container">
                 <div class="fc-mod-head">
                     <div>
-                        <p class="fc-mod-kicker">Onde o talento joga</p>
+                        <p class="fc-mod-kicker">{{ __('ui.landing.mod_kicker') }}</p>
                         <h2 class="fc-mod-title" id="modalidades-title">
-                            Três gramados.<br><em>Dois gêneros.</em><br>Um só mercado.
+                            {!! __('ui.landing.mod_title') !!}
                         </h2>
                     </div>
-                    <div class="fc-mod-genders" aria-label="Categorias disponíveis">
+                    <div class="fc-mod-genders" aria-label="{{ __('ui.landing.mod_categories') }}">
                         <div class="fc-mod-gender fc-mod-gender--m">
-                            <strong>Masculino</strong>
-                            <span>Ativo agora</span>
+                            <strong>{{ __('ui.landing.male') }}</strong>
+                            <span>{{ __('ui.landing.active_now') }}</span>
                         </div>
                         <div class="fc-mod-gender fc-mod-gender--f">
-                            <strong>Feminino</strong>
-                            <span>Ativo agora</span>
+                            <strong>{{ __('ui.landing.female') }}</strong>
+                            <span>{{ __('ui.landing.active_now') }}</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="fc-mod-track">
                     <article class="fc-mod-panel fc-mod-panel--campo" data-num="01">
-                        <p class="fc-mod-code">Modalidade</p>
-                        <h3 class="fc-mod-name">Futebol de Campo</h3>
-                        <p class="fc-mod-tagline">11×11. O palco clássico — do amador ao profissional.</p>
+                        <p class="fc-mod-code">{{ __('ui.landing.modality') }}</p>
+                        <h3 class="fc-mod-name">{{ __('ui.landing.campo_name') }}</h3>
+                        <p class="fc-mod-tagline">{{ __('ui.landing.campo_tag') }}</p>
                         <div class="fc-mod-mf">
-                            <b>Masculino</b>
-                            <b>Feminino</b>
+                            <b>{{ __('ui.landing.male') }}</b>
+                            <b>{{ __('ui.landing.female') }}</b>
                         </div>
                     </article>
 
                     <article class="fc-mod-panel fc-mod-panel--futsal" data-num="02">
-                        <p class="fc-mod-code">Modalidade</p>
-                        <h3 class="fc-mod-name">Futsal</h3>
-                        <p class="fc-mod-tagline">Quadra rápida. Decisão em cada toque.</p>
+                        <p class="fc-mod-code">{{ __('ui.landing.modality') }}</p>
+                        <h3 class="fc-mod-name">{{ __('ui.landing.futsal_name') }}</h3>
+                        <p class="fc-mod-tagline">{{ __('ui.landing.futsal_tag') }}</p>
                         <div class="fc-mod-mf">
-                            <b>Masculino</b>
-                            <b>Feminino</b>
+                            <b>{{ __('ui.landing.male') }}</b>
+                            <b>{{ __('ui.landing.female') }}</b>
                         </div>
                     </article>
 
                     <article class="fc-mod-panel fc-mod-panel--fut7" data-num="03">
-                        <p class="fc-mod-code">Modalidade</p>
-                        <h3 class="fc-mod-name">Fut 7</h3>
-                        <p class="fc-mod-tagline">Society em alta. Ritmo intenso, vitrine real.</p>
+                        <p class="fc-mod-code">{{ __('ui.landing.modality') }}</p>
+                        <h3 class="fc-mod-name">{{ __('ui.landing.fut7_name') }}</h3>
+                        <p class="fc-mod-tagline">{{ __('ui.landing.fut7_tag') }}</p>
                         <div class="fc-mod-mf">
-                            <b>Masculino</b>
-                            <b>Feminino</b>
+                            <b>{{ __('ui.landing.male') }}</b>
+                            <b>{{ __('ui.landing.female') }}</b>
                         </div>
                     </article>
                 </div>
 
                 <p class="fc-mod-foot">
-                    Perfis e buscas no FootConnect cobrem <strong>Campo, Futsal e Fut 7</strong> —
-                    com atletas e profissionais do <strong>masculino e do feminino</strong> no mesmo ecossistema.
+                    {!! __('ui.landing.mod_foot') !!}
                 </p>
             </div>
         </section>
@@ -1106,11 +1105,11 @@
                 <div class="container">
                     <div class="d-flex flex-wrap align-items-end justify-content-between gap-3 mb-4">
                         <div>
-                            <p class="fc-pill mb-2"><span class="fc-pill-dot"></span> Notícias</p>
-                            <h2 class="fc-section-title mb-1">No radar do FootConnect</h2>
-                            <p class="fc-section-lead mb-0">Campanhas, novidades e comunicados do mercado.</p>
+                            <p class="fc-pill mb-2"><span class="fc-pill-dot"></span> {{ __('ui.nav.news') }}</p>
+                            <h2 class="fc-section-title mb-1">{{ __('ui.landing.news_title') }}</h2>
+                            <p class="fc-section-lead mb-0">{{ __('ui.landing.news_lead') }}</p>
                         </div>
-                        <a href="{{ route('news.index') }}" class="fc-btn-ghost" style="font-size: 0.85rem;">Ver todas</a>
+                        <a href="{{ route('news.index') }}" class="fc-btn-ghost" style="font-size: 0.85rem;">{{ __('ui.nav.see_all') }}</a>
                     </div>
                     <div class="row g-3">
                         @foreach($news as $post)
@@ -1121,11 +1120,11 @@
                                     @endif
                                     <div class="fc-landing-news-body">
                                         <p class="fc-landing-news-date">
-                                            {{ optional($post->published_at)->format('d/m/Y') ?? $post->created_at->format('d/m/Y') }}
+                                            {{ ($post->published_at ?? $post->created_at)->isoFormat('L') }}
                                         </p>
                                         <h3 class="fc-landing-news-title">{{ $post->title }}</h3>
                                         <p class="fc-landing-news-excerpt">{{ $post->excerpt_or_body }}</p>
-                                        <span class="fc-landing-news-more">Ler notícia →</span>
+                                        <span class="fc-landing-news-more">{{ __('ui.nav.read_news') }}</span>
                                     </div>
                                 </a>
                             </div>
@@ -1138,10 +1137,10 @@
         {{-- Perfis G1–G4 --}}
         <section class="fc-section" id="perfis">
             <div class="container">
-                <p class="fc-pill mb-2"><span class="fc-pill-dot"></span> Perfis</p>
-                <h2 class="fc-section-title">Um plano para cada papel no futebol</h2>
+                <p class="fc-pill mb-2"><span class="fc-pill-dot"></span> {{ __('ui.nav.profiles') }}</p>
+                <h2 class="fc-section-title">{{ __('ui.landing.profiles_title') }}</h2>
                 <p class="fc-section-lead">
-                    Cada grupo tem funcionalidades e preços pensados para a sua realidade — do atleta em busca de visibilidade ao clube organizando peneiras.
+                    {{ __('ui.landing.profiles_lead') }}
                 </p>
                 <div class="row g-3">
                     @foreach ($planGroups as $group)
@@ -1153,16 +1152,16 @@
                             <div class="fc-card fc-profile-card {{ $isGreen ? 'fc-profile-card--green' : 'fc-profile-card--yellow' }}">
                                 <div class="fc-profile-icon">{{ $group['icon'] }}</div>
                                 <span class="fc-profile-code">{{ $group['code'] }}</span>
-                                <h3 class="fc-profile-name">{{ $group['short_label'] }}</h3>
-                                <p class="fc-profile-desc">{{ $group['description'] }}</p>
+                                <h3 class="fc-profile-name">{{ __('ui.plans.groups.'.$group['key'].'.short_label') }}</h3>
+                                <p class="fc-profile-desc">{{ __('ui.plans.groups.'.$group['key'].'.description') }}</p>
                                 @if ($monthly)
                                     <p class="fc-profile-price mb-3">
                                         {{ $monthly->formatted_price }}
-                                        <small>/ mês</small>
+                                        <small>{{ __('ui.landing.per_month_short') }}</small>
                                     </p>
                                 @endif
                                 <a href="{{ route('onboarding.user-type') }}" class="fc-btn-ghost w-100 text-center" style="font-size: 0.85rem; padding: 0.5rem;">
-                                    Escolher {{ $group['code'] }}
+                                    {{ __('ui.landing.choose', ['code' => $group['code']]) }}
                                 </a>
                             </div>
                         </div>
@@ -1176,10 +1175,10 @@
             <div class="container">
                 <div class="row g-4 align-items-center">
                     <div class="col-lg-5">
-                        <p class="fc-pill mb-2"><span class="fc-pill-dot"></span> Recursos</p>
-                        <h2 class="fc-section-title">Tudo que você precisa para se destacar</h2>
+                        <p class="fc-pill mb-2"><span class="fc-pill-dot"></span> {{ __('ui.landing.resources') }}</p>
+                        <h2 class="fc-section-title">{{ __('ui.landing.resources_title') }}</h2>
                         <p class="fc-section-lead mb-0">
-                            Ambiente 100% profissional, sem distrações. Feito para quem leva o futebol a sério.
+                            {{ __('ui.landing.resources_lead') }}
                         </p>
                     </div>
                     <div class="col-lg-7">
@@ -1187,29 +1186,29 @@
                             <div class="col-sm-6">
                                 <div class="fc-card">
                                     <div style="font-size: 1.25rem; margin-bottom: 0.5rem;">⚽</div>
-                                    <h4 style="font-size: 0.95rem; font-weight: 600;">Perfil esportivo completo</h4>
-                                    <p class="mb-0" style="font-size: 0.85rem; color: var(--fc-muted);">Vídeos, fotos, estatísticas, posição, características físicas e biografia.</p>
+                                    <h4 style="font-size: 0.95rem; font-weight: 600;">{{ __('ui.landing.feature_profile_title') }}</h4>
+                                    <p class="mb-0" style="font-size: 0.85rem; color: var(--fc-muted);">{{ __('ui.landing.feature_profile_text') }}</p>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="fc-card">
                                     <div style="font-size: 1.25rem; margin-bottom: 0.5rem;">🔍</div>
-                                    <h4 style="font-size: 0.95rem; font-weight: 600;">Busca avançada</h4>
-                                    <p class="mb-0" style="font-size: 0.85rem; color: var(--fc-muted);">Filtros por posição, idade, cidade, modalidade e muito mais.</p>
+                                    <h4 style="font-size: 0.95rem; font-weight: 600;">{{ __('ui.landing.feature_search_title') }}</h4>
+                                    <p class="mb-0" style="font-size: 0.85rem; color: var(--fc-muted);">{{ __('ui.landing.feature_search_text') }}</p>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="fc-card">
                                     <div style="font-size: 1.25rem; margin-bottom: 0.5rem;">⭐</div>
-                                    <h4 style="font-size: 0.95rem; font-weight: 600;">Favoritos</h4>
-                                    <p class="mb-0" style="font-size: 0.85rem; color: var(--fc-muted);">Organize sua lista de talentos e acompanhe candidatos com facilidade.</p>
+                                    <h4 style="font-size: 0.95rem; font-weight: 600;">{{ __('ui.landing.feature_favorites_title') }}</h4>
+                                    <p class="mb-0" style="font-size: 0.85rem; color: var(--fc-muted);">{{ __('ui.landing.feature_favorites_text') }}</p>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="fc-card">
                                     <div style="font-size: 1.25rem; margin-bottom: 0.5rem;">💬</div>
-                                    <h4 style="font-size: 0.95rem; font-weight: 600;">Mensagens internas</h4>
-                                    <p class="mb-0" style="font-size: 0.85rem; color: var(--fc-muted);">Contato direto entre atletas e profissionais, sem sair da plataforma.</p>
+                                    <h4 style="font-size: 0.95rem; font-weight: 600;">{{ __('ui.landing.feature_messages_title') }}</h4>
+                                    <p class="mb-0" style="font-size: 0.85rem; color: var(--fc-muted);">{{ __('ui.landing.feature_messages_text') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -1222,16 +1221,16 @@
         <section class="fc-section" id="planos">
             <div class="container">
                 <div class="text-center mb-4">
-                    <p class="fc-pill mb-2 justify-content-center"><span class="fc-pill-dot"></span> Planos</p>
-                    <h2 class="fc-section-title">Valores atualizados</h2>
+                    <p class="fc-pill mb-2 justify-content-center"><span class="fc-pill-dot"></span> {{ __('ui.nav.plans') }}</p>
+                    <h2 class="fc-section-title">{{ __('ui.landing.prices_title') }}</h2>
                     <p class="fc-section-lead mx-auto">
-                        Cobrança recorrente via Stripe. Cancele quando quiser nas configurações da conta.
+                        {{ __('ui.landing.prices_lead') }}
                     </p>
                     <div class="fc-billing-toggle">
-                        <button type="button" class="fc-billing-btn active" data-billing="monthly">Mensal</button>
+                        <button type="button" class="fc-billing-btn active" data-billing="monthly">{{ __('ui.landing.monthly') }}</button>
                         <button type="button" class="fc-billing-btn" data-billing="yearly">
-                            Anual
-                            <span class="fc-billing-save">{{ $annualDiscount }}% OFF</span>
+                            {{ __('ui.landing.yearly') }}
+                            <span class="fc-billing-save">{{ __('ui.landing.trust_discount', ['discount' => $annualDiscount]) }}</span>
                         </button>
                     </div>
                 </div>
@@ -1250,17 +1249,17 @@
                                     <span class="fc-profile-code">{{ $group['code'] }}</span>
                                 </div>
                                 <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.25rem;">
-                                    {{ $group['short_label'] }}
+                                    {{ __('ui.plans.groups.'.$group['key'].'.short_label') }}
                                     @if(($monthly?->hasTrial() || $yearly?->hasTrial()) && $group['key'] !== 'g1')
-                                        <span class="fc-tag-off" style="background: var(--fc-green-dim); color: var(--fc-green); border-color: rgba(34, 197, 94, 0.4);">1 mês grátis</span>
+                                        <span class="fc-tag-off" style="background: var(--fc-green-dim); color: var(--fc-green); border-color: rgba(34, 197, 94, 0.4);">{{ __('ui.landing.free_month') }}</span>
                                     @endif
                                 </h3>
-                                <p style="font-size: 0.8rem; color: var(--fc-muted); margin-bottom: 0; line-height: 1.45;">{{ $group['plan_description'] }}</p>
+                                <p style="font-size: 0.8rem; color: var(--fc-muted); margin-bottom: 0; line-height: 1.45;">{{ __('ui.plans.groups.'.$group['key'].'.plan_description') }}</p>
 
                                 <div class="fc-price-monthly active">
                                     @if ($monthly)
                                         <div class="fc-plan-price">{{ $monthly->formatted_price }}</div>
-                                        <div class="fc-plan-interval">por mês</div>
+                                        <div class="fc-plan-interval">{{ __('ui.landing.per_month') }}</div>
                                     @else
                                         <div class="fc-plan-price">—</div>
                                     @endif
@@ -1269,39 +1268,25 @@
                                     @if ($yearly)
                                         <div class="fc-plan-price">
                                             {{ $yearly->formatted_price }}
-                                            <span class="fc-tag-off">{{ $annualDiscount }}% OFF</span>
+                                            <span class="fc-tag-off">{{ __('ui.landing.trust_discount', ['discount' => $annualDiscount]) }}</span>
                                         </div>
-                                        <div class="fc-plan-interval">por ano (economia de {{ $annualDiscount }}%)</div>
+                                        <div class="fc-plan-interval">{{ __('ui.landing.per_year', ['discount' => $annualDiscount]) }}</div>
                                     @else
                                         <div class="fc-plan-price">—</div>
                                     @endif
                                 </div>
 
                                 <ul class="fc-plan-features">
-                                    @if ($group['role'] === 'player')
-                                        <li>Perfil esportivo e vitrine de talentos</li>
-                                        <li>Upload de vídeos e estatísticas</li>
-                                        <li>Contato com profissionais do mercado</li>
-                                    @elseif ($group['key'] === 'g2')
-                                        <li>Busca avançada e favoritos</li>
-                                        <li>Gestão de carreira e negócios</li>
-                                        <li>Mensagens com atletas</li>
-                                    @elseif ($group['key'] === 'g3')
-                                        <li>Scouting e filtros detalhados</li>
-                                        <li>Desenvolvimento de talentos</li>
-                                        <li>Comunicação direta com jogadores</li>
-                                    @else
-                                        <li>Peneiras e gestão de projetos</li>
-                                        <li>Base de candidatos centralizada</li>
-                                        <li>Acesso completo à plataforma</li>
-                                    @endif
+                                    @foreach (__('ui.plans.groups.'.$group['key'].'.features') as $feature)
+                                        <li>{{ $feature }}</li>
+                                    @endforeach
                                 </ul>
 
                                 <a href="{{ route('onboarding.user-type') }}" class="fc-btn-green w-100 text-center" style="font-size: 0.85rem;">
                                     @if(($monthly?->hasTrial() || $yearly?->hasTrial()) && $group['key'] !== 'g1')
-                                        Começar 1 mês grátis
+                                        {{ __('ui.landing.start_trial') }}
                                     @else
-                                        Assinar {{ $group['code'] }}
+                                        {{ __('ui.landing.subscribe', ['code' => $group['code']]) }}
                                     @endif
                                 </a>
                             </div>
@@ -1314,9 +1299,9 @@
                         $landingHasTrial = $planGroups->contains(fn ($g) => ($g['key'] ?? '') !== 'g1' && (($g['monthly']?->hasTrial()) || ($g['yearly']?->hasTrial())));
                     @endphp
                     @if($landingHasTrial)
-                        Planos profissionais (G2–G4) com 1 mês grátis. Jogador (G1) cobra a partir do primeiro mês. Valores em reais (BRL).
+                        {{ __('ui.landing.prices_note_trial') }}
                     @else
-                        Todos os planos incluem acesso após a confirmação do pagamento. Valores em reais (BRL).
+                        {{ __('ui.landing.prices_note') }}
                     @endif
                 </p>
             </div>
@@ -1328,15 +1313,14 @@
                 <div class="fc-referral-banner">
                     <div class="row align-items-center g-4">
                         <div class="col-lg-8">
-                            <p class="fc-pill mb-2"><span class="fc-pill-dot"></span> Indique e Ganhe</p>
-                            <h2 class="fc-section-title" style="font-size: 1.5rem;">Ganhe 25% recorrente por indicação</h2>
+                            <p class="fc-pill mb-2"><span class="fc-pill-dot"></span> {{ __('ui.landing.referral_pill') }}</p>
+                            <h2 class="fc-section-title" style="font-size: 1.5rem;">{{ __('ui.landing.referral_title') }}</h2>
                             <p class="mb-0" style="color: var(--fc-muted); max-width: 520px;">
-                                Compartilhe seu link, indique novos assinantes e receba comissão em cada renovação.
-                                Saque automático via PIX em até 2 dias após liberação.
+                                {{ __('ui.landing.referral_text') }}
                             </p>
                         </div>
                         <div class="col-lg-4 text-lg-end">
-                            <a href="{{ route('onboarding.user-type') }}" class="fc-btn-green">Criar conta e participar</a>
+                            <a href="{{ route('onboarding.user-type') }}" class="fc-btn-green">{{ __('ui.landing.referral_cta') }}</a>
                         </div>
                     </div>
                 </div>
@@ -1348,40 +1332,27 @@
             <div class="container">
                 <div class="row g-5">
                     <div class="col-lg-4">
-                        <p class="fc-pill mb-2"><span class="fc-pill-dot"></span> FAQ</p>
-                        <h2 class="fc-section-title">Dúvidas frequentes</h2>
-                        <p class="fc-section-lead mb-0">Respostas rápidas sobre acesso, planos e uso da plataforma.</p>
+                        <p class="fc-pill mb-2"><span class="fc-pill-dot"></span> {{ __('ui.nav.faq') }}</p>
+                        <h2 class="fc-section-title">{{ __('ui.landing.faq_title') }}</h2>
+                        <p class="fc-section-lead mb-0">{{ __('ui.landing.faq_lead') }}</p>
                     </div>
                     <div class="col-lg-8">
                         <div class="fc-card" style="padding: 0 1.5rem;">
                             <div class="fc-faq-item">
-                                <p class="fc-faq-q">Qual a diferença entre G1, G2, G3 e G4?</p>
-                                <p class="fc-faq-a">
-                                    <strong>G1</strong> é para atletas (perfil e vitrine). <strong>G2</strong> para empresários e agentes.
-                                    <strong>G3</strong> para treinadores e olheiros. <strong>G4</strong> para clubes, projetos e peneiras.
-                                    Cada perfil tem campos e preços específicos.
-                                </p>
+                                <p class="fc-faq-q">{{ __('ui.landing.faq_1_q') }}</p>
+                                <p class="fc-faq-a">{!! __('ui.landing.faq_1_a') !!}</p>
                             </div>
                             <div class="fc-faq-item">
-                                <p class="fc-faq-q">Preciso pagar antes de acessar o app?</p>
-                                <p class="fc-faq-a">
-                                    Sim. O FootConnect é um app fechado para assinantes. Você escolhe o perfil, o plano (mensal ou anual),
-                                    realiza o pagamento seguro e em seguida completa seu cadastro.
-                                </p>
+                                <p class="fc-faq-q">{{ __('ui.landing.faq_2_q') }}</p>
+                                <p class="fc-faq-a">{{ __('ui.landing.faq_2_a') }}</p>
                             </div>
                             <div class="fc-faq-item">
-                                <p class="fc-faq-q">Vale a pena o plano anual?</p>
-                                <p class="fc-faq-a">
-                                    O plano anual oferece {{ $annualDiscount }}% de desconto em relação ao valor mensal acumulado em 12 meses.
-                                    Ideal para quem vai usar a plataforma de forma contínua ao longo da temporada.
-                                </p>
+                                <p class="fc-faq-q">{{ __('ui.landing.faq_3_q') }}</p>
+                                <p class="fc-faq-a">{{ __('ui.landing.faq_3_a', ['discount' => $annualDiscount]) }}</p>
                             </div>
                             <div class="fc-faq-item">
-                                <p class="fc-faq-q">Posso cancelar ou trocar de plano?</p>
-                                <p class="fc-faq-a">
-                                    Sim. Em <strong>Configurações → Plano</strong> você visualiza sua assinatura, período de renovação
-                                    e pode cancelar a qualquer momento, com total transparência.
-                                </p>
+                                <p class="fc-faq-q">{{ __('ui.landing.faq_4_q') }}</p>
+                                <p class="fc-faq-a">{!! __('ui.landing.faq_4_a') !!}</p>
                             </div>
                         </div>
                     </div>
@@ -1393,11 +1364,11 @@
         <section class="fc-section" style="padding-top: 0;">
             <div class="container">
                 <div class="fc-cta-band">
-                    <h2 class="fc-section-title mb-2">Pronto para entrar no jogo?</h2>
-                    <p class="mb-4" style="color: var(--fc-muted);">Escolha seu perfil, assine e comece a se conectar hoje.</p>
+                    <h2 class="fc-section-title mb-2">{{ __('ui.landing.cta_title') }}</h2>
+                    <p class="mb-4" style="color: var(--fc-muted);">{{ __('ui.landing.cta_text') }}</p>
                     <div class="d-flex flex-wrap gap-3 justify-content-center">
-                        <a href="{{ route('onboarding.user-type') }}" class="fc-btn-green">Criar conta FootConnect</a>
-                        <a href="{{ route('login') }}" class="fc-btn-ghost">Já sou assinante</a>
+                        <a href="{{ route('onboarding.user-type') }}" class="fc-btn-green">{{ __('ui.landing.cta_signup') }}</a>
+                        <a href="{{ route('login') }}" class="fc-btn-ghost">{{ __('ui.landing.cta_login') }}</a>
                     </div>
                 </div>
             </div>
@@ -1410,12 +1381,12 @@
                     <div class="d-flex align-items-center gap-2">
                         @include('partials.brand-logo', ['height' => 44, 'class' => 'fc-logo'])
                         <span style="font-size: 0.8rem; color: var(--fc-muted);">
-                            © {{ date('Y') }} FootConnect. Conexão profissional no futebol.
+                            © {{ date('Y') }} FootConnect. {{ __('ui.landing.footer_tagline') }}
                         </span>
                     </div>
                     <div class="d-flex gap-3" style="font-size: 0.8rem; color: var(--fc-muted);">
-                        <span>App fechado para assinantes</span>
-                        <span>Pagamento seguro via Stripe</span>
+                        <span>{{ __('ui.landing.footer_closed') }}</span>
+                        <span>{{ __('ui.landing.footer_stripe') }}</span>
                     </div>
                 </div>
             </div>

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="{{ config('locales.supported.'.app()->getLocale().'.html', 'pt-BR') }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Recuperar senha — FootConnect</title>
+    <title>{{ __('ui.auth.forgot_title') }}</title>
     @include('partials.favicon')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @include('auth.partials.card-styles')
@@ -11,20 +11,23 @@
 <body>
 <div class="fc-login-wrapper">
     <div class="fc-login-card">
+        <div class="d-flex justify-content-end mb-2">
+            <x-locale-switcher />
+        </div>
         <div class="fc-logo-badge">
             <a href="{{ route('landing') }}">@include('partials.brand-logo', ['height' => 72])</a>
         </div>
 
-        <h1 class="fc-title">Esqueceu a senha?</h1>
+        <h1 class="fc-title">{{ __('ui.auth.forgot_heading') }}</h1>
         <p class="fc-subtitle">
-            Informe o e-mail da sua conta. Enviaremos um link para você criar uma nova senha.
+            {{ __('ui.auth.forgot_lead') }}
         </p>
 
         <form method="POST" action="{{ route('password.email') }}">
             @csrf
 
             <div class="fc-form-group">
-                <label for="email" class="fc-form-label">E-mail</label>
+                <label for="email" class="fc-form-label">{{ __('ui.auth.email') }}</label>
                 <input
                     id="email"
                     type="email"
@@ -50,12 +53,12 @@
             @endif
 
             <button type="submit" class="fc-btn-primary">
-                Enviar link de recuperação
+                {{ __('ui.auth.send_link') }}
             </button>
 
             <p class="fc-link-text">
-                Lembrou a senha?
-                <a href="{{ route('login') }}">Voltar ao login</a>
+                {{ __('ui.auth.remembered') }}
+                <a href="{{ route('login') }}">{{ __('ui.auth.back_login') }}</a>
             </p>
         </form>
     </div>

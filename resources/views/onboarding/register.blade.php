@@ -3,11 +3,11 @@
 @endphp
 
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="{{ config('locales.supported.'.app()->getLocale().'.html', 'pt-BR') }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Criar conta — FootConnect</title>
+    <title>{{ __('ui.onboarding.register_title') }}</title>
     @include('partials.favicon')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
@@ -141,31 +141,34 @@
 <body>
 <div class="fc-onboarding-wrapper">
     <div class="fc-onboarding-card">
-        <a href="{{ route('landing') }}" class="d-inline-block mb-3 text-decoration-none">
-            @include('partials.brand-logo', ['height' => 64])
-        </a>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <a href="{{ route('landing') }}" class="d-inline-block text-decoration-none">
+                @include('partials.brand-logo', ['height' => 64])
+            </a>
+            <x-locale-switcher />
+        </div>
         <div class="fc-pill">
             <span class="fc-pill-dot"></span>
-            Passo 2 de 4 • Criar conta
+            {{ __('ui.onboarding.step_account') }}
         </div>
 
-        <h1 class="fc-title">Criar sua conta</h1>
+        <h1 class="fc-title">{{ __('ui.onboarding.register_heading') }}</h1>
         <p class="fc-subtitle">
-            Crie seu acesso ao FootConnect. Depois você escolherá seu plano de assinatura.
+            {{ __('ui.onboarding.register_lead') }}
         </p>
 
         <div class="fc-user-type-badge">
             <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
             </svg>
-            {{ $groupConfig['code'] }} — {{ $groupConfig['label'] }}
+            {{ $groupConfig['code'] }} — {{ __('ui.plans.groups.'.$planGroup.'.label') }}
         </div>
 
         <form method="POST" action="{{ route('onboarding.register.post') }}">
             @csrf
 
             <div class="fc-form-group">
-                <label for="email" class="fc-form-label">Email</label>
+                <label for="email" class="fc-form-label">{{ __('ui.auth.email') }}</label>
                 <input
                     id="email"
                     type="email"
@@ -176,30 +179,30 @@
                     class="fc-form-input"
                     placeholder="seu@email.com"
                 >
-                <p class="fc-help-text">Use um email válido. Você precisará dele para fazer login.</p>
+                <p class="fc-help-text">{{ __('ui.onboarding.email_help') }}</p>
             </div>
 
             <div class="fc-form-group">
-                <label for="password" class="fc-form-label">Senha</label>
+                <label for="password" class="fc-form-label">{{ __('ui.auth.password') }}</label>
                 <input
                     id="password"
                     type="password"
                     name="password"
                     required
                     class="fc-form-input"
-                    placeholder="Mínimo 8 caracteres"
+                    placeholder="{{ __('ui.auth.password_min') }}"
                 >
             </div>
 
             <div class="fc-form-group">
-                <label for="password_confirmation" class="fc-form-label">Confirmar senha</label>
+                <label for="password_confirmation" class="fc-form-label">{{ __('ui.auth.confirm_password_short') }}</label>
                 <input
                     id="password_confirmation"
                     type="password"
                     name="password_confirmation"
                     required
                     class="fc-form-input"
-                    placeholder="Digite a senha novamente"
+                    placeholder="{{ __('ui.onboarding.password_again') }}"
                 >
             </div>
 
@@ -210,7 +213,7 @@
             @endif
 
             <button type="submit" class="fc-btn-primary">
-                Criar conta e continuar
+                {{ __('ui.onboarding.register_submit') }}
             </button>
         </form>
     </div>

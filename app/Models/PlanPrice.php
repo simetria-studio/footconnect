@@ -61,8 +61,8 @@ class PlanPrice extends Model
         }
 
         return ((int) $this->trial_days) === 30
-            ? '1 mês grátis'
-            : $this->trial_days.' dias grátis';
+            ? __('ui.plans.trial_month')
+            : __('ui.plans.trial_days', ['days' => $this->trial_days]);
     }
 
     public function groupKey(): string

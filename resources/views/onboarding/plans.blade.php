@@ -6,11 +6,11 @@
 @endphp
 
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="{{ config('locales.supported.'.app()->getLocale().'.html', 'pt-BR') }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Planos — FootConnect</title>
+    <title>{{ __('ui.onboarding.plans_title') }}</title>
     @include('partials.favicon')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
@@ -211,19 +211,22 @@
 <div class="fc-onboarding-wrapper">
     <div class="fc-onboarding-card">
         <div class="mb-4">
-            <a href="{{ route('landing') }}" class="d-inline-block mb-3 text-decoration-none">
-                @include('partials.brand-logo', ['height' => 64])
-            </a>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <a href="{{ route('landing') }}" class="d-inline-block text-decoration-none">
+                    @include('partials.brand-logo', ['height' => 64])
+                </a>
+                <x-locale-switcher />
+            </div>
             <div class="fc-pill">
                 <span class="fc-pill-dot"></span>
-                Passo 3 de 4 • Escolha seu plano
+                {{ __('ui.onboarding.step_plan') }}
             </div>
-            <h1 class="fc-title">Escolha seu plano</h1>
+            <h1 class="fc-title">{{ __('ui.onboarding.plans_heading') }}</h1>
             <p class="fc-subtitle">
                 @if(($monthlyPlan?->hasTrial() || $yearlyPlan?->hasTrial()))
-                    Comece com 1 mês grátis. Você cadastra o cartão agora e a primeira cobrança só acontece depois do período promocional.
+                    {{ __('ui.onboarding.plans_lead_trial') }}
                 @else
-                    O acesso ao FootConnect é exclusivo para assinantes. Selecione a periodicidade ideal e siga para o pagamento seguro.
+                    {{ __('ui.onboarding.plans_lead') }}
                 @endif
             </p>
         </div>
@@ -234,8 +237,8 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                 </svg>
                 <div>
-                    <p style="font-size: 0.9rem; font-weight: 600; color: #fca5a5; margin: 0 0 0.25rem;">Pagamento cancelado</p>
-                    <p style="font-size: 0.85rem; color: #9ca3af; margin: 0;">Você pode tentar novamente selecionando um plano abaixo.</p>
+                    <p style="font-size: 0.9rem; font-weight: 600; color: #fca5a5; margin: 0 0 0.25rem;">{{ __('ui.onboarding.payment_canceled') }}</p>
+                    <p style="font-size: 0.85rem; color: #9ca3af; margin: 0;">{{ __('ui.onboarding.payment_canceled_text') }}</p>
                 </div>
             </div>
         @endif
@@ -245,14 +248,14 @@
 
             <div class="fc-plan-card {{ $isGreenAccent ? '' : 'fc-plan-card--yellow' }}">
                 <p class="fc-plan-label {{ $isGreenAccent ? '' : 'fc-plan-label-secondary' }}">
-                    {{ $groupConfig['short_label'] }}
+                    {{ __('ui.plans.groups.'.$planGroup.'.short_label') }}
                     <span class="fc-plan-code">{{ $groupConfig['code'] }}</span>
                 </p>
                 <h2 style="font-size: 0.95rem; font-weight: 600; margin: 0 0 0.35rem;">
-                    {{ $groupConfig['label'] }}
+                    {{ __('ui.plans.groups.'.$planGroup.'.label') }}
                 </h2>
                 <p class="fc-plan-description">
-                    {{ $groupConfig['plan_description'] }}
+                    {{ __('ui.plans.groups.'.$planGroup.'.plan_description') }}
                 </p>
 
                 <div class="fc-radios">
@@ -260,20 +263,20 @@
                         <input type="radio" name="plan" value="{{ $monthlyKey }}" checked>
                         <div class="fc-radio-content">
                             <div class="fc-radio-title">
-                                Plano Mensal
+                                {{ __('ui.onboarding.monthly_plan') }}
                                 @if($monthlyPlan?->hasTrial())
-                                    <span class="fc-tag-saving">1 mês grátis</span>
+                                    <span class="fc-tag-saving">{{ __('ui.landing.free_month') }}</span>
                                 @endif
                             </div>
                             <div class="fc-radio-price">
                                 {{ $monthlyPlan ? $monthlyPlan->formatted_price : '—' }}
-                                <span class="fc-price-note">/ mês</span>
+                                <span class="fc-price-note">{{ __('ui.onboarding.per_month') }}</span>
                             </div>
                             <p class="fc-radio-text">
                                 @if($monthlyPlan?->hasTrial())
-                                    {{ $monthlyPlan->trialLabel() }} — depois {{ $monthlyPlan->formatted_price }}/mês.
+                                    {{ __('ui.onboarding.monthly_after', ['label' => $monthlyPlan->trialLabel(), 'price' => $monthlyPlan->formatted_price]) }}
                                 @else
-                                    Flexibilidade total com renovação mensal automática.
+                                    {{ __('ui.onboarding.monthly_flex') }}
                                 @endif
                             </p>
                         </div>
@@ -283,24 +286,24 @@
                         <input type="radio" name="plan" value="{{ $yearlyKey }}">
                         <div class="fc-radio-content">
                             <div class="fc-radio-title">
-                                Plano Anual
+                                {{ __('ui.onboarding.yearly_plan') }}
                                 @if($yearlyPlan?->hasTrial())
-                                    <span class="fc-tag-saving">1 mês grátis</span>
+                                    <span class="fc-tag-saving">{{ __('ui.landing.free_month') }}</span>
                                 @else
                                     <span class="fc-tag-saving">
-                                        {{ config('plans.annual_discount_percent') }}% OFF
+                                        {{ __('ui.landing.trust_discount', ['discount' => config('plans.annual_discount_percent')]) }}
                                     </span>
                                 @endif
                             </div>
                             <div class="fc-radio-price">
                                 {{ $yearlyPlan ? $yearlyPlan->formatted_price : '—' }}
-                                <span class="fc-price-note">/ ano</span>
+                                <span class="fc-price-note">{{ __('ui.onboarding.per_year') }}</span>
                             </div>
                             <p class="fc-radio-text">
                                 @if($yearlyPlan?->hasTrial())
-                                    {{ $yearlyPlan->trialLabel() }}, depois {{ $yearlyPlan->formatted_price }}/ano ({{ config('plans.annual_discount_percent') }}% OFF).
+                                    {{ __('ui.onboarding.yearly_after', ['label' => $yearlyPlan->trialLabel(), 'price' => $yearlyPlan->formatted_price, 'discount' => config('plans.annual_discount_percent')]) }}
                                 @else
-                                    Economia de {{ config('plans.annual_discount_percent') }}% com acesso garantido por 12 meses.
+                                    {{ __('ui.onboarding.yearly_save', ['discount' => config('plans.annual_discount_percent')]) }}
                                 @endif
                             </p>
                         </div>
@@ -310,16 +313,16 @@
                 <div class="fc-cta">
                     <button type="submit" class="fc-btn-primary">
                         @if($monthlyPlan?->hasTrial() || $yearlyPlan?->hasTrial())
-                            Começar 1 mês grátis
+                            {{ __('ui.landing.start_trial') }}
                         @else
-                            Assinar e ir para pagamento
+                            {{ __('ui.onboarding.pay') }}
                         @endif
                     </button>
                     <span class="fc-small-note">
                         @if($monthlyPlan?->hasTrial() || $yearlyPlan?->hasTrial())
-                            Sem cobrança agora. Cancele quando quiser, antes do fim do mês grátis.
+                            {{ __('ui.onboarding.trial_note') }}
                         @else
-                            Cobrança recorrente gerenciada pelo Stripe, com opção de cancelamento no app.
+                            {{ __('ui.onboarding.pay_note') }}
                         @endif
                     </span>
                 </div>

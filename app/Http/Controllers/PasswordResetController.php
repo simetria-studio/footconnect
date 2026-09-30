@@ -26,7 +26,7 @@ class PasswordResetController extends Controller
         );
 
         if ($status === Password::RESET_LINK_SENT) {
-            return back()->with('status', 'Enviamos um link de redefinição para o seu e-mail.');
+            return back()->with('status', __('ui.auth.reset_sent'));
         }
 
         return back()->withErrors([
@@ -66,7 +66,7 @@ class PasswordResetController extends Controller
         if ($status === Password::PASSWORD_RESET) {
             return redirect()
                 ->route('login')
-                ->with('status', 'Senha redefinida com sucesso! Faça login com a nova senha.');
+                ->with('status', __('ui.auth.reset_success'));
         }
 
         return back()->withErrors([
@@ -77,10 +77,10 @@ class PasswordResetController extends Controller
     private function translateStatus(string $status): string
     {
         return match ($status) {
-            Password::INVALID_USER => 'Não encontramos uma conta com este e-mail.',
-            Password::INVALID_TOKEN => 'Este link de redefinição é inválido ou expirou. Solicite um novo.',
-            Password::RESET_THROTTLED => 'Aguarde alguns minutos antes de solicitar outro link.',
-            default => 'Não foi possível processar sua solicitação. Tente novamente.',
+            Password::INVALID_USER => __('ui.auth.invalid_user'),
+            Password::INVALID_TOKEN => __('ui.auth.invalid_token'),
+            Password::RESET_THROTTLED => __('ui.auth.throttled'),
+            default => __('ui.auth.reset_failed'),
         };
     }
 }

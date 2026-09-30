@@ -21,6 +21,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', LandingController::class)->name('landing');
 
+Route::get('/idioma/{locale}', \App\Http\Controllers\LocaleController::class)
+    ->whereIn('locale', array_keys(config('locales.supported')))
+    ->name('locale.switch');
+
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 

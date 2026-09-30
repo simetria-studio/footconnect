@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="{{ config('locales.supported.'.app()->getLocale().'.html', 'pt-BR') }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -40,25 +40,32 @@
                             {{ strtoupper(substr(auth()->user()->full_name ?? auth()->user()->email, 0, 2)) }}
                         </div>
                         <div>
-                            <p class="mb-0 small text-uppercase text-muted" style="font-size: 0.625rem; letter-spacing: 0.05em;">Bem-vindo</p>
+                            <p class="mb-0 small text-uppercase text-muted" style="font-size: 0.625rem; letter-spacing: 0.05em;">{{ __('ui.nav.welcome') }}</p>
                             <p class="mb-0 fw-bold fc-text-primary">{{ auth()->user()->full_name ?? auth()->user()->email }}</p>
                         </div>
                     </div>
-                    @if(auth()->user()->isAdmin())
-                        <a href="{{ route('admin.dashboard') }}" class="btn btn-sm btn-outline-success border-success me-2">Painel admin</a>
-                    @endif
-                    <form method="POST" action="{{ route('logout') }}" class="d-inline">
-                        @csrf
-                        <button type="submit" class="btn btn-sm btn-outline-secondary border-secondary">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
-                                <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
-                            </svg>
-                        </button>
-                    </form>
+                    <div class="d-flex align-items-center gap-2">
+                        <x-locale-switcher />
+                        @if(auth()->user()->isAdmin())
+                            <a href="{{ route('admin.dashboard') }}" class="btn btn-sm btn-outline-success border-success">{{ __('ui.nav.admin') }}</a>
+                        @endif
+                        <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                            @csrf
+                            <button type="submit" class="btn btn-sm btn-outline-secondary border-secondary">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
+                                    <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </header>
+    @else
+        <div class="container-fluid px-4 py-3 d-flex justify-content-end">
+            <x-locale-switcher />
+        </div>
     @endauth
 
     <!-- Main Content -->
@@ -78,7 +85,7 @@
                                 <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5Z"/>
                                 <path d="m8 3.293 4.712 4.712A4.5 4.5 0 0 1 12.5 15a.5.5 0 0 1-.5-.5v-4a.5.5 0 0 0-.146-.354l-.807-.808a.5.5 0 0 0-.707 0l-.808.808A.5.5 0 0 0 9 10.5v4a.5.5 0 0 1-.5.5A4.5 4.5 0 0 1 4 8.005L8.707 3.293a.5.5 0 0 1 .586 0Z"/>
                             </svg>
-                            <span>Home</span>
+                            <span>{{ __('ui.nav.home') }}</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -86,7 +93,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                             </svg>
-                            <span>Buscar</span>
+                            <span>{{ __('ui.nav.search') }}</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -94,7 +101,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
                             </svg>
-                            <span>Mensagens</span>
+                            <span>{{ __('ui.nav.messages') }}</span>
                         </a>
                     </li>
                     @endunless
@@ -103,7 +110,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>
                             </svg>
-                            <span>Indique</span>
+                            <span>{{ __('ui.nav.referrals') }}</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -111,7 +118,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                             </svg>
-                            <span>Perfil</span>
+                            <span>{{ __('ui.nav.profile') }}</span>
                         </a>
                     </li>
                 </ul>
