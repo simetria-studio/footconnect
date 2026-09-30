@@ -150,12 +150,13 @@ return [
                 'label' => 'Athlete (Player)',
                 'short_label' => 'Player',
                 'title' => 'I want to be a shop window for talent',
-                'description' => 'Build a complete sporting profile with physical data, position, dominant foot, videos, photos and stats to present to clubs, agents and representatives.',
-                'plan_description' => 'Complete sporting profile, video showcase, photos, stats and direct contact with agents and scouts inside the app.',
+                'description' => 'Build a complete sporting profile with physical data, position, dominant foot, videos, photos and stats to present to clubs, agents and representatives. Ideal for athletes from clubs, projects or academies.',
+                'plan_description' => 'Complete sporting profile, video showcase, photos, stats and direct contact with agents and scouts — for athletes from clubs, projects or academies.',
                 'features' => [
                     'Sporting profile and talent showcase',
                     'Video and stats uploads',
                     'Contact with market professionals',
+                    'Club, project or academy registration',
                 ],
             ],
             'g2' => [

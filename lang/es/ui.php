@@ -150,12 +150,13 @@ return [
                 'label' => 'Atleta (Jugador)',
                 'short_label' => 'Jugador',
                 'title' => 'Quiero ser un escaparate de talento',
-                'description' => 'Arma un perfil deportivo completo con datos físicos, posición, pierna hábil, vídeos, fotos y estadísticas para presentarte a clubes, agentes y representantes.',
-                'plan_description' => 'Perfil deportivo completo, escaparate de vídeos, fotos, estadísticas y contacto directo con agentes y ojeadores dentro de la app.',
+                'description' => 'Arma un perfil deportivo completo con datos físicos, posición, pierna hábil, vídeos, fotos y estadísticas para presentarte a clubes, agentes y representantes. Ideal para atletas de club, proyecto o escuela de fútbol.',
+                'plan_description' => 'Perfil deportivo completo, escaparate de vídeos, fotos, estadísticas y contacto directo con agentes y ojeadores — para atletas de club, proyecto o escuela de fútbol.',
                 'features' => [
                     'Perfil deportivo y escaparate de talento',
                     'Carga de vídeos y estadísticas',
                     'Contacto con profesionales del mercado',
+                    'Registro de club, proyecto o escuela',
                 ],
             ],
             'g2' => [

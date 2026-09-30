@@ -150,12 +150,13 @@ return [
                 'label' => 'Atleta (Jogador)',
                 'short_label' => 'Jogador',
                 'title' => 'Quero ser vitrine de talentos',
-                'description' => 'Monte um perfil esportivo completo com dados físicos, posição, pé dominante, vídeos, fotos e estatísticas para apresentar a clubes, empresários e agentes.',
-                'plan_description' => 'Perfil esportivo completo, vitrine de vídeos, fotos, estatísticas e contato direto com empresários, agentes e olheiros dentro do app.',
+                'description' => 'Monte um perfil esportivo completo com dados físicos, posição, pé dominante, vídeos, fotos e estatísticas para apresentar a clubes, empresários e agentes. Ideal para atletas de clube, projeto ou escolinha.',
+                'plan_description' => 'Perfil esportivo completo, vitrine de vídeos, fotos, estatísticas e contato direto com empresários, agentes e olheiros — para atletas de clube, projeto ou escolinha.',
                 'features' => [
                     'Perfil esportivo e vitrine de talentos',
                     'Upload de vídeos e estatísticas',
                     'Contato com profissionais do mercado',
+                    'Cadastro de clube, projeto ou escolinha',
                 ],
             ],
             'g2' => [

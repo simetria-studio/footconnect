@@ -150,12 +150,13 @@ return [
                 'label' => 'Athlète (Joueur)',
                 'short_label' => 'Joueur',
                 'title' => 'Je veux être une vitrine de talents',
-                'description' => 'Construisez un profil sportif complet avec données physiques, poste, pied fort, vidéos, photos et statistiques pour vous présenter aux clubs, agents et représentants.',
-                'plan_description' => 'Profil sportif complet, vitrine vidéo, photos, statistiques et contact direct avec agents et recruteurs dans l’app.',
+                'description' => 'Construisez un profil sportif complet avec données physiques, poste, pied fort, vidéos, photos et statistiques pour vous présenter aux clubs, agents et représentants. Idéal pour les athlètes de club, projet ou école de foot.',
+                'plan_description' => 'Profil sportif complet, vitrine vidéo, photos, statistiques et contact direct avec agents et recruteurs — pour les athlètes de club, projet ou école de foot.',
                 'features' => [
                     'Profil sportif et vitrine de talents',
                     'Envoi de vidéos et de statistiques',
                     'Contact avec les professionnels du marché',
+                    'Inscription club, projet ou école',
                 ],
             ],
             'g2' => [
